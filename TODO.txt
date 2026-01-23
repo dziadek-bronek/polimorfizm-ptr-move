@@ -1,0 +1,1 @@
+Registering child creator with givent event: check for existing events and prevent from assignment
