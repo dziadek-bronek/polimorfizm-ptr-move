@@ -1,12 +1,16 @@
 #include"include/child-creator.hpp"
+#include<cstdio>
 
-static void assignChildCreatorToEvent(
-        int event, std::list<std::unique_ptr<CChildCreator>>& map) {
-    map.push_back(std::unique_ptr<CChildCreator>(new CChildCreator(event)));
-}
+    void CChildCreatorIf::printoutOnConstructor(int number_) {
+        printf("childCreator constructor %i\n", number_);
+    }
+  
+    void CChildCreatorIf::printoutOnCreateNewChild(int number_) {
+        printf("CChildCreator is creating new child %i\n", number_);
+    }
 
-void registerChildCreators(std::list<std::unique_ptr<CChildCreator>>& map) {
-    assignChildCreatorToEvent(1, map);
-    assignChildCreatorToEvent(2, map);
-    assignChildCreatorToEvent(3, map);
-}
+    void CChildCreatorIf::printoutOnDestructor(int number_) {
+        printf("childCreator destructor %i\n", number_);
+    }
+
+
