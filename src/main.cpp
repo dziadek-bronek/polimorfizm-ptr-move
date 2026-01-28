@@ -1,8 +1,3 @@
-
-
-
-
-
 #include<cstdio>
 #include<iostream>
 
@@ -49,11 +44,11 @@ int main() {
     try {
 
         CInput input;
-        input.init(std::unique_ptr<std::vector<int>> (new std::vector<int>{1,3,2,2,1,2,1,1,2,5}));
+        input.init(std::unique_ptr<std::vector<int>> (new std::vector<int>{2,3,1,0}));
 
         /* child creators register */
-        std::list<std::unique_ptr<CChildCreatorP>> mapOfEventsAndChildrenCreators;
-        registerRegisterChildCreators(mapOfEventsAndChildrenCreators);
+        std::unique_ptr<CCreatorsRegisterIf> creatorsRegister(CCreatorsRegisterIf::createNew());
+        creatorsRegister->init();
 
         /* choose child creator based on event and create child */
 
@@ -61,7 +56,7 @@ int main() {
                 event = input.nextCurrentEvent() /* input++*/ )
         {
             std::unique_ptr<CParent> child
-                    = newChildBasedOnEvent(event, mapOfEventsAndChildrenCreators);
+                    = creatorsRegister->newChildBasedOnEvent(event);
             child->action();
         }
 

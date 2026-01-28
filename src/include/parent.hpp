@@ -6,4 +6,6 @@ struct CParent {
     virtual ~CParent() {};
 };
 
+CParent* createNewChild(int number);
+
 #endif

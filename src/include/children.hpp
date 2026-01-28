@@ -2,6 +2,8 @@
 #define CHILDREN_HPP
 
 #include"parent.hpp"
+#include<cstdio>
+
 struct CChild1 : CParent {
     CChild1() {printf("child 1 constructor\n");}
     virtual void action() { printf("behavior specific for child 1\n"); }
@@ -19,5 +21,12 @@ struct CChild3 : CParent {
     virtual void action() { printf("behavior specific for child 3\n"); }
     virtual ~CChild3() {printf("child 3 destructor\n");}
 };
+
+CParent* createNewChild(int number) {
+    if(1 == number) return new CChild1;
+    if(2 == number) return new CChild2;
+    if(3 == number) return new CChild3;
+    throw "createNewChild problem";
+}
 
 #endif
