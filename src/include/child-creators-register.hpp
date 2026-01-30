@@ -3,12 +3,10 @@
 
 #include"parent.hpp"
 
-#include<memory>
-
 struct CCreatorsRegisterIf {
-    static std::unique_ptr<CCreatorsRegisterIf> createNew();
+    static CCreatorsRegisterIf* createNew();
     virtual void init() = 0;
-    virtual std::unique_ptr<CParent> newChildBasedOnEvent(int event) = 0;
+    virtual CParent* newChildBasedOnEvent(int event) = 0;
     virtual ~CCreatorsRegisterIf(){}
 };
 

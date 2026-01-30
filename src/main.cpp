@@ -3,6 +3,9 @@
 
 #include<memory>
 #include<vector>
+
+#include"include/throw.hpp"
+
 struct CInput {
     int indexOfCurrentEvent{0};
     std::unique_ptr<std::vector<int>> sequenceOfEvents;
@@ -25,16 +28,16 @@ struct CInput {
 
     void setCurrentEvent() {
         if (indexOfCurrentEvent < 0) {
-            throw "Exit on error: invalid index of event";
+            THROW2("Exit",  " on error: invalid index of event");
         }
 
         if (sequenceOfEvents->size() <= indexOfCurrentEvent) {
-            throw "Clean exit: no more events";
+            THROW2("Clean exit", " (no more events)");
         }
 
         currentEvent = (*sequenceOfEvents)[indexOfCurrentEvent];
         if(0 == currentEvent) {
-            throw "Clean exit: event 'EXIT' in sequenceOfEvents";
+            THROW2("Clean exit", " (event 'EXIT' in sequenceOfEvents)");
         }
     }
 };
@@ -48,7 +51,6 @@ int main() {
 
         std::unique_ptr<CCreatorsRegisterIf> creatorsRegister(CCreatorsRegisterIf::createNew());
         creatorsRegister->init();
-
 
         for(int event = input.getCurrentEvent(); ;
                 event = input.nextCurrentEvent() /* input++*/ )
