@@ -7,29 +7,29 @@
 #include<vector>
 #include<memory>
 
-struct CCreatorsRegister : CCreatorsRegisterIf<CParent> {
+struct CCreatorsRegister : CCreatorsRegisterIf {
     CCreatorsRegister() { printf("The register of child creators: constructing\n");}
-    virtual ~CCreatorsRegister() {printf("The register of child creators: destructing\n");}    
+    virtual ~CCreatorsRegister() {printf("The register of child creators: destructing\n");}
+
     virtual void init();
-    virtual CParent* newChildBasedOnEvent(int event);
+    virtual void* newChildBasedOnEvent(int event);
 
     private:
     std::vector<std::unique_ptr<CChildCreatorIf>> map{std::vector<std::unique_ptr<CChildCreatorIf>>(0)};    
 };
 
-template<>
-CCreatorsRegisterIf<CParent>* CCreatorsRegisterIf<CParent>::createNew() {
+CCreatorsRegisterIf* CCreatorsRegisterIf::createNew() {
     return new CCreatorsRegister;
 }
 
-CParent* CCreatorsRegister::newChildBasedOnEvent(int event) {
+void* CCreatorsRegister::newChildBasedOnEvent(int event) {
     if (0 == event) {
         throw "Clean exit: event 'EXIT' in newChildBasedOnEvent";
     }
     // for list:
     // for(std::unique_ptr<CChildCreatorIf>& childCreator : map) {
-    //     PARENT* x = (PARENT*)childCreator->createNewChildIfIsNumber(event);
-        CParent* x = (CParent*)((map.at(event))->createNewChildIfIsNumber(event));
+    //     void* x = (void*)childCreator->createNewChildIfIsNumber(event);
+        void* x = (map.at(event))->createNewChildIfIsNumber(event);
         if(nullptr != x) {
             printf("The register of child creators: new child created based on event %i\n",
                     event);
@@ -40,7 +40,6 @@ CParent* CCreatorsRegister::newChildBasedOnEvent(int event) {
     THROW2("Exit", " on error: unknown event");
 }
 
-void initMapWithCreators(void* mapVoidPtr);
 void CCreatorsRegister::init() {
-    initMapWithCreators((void*) &map);    
+    CChildCreatorIf::initMapWithCreators((void*) &map);    
 }

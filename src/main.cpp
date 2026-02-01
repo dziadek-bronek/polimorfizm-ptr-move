@@ -49,14 +49,14 @@ int main() {
         CInput input;
         input.init(std::unique_ptr<std::vector<int>> (new std::vector<int>{2,3,1,4,0}));
 
-        std::unique_ptr<CCreatorsRegisterIf<CParent>> /* do not use 'auto' (one may check :) */
-                    creatorsRegister(CCreatorsRegisterIf<CParent>::createNew());
+        std::unique_ptr<CCreatorsRegisterIf> /* do not use 'auto' (one may check :) */
+                    creatorsRegister(CCreatorsRegisterIf::createNew());
         creatorsRegister->init();
 
         for(int event = input.getCurrentEvent(); ;
                 event = input.nextCurrentEvent() /* input++*/ )
         {
-            std::unique_ptr<CParent> child(creatorsRegister->newChildBasedOnEvent(event));
+            std::unique_ptr<CParent> child((CParent*)(creatorsRegister->newChildBasedOnEvent(event)));
             child->action();
         }
 
