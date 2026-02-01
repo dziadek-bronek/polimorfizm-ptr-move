@@ -1,21 +1,46 @@
 #include"include/child-creators-register.hpp"
-#include"include/child-creators.hpp"
-#include"include/children.hpp"
+#include"include/parent.hpp"
+#include"include/child-creator.hpp"
 
-#include<list>
+#include"include/throw.hpp"
+
+#include<vector>
 #include<memory>
 
-template<typename CHILD>
-static void pushBackChildCreator(std::list<std::unique_ptr<CChildCreatorIf>>& map,
-        int number)
-{
-    map.push_back(std::unique_ptr<CChildCreatorIf>(new CChildCreator<CHILD>(number)));
-}
+struct CCreatorsRegister : CCreatorsRegisterIf<CParent> {
+    CCreatorsRegister() { printf("The register of child creators: constructing\n");}
+    virtual ~CCreatorsRegister() {printf("The register of child creators: destructing\n");}    
+    virtual void init();
+    virtual CParent* newChildBasedOnEvent(int event);
+
+    private:
+    std::vector<std::unique_ptr<CChildCreatorIf>> map{std::vector<std::unique_ptr<CChildCreatorIf>>(0)};    
+};
 
 template<>
-void CCreatorsRegister<CParent, CChildCreatorIf>::init() {
-    pushBackChildCreator<CChild1>(map, 1);
-    pushBackChildCreator<CChild2>(map, 2);
-    pushBackChildCreator<CChild3>(map, 3);
-    pushBackChildCreator<CChild4>(map, 4);
+CCreatorsRegisterIf<CParent>* CCreatorsRegisterIf<CParent>::createNew() {
+    return new CCreatorsRegister;
+}
+
+CParent* CCreatorsRegister::newChildBasedOnEvent(int event) {
+    if (0 == event) {
+        throw "Clean exit: event 'EXIT' in newChildBasedOnEvent";
+    }
+    // for list:
+    // for(std::unique_ptr<CChildCreatorIf>& childCreator : map) {
+    //     PARENT* x = (PARENT*)childCreator->createNewChildIfIsNumber(event);
+        CParent* x = (CParent*)((map.at(event))->createNewChildIfIsNumber(event));
+        if(nullptr != x) {
+            printf("The register of child creators: new child created based on event %i\n",
+                    event);
+            return x;
+        }
+    // }
+
+    THROW2("Exit", " on error: unknown event");
+}
+
+void initMapWithCreators(void* mapVoidPtr);
+void CCreatorsRegister::init() {
+    initMapWithCreators((void*) &map);    
 }
