@@ -1,18 +1,18 @@
 
 #include"child-creator.hpp"
 
-template <typename CHILD, typename PARENT>
-struct CChildCreator : CChildCreatorIf<PARENT> {
+template <typename CHILD>
+struct CChildCreator : CChildCreatorIf {
     CChildCreator(int number_): number(number_) {
        this->printoutOnConstructor(number); 
     }
 
     ~CChildCreator(){this->printoutOnDestructor(number);}
 
-    virtual PARENT* createNewChildIfIsNumber(int number_) {
+    virtual void* createNewChildIfIsNumber(int number_) {
         if(number_ == number) {
             this->printoutOnCreateNewChild(number);
-            return new CHILD;
+            return (void*)new CHILD;
         }
         return nullptr;
     }

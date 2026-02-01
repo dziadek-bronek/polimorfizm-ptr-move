@@ -4,11 +4,11 @@
 #include"parent.hpp"
 
     #include<cstdio>
-template <typename PARENT>
+
 struct CChildCreatorIf {
     CChildCreatorIf() = default;
     CChildCreatorIf(int number){} 
-    virtual PARENT* createNewChildIfIsNumber(int number_) = 0;
+    virtual void* createNewChildIfIsNumber(int number_) = 0;
     virtual ~CChildCreatorIf() {}
 
 

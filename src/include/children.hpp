@@ -16,9 +16,15 @@ struct CChild2 : CParent {
 };
 
 struct CChild3 : CParent {
-    CChild3();;
+    CChild3();
     virtual void action();
     virtual ~CChild3();
+};
+
+struct CChild4 : CParent {
+    CChild4();
+    virtual void action();
+    virtual ~CChild4();
 };
 
 #endif

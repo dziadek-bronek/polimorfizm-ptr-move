@@ -1,44 +1,21 @@
 #include"include/child-creators-register.hpp"
+#include"include/child-creators.hpp"
+#include"include/children.hpp"
 
-#include"include/child-creator.hpp"
 #include<list>
 #include<memory>
-#include"include/throw.hpp"
 
-struct CCreatorsRegister: CCreatorsRegisterIf {
-        CCreatorsRegister(){printf("The register of child creators: constructing\n");}
-        virtual ~CCreatorsRegister(){printf("The register of child creators: destructing\n");}
-
-        virtual void init();
-        virtual CParent* newChildBasedOnEvent(int event);
-
-    private:
-        std::list<std::unique_ptr<CChildCreatorIf<CParent>>> map; /* mapOfEventsAndChildrenCreators; */
-};
-
-void registerChildCreators(std::list<std::unique_ptr<CChildCreatorIf<CParent>>>& map);
-void CCreatorsRegister::init() {
-    registerChildCreators(map);
+template<typename CHILD>
+static void pushBackChildCreator(std::list<std::unique_ptr<CChildCreatorIf>>& map,
+        int number)
+{
+    map.push_back(std::unique_ptr<CChildCreatorIf>(new CChildCreator<CHILD>(number)));
 }
 
-CParent* CCreatorsRegister::newChildBasedOnEvent(int event) {
-    if (0 == event) {
-        throw "Clean exit: event 'EXIT' in newChildBasedOnEvent";
-    }
-
-    for(std::unique_ptr<CChildCreatorIf<CParent>>& childCreator : map) {
-        CParent* x = childCreator->createNewChildIfIsNumber(event);
-        if(nullptr != x) {
-            printf("The register of child creators: new child created based on event %i\n",
-                        event);
-            return x;
-        }
-    }
-
-    THROW2("Exit", " on error: unknown event");
+template<>
+void CCreatorsRegister<CParent, CChildCreatorIf>::init() {
+    pushBackChildCreator<CChild1>(map, 1);
+    pushBackChildCreator<CChild2>(map, 2);
+    pushBackChildCreator<CChild3>(map, 3);
+    pushBackChildCreator<CChild4>(map, 4);
 }
-
-CCreatorsRegisterIf* CCreatorsRegisterIf::createNew() {
-    return new CCreatorsRegister();
-} 
-

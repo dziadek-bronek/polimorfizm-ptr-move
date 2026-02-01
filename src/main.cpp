@@ -42,20 +42,22 @@ struct CInput {
     }
 };
 
+#include"include/parent.hpp"
+#include"include/child-creator.hpp"
 #include"include/child-creators-register.hpp"
 int main() {
     try {
 
         CInput input;
-        input.init(std::unique_ptr<std::vector<int>> (new std::vector<int>{2,3,1,0}));
+        input.init(std::unique_ptr<std::vector<int>> (new std::vector<int>{2,3,1,4,0}));
 
-        std::unique_ptr<CCreatorsRegisterIf> creatorsRegister(CCreatorsRegisterIf::createNew());
-        creatorsRegister->init();
+        CCreatorsRegister<CParent, CChildCreatorIf> creatorsRegister;
+        creatorsRegister.init();
 
         for(int event = input.getCurrentEvent(); ;
                 event = input.nextCurrentEvent() /* input++*/ )
         {
-            std::unique_ptr<CParent> child(creatorsRegister->newChildBasedOnEvent(event));
+            std::unique_ptr<CParent> child(creatorsRegister.newChildBasedOnEvent(event));
             child->action();
         }
 
