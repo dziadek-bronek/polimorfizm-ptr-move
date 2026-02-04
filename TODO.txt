@@ -1,1 +1,24 @@
-Registering child creator with givent event: check for existing events and prevent from assignment
+Registering child creator with given event: check for existing events and prevent from assignment
+
+
+
+change name: worker(instead child), workerIf(instead parent), workerSelector, workerCreator,
+
+Create library 'framework', library implementation.
+
+
+integrate child-creator.hpp into children.hpp, and child-creator.cpp into children.cpp
+
+
+int  main() {
+
+	for(int i = 0; i < 10; ++i) {
+		input = 1, 2, 
+		swithc(input) {
+			framework.register(1) // Child no, event no is auto starting from 1
+			framework.register(2)
+			framework.register(3)
+		}
+		run framework
+	}
+}
