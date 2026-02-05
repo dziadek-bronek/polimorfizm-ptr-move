@@ -3,6 +3,8 @@
 
 struct CChildCreatorIf {
     static void initMapWithCreators(void* mapVoidPtr);
+    template<typename CHILD>
+    static void registerr(void* mapVoidPtr, int event);
     virtual void* createNewChildIfIsNumber(int number_) = 0;
     virtual ~CChildCreatorIf() {}
 };

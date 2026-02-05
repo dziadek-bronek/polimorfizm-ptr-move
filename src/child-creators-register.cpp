@@ -13,6 +13,13 @@ struct CCreatorsRegister : CCreatorsRegisterIf {
 
     virtual void init();
     virtual void* newChildBasedOnEvent(int event);
+    virtual void registerr(void* creator, int event) {
+        CChildCreatorIf* x = (CChildCreatorIf*) creator;
+        map.at(event) = std::unique_ptr<CChildCreatorIf>(x);
+    }
+    virtual void* getMapVoidPtr() {
+        return (void*)&map;
+    }
 
     private:
     std::vector<std::unique_ptr<CChildCreatorIf>> map{std::vector<std::unique_ptr<CChildCreatorIf>>(0)};    
@@ -22,6 +29,8 @@ CCreatorsRegisterIf* CCreatorsRegisterIf::createNew() {
     return new CCreatorsRegister;
 }
 
+
+
 void* CCreatorsRegister::newChildBasedOnEvent(int event) {
     if (0 == event) {
         throw "Clean exit: event 'EXIT' in newChildBasedOnEvent";
@@ -29,17 +38,31 @@ void* CCreatorsRegister::newChildBasedOnEvent(int event) {
     // for list:
     // for(std::unique_ptr<CChildCreatorIf>& childCreator : map) {
     //     void* x = (void*)childCreator->createNewChildIfIsNumber(event);
-        void* x = (map.at(event))->createNewChildIfIsNumber(event);
-        if(nullptr != x) {
+        auto& x = map.at(event);
+        if (nullptr != x) {
+        void* y = (map.at(event))->createNewChildIfIsNumber(event);
+        if(nullptr != y) {
             printf("The register of child creators: new child created based on event %i\n",
                     event);
-            return x;
+            return y;
+        }
         }
     // }
 
     THROW2("Exit", " on error: unknown event");
 }
 
+
 void CCreatorsRegister::init() {
-    CChildCreatorIf::initMapWithCreators((void*) &map);    
+
+    map.push_back(std::unique_ptr<CChildCreatorIf>(nullptr)); /* exit */
+
+    map.push_back(std::unique_ptr<CChildCreatorIf>(nullptr)); /* exit */
+    map.push_back(std::unique_ptr<CChildCreatorIf>(nullptr)); /* exit */
+    map.push_back(std::unique_ptr<CChildCreatorIf>(nullptr)); /* exit */
+    map.push_back(std::unique_ptr<CChildCreatorIf>(nullptr)); /* exit */
+    map.push_back(std::unique_ptr<CChildCreatorIf>(nullptr)); /* exit */
+
+
+//    CChildCreatorIf::initMapWithCreators((void*) &map);    
 }

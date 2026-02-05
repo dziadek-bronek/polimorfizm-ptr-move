@@ -44,14 +44,8 @@ struct CInput {
 
 #include"include/parent.hpp"
 #include"include/child-creators-register.hpp"
-int main() {
-    try {
-        CInput input;
-        input.init(std::unique_ptr<std::vector<int>> (new std::vector<int>{2,3,1,4,0}));
-
-        std::unique_ptr<CCreatorsRegisterIf> /* do not use 'auto' (one may check :) */
-                    creatorsRegister(CCreatorsRegisterIf::createNew());
-        creatorsRegister->init();
+#include"include/child-creators.hpp"
+void mainLoop(CInput& input, std::unique_ptr<CCreatorsRegisterIf>& creatorsRegister) {
 
         for(int event = input.getCurrentEvent(); ;
                 event = input.nextCurrentEvent() /* input++*/ )
@@ -59,6 +53,27 @@ int main() {
             std::unique_ptr<CParent> child((CParent*)(creatorsRegister->newChildBasedOnEvent(event)));
             child->action();
         }
+}
+#include"include/children.hpp"
+int main() {
+    try {
+        CInput input;
+        input.init(std::unique_ptr<std::vector<int>> (new std::vector<int>{2,3,1,4,0}));
+
+        std::unique_ptr<CCreatorsRegisterIf> /* do not use 'auto' (one may check :) */
+                creatorsRegister(CCreatorsRegisterIf::createNew());
+        creatorsRegister->init();
+
+        creatorsRegister->registerr((void*)new CChildCreator<CChild2>(2), 2);
+
+#if 0
+        CChildCreator<CChild1>::registerr(creatorsRegister->getMapVoidPtr(), 1);
+        CChildCreator<CChild2>::registerr(creatorsRegister->getMapVoidPtr(), 2);
+        CChildCreator<CChild3>::registerr(creatorsRegister->getMapVoidPtr(), 3);
+#endif
+
+        mainLoop(input, creatorsRegister);
+
 
     } catch(const char* result) {
         printf("%s.\n", result);
