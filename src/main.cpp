@@ -1,78 +1,16 @@
 #include<cstdio>
-#include<iostream>
-
-#include<memory>
 #include<vector>
+#include"include/framework.hpp"
 
-#include"include/throw.hpp"
-
-struct CInput {
-    int indexOfCurrentEvent{0};
-    std::unique_ptr<std::vector<int>> sequenceOfEvents;
-    int currentEvent{0};
-
-    void init(std::unique_ptr<std::vector<int>> sequenceOfEvents_) {
-        sequenceOfEvents = std::move(sequenceOfEvents_);
-	    setCurrentEvent();
-    }
-
-    int getCurrentEvent() {
-        return currentEvent;
-    }
-
-    int nextCurrentEvent() {
-	    ++indexOfCurrentEvent;
-        setCurrentEvent();
-        return currentEvent;
-    }
-
-    void setCurrentEvent() {
-        if (indexOfCurrentEvent < 0) {
-            THROW2("Exit",  " on error: invalid index of event");
-        }
-
-        if (sequenceOfEvents->size() <= indexOfCurrentEvent) {
-            THROW2("Clean exit", " (no more events)");
-        }
-
-        currentEvent = (*sequenceOfEvents)[indexOfCurrentEvent];
-        if(0 == currentEvent) {
-            THROW2("Clean exit", " (event 'EXIT' in sequenceOfEvents)");
-        }
-    }
-};
-
-#include"include/parent.hpp"
-#include"include/child-creators-register.hpp"
-#include"include/child-creators.hpp"
-void mainLoop(CInput& input, std::unique_ptr<CCreatorsRegisterIf>& creatorsRegister) {
-
-        for(int event = input.getCurrentEvent(); ;
-                event = input.nextCurrentEvent() /* input++*/ )
-        {
-            std::unique_ptr<CParent> child((CParent*)(creatorsRegister->newChildBasedOnEvent(event)));
-            child->action();
-        }
-}
-#include"include/children.hpp"
 int main() {
     try {
+
+        CFramework framework;
+
         CInput input;
-        input.init(std::unique_ptr<std::vector<int>> (new std::vector<int>{2,3,1,4,0}));
+        input.init(new std::vector<int>{2,1,4,3,0});
 
-        std::unique_ptr<CCreatorsRegisterIf> /* do not use 'auto' (one may check :) */
-                creatorsRegister(CCreatorsRegisterIf::createNew());
-        creatorsRegister->init();
-
-        creatorsRegister->registerr((void*)new CChildCreator<CChild2>(2), 2);
-
-#if 0
-        CChildCreator<CChild1>::registerr(creatorsRegister->getMapVoidPtr(), 1);
-        CChildCreator<CChild2>::registerr(creatorsRegister->getMapVoidPtr(), 2);
-        CChildCreator<CChild3>::registerr(creatorsRegister->getMapVoidPtr(), 3);
-#endif
-
-        mainLoop(input, creatorsRegister);
+        framework.mainLoop(input);
 
 
     } catch(const char* result) {

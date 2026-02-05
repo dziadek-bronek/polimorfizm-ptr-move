@@ -1,13 +1,14 @@
-#include"child-creator.hpp"
+#include"include/children.hpp"
+#include"include/child-creator.hpp"
 
 
 #include<memory>
-#include<vector>
+#include<list>
 
 #include<cstdio>
 
 using UptrChCrIf = std::unique_ptr<CChildCreatorIf>;
-using VecOfUptrChCrIf = std::vector<UptrChCrIf>;
+using MapOfUptrChCrIf = std::list<UptrChCrIf>;
 
 template <typename CHILD>
 struct CChildCreator : CChildCreatorIf {
@@ -21,14 +22,21 @@ struct CChildCreator : CChildCreatorIf {
         }
         return nullptr;
     }
-    static void registerr(void* mapVoidPtr, int event) {
-        VecOfUptrChCrIf* mapPtr = (VecOfUptrChCrIf*) mapVoidPtr;
-        // printf("registering for event %i, sizeof map: %i\n", event, mapPtr->size());
-        // fflush(NULL);
-        mapPtr->at(event) = UptrChCrIf(new CChildCreator<CHILD>(event));
-    }
-
 
     private:
     int id;
 };
+
+static CChildCreatorIf* createNew(int childClass, int event) {
+    switch(childClass) {
+        case 1: return new CChildCreator<CChild1>(event);
+        case 2: return new CChildCreator<CChild2>(event);
+        case 3: return new CChildCreator<CChild3>(event);
+        case 4: return new CChildCreator<CChild4>(event);
+    }
+    throw;
+}
+
+void configure(MapOfUptrChCrIf& map) {
+    map.push_back(UptrChCrIf(createNew(3,2)));
+}

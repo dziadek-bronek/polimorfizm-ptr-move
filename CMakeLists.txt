@@ -4,8 +4,11 @@ project(polimorfizm-ptr-move-proj)
 
 add_library(mylib SHARED
     src/children.cpp
-    src/child-creator.cpp
+
     src/child-creators-register.cpp
+    src/child-creators.cpp
+    
+    src/framework.cpp
 )
 
 add_executable(polimorfizm-ptr-move
