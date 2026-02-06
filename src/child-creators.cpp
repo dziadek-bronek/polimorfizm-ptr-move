@@ -17,18 +17,18 @@ struct CChildCreator : CChildCreatorIf {
     CChildCreator(int id_): id(id_)
     {
         printf("ChildCreator constructor for  %s event %i \n",
-                typeid(CHILD).name(), id);
+                typeid(CHILD).name() + 1, id);
     }
     ~CChildCreator(){
         printf("ChildCreator destructor for  %s event %i \n",
-                typeid(CHILD).name(), id);
+                typeid(CHILD).name() + 1, id);
     }
 
     virtual void* createNewChildIfIsNumber(int id_) {
         if(id_ == id) {
             printf("CChildCreator on event %i is creating new %s\n",
-                id, typeid(CHILD).name());
-            return (void*)new CHILD;
+                id, typeid(CHILD).name() + 1);
+            return new CHILD;
         }
         return nullptr;
     }
@@ -68,16 +68,19 @@ static CChildCreatorIf* createNew(int childClass, int event) {
     throw;
 }
 
-void configure(MapOfUptrChCrIf& map, std::vector<int>& regConfig) {
-    map.push_back(UptrChCrIf(new CChildCreatorExit(regConfig[0])));
+void configureSelection(void* mapVoidPtr, void* selectorConfigVoidPtr) {
+    MapOfUptrChCrIf* mapPtr = (MapOfUptrChCrIf*)mapVoidPtr;
+    std::vector<int>* selectorConfigPtr = (std::vector<int>*)selectorConfigVoidPtr;
 
-    int size = regConfig.size();
+    mapPtr->push_back(UptrChCrIf(new CChildCreatorExit(selectorConfigPtr->at(0))));
+
+    int size = selectorConfigPtr->size();
     for(int i = 1; i < size; ++i) {
-        map.push_back(UptrChCrIf(createNew(i,regConfig[i])));
+        mapPtr->push_back(UptrChCrIf(createNew(i,selectorConfigPtr->at(i))));
     }
 }
 
-void* simple(int event) {
+void* simpleSelection(int event) {
     switch(event) {
         case 0: throw "exit event simple";
         case 1: return new CChild1;

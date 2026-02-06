@@ -1,6 +1,6 @@
 
 #include"include/parent.hpp"
-#include"include/child-creators-register.hpp"
+#include"include/child-selector.hpp"
 
 #include"include/throw.hpp"
 
@@ -36,14 +36,26 @@
         currentEvent = (*sequenceOfEvents)[indexOfCurrentEvent];
     }
 
-    void CFramework::mainLoop(CInput& input, void* regConfigVoidPtr) {
-        creatorsRegister = 
-                std::unique_ptr<CCreatorsRegisterIf>(CCreatorsRegisterIf::createNew(regConfigVoidPtr));
+struct CFramework : CFrameworkIf{
+    ~CFramework(){ printf("CFramework destructor\n"); }
+     
+    virtual void mainLoop(CInput& input, void* selectorConfigVoidPtr) {
+        childSelector =  std::unique_ptr<CChildSelectorIf>(
+                        CChildSelectorIf::createNew(selectorConfigVoidPtr)
+                    );
         for(int event = input.getCurrentEvent(); ;
                 event = input.nextCurrentEvent() /* input++*/ )
         {
-            std::unique_ptr<CParent> child((CParent*)(creatorsRegister->newChildBasedOnEvent(event)));
+            std::unique_ptr<CParent> child(
+                        (CParent*)(childSelector->newChildBasedOnEvent(event))
+                    );
             child->action();
         }
     }
+    private:
+    std::unique_ptr<CChildSelectorIf> childSelector;
+};
 
+CFrameworkIf* CFrameworkIf::createNew() {
+    return new CFramework;
+}

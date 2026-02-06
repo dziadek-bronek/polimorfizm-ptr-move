@@ -1,4 +1,4 @@
-#include"child-creators-register.hpp"
+#include"child-selector.hpp"
 #include<memory>
 #include<vector>
 
@@ -16,8 +16,9 @@ struct CInput {
     void setCurrentEvent();
 };
 
-
-struct CFramework {
-    void mainLoop(CInput& input, void* regConfigVoidPtr);
-    std::unique_ptr<CCreatorsRegisterIf> creatorsRegister; 
+struct CFrameworkIf {
+    static CFrameworkIf* createNew();
+    virtual void mainLoop(CInput& input, void* regConfigVoidPtr) = 0;
+    virtual ~CFrameworkIf(){}
 };
+
