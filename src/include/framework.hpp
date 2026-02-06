@@ -18,7 +18,6 @@ struct CInput {
 
 
 struct CFramework {
-    CFramework();
-    void mainLoop(CInput& input);
+    void mainLoop(CInput& input, void* regConfigVoidPtr);
     std::unique_ptr<CCreatorsRegisterIf> creatorsRegister; 
 };

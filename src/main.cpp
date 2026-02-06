@@ -8,9 +8,12 @@ int main() {
         CFramework framework;
 
         CInput input;
-        input.init(new std::vector<int>{2,1,4,3,0});
+        input.init(new std::vector<int>{2,1,4,1,7});
 
-        framework.mainLoop(input);
+        std::vector<int> regConfig({7,1, 2, 3, 4});
+
+        // framework.mainLoop(input, (void*)&regConfig);
+        framework.mainLoop(input, nullptr);
 
 
     } catch(const char* result) {

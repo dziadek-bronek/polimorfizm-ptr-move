@@ -4,37 +4,53 @@
 
 #include"include/throw.hpp"
 
-#include<list>
 #include<memory>
+#include<list>
+#include<vector>
 
-void configure(std::list<std::unique_ptr<CChildCreatorIf>>& mapVoidPtr);
+using UptrChCrIf = std::unique_ptr<CChildCreatorIf>;
+using MapOfUptrChCrIf = std::list<UptrChCrIf>;
+
+
+void configure(MapOfUptrChCrIf& map, std::vector<int>& regConfig);
+void* simple(int event);
 
 struct CCreatorsRegister : CCreatorsRegisterIf {
-    CCreatorsRegister() { printf("The register of child creators: constructing\n");}
+    CCreatorsRegister(void* regConfigVoidPtr):
+        regConfig(*((std::vector<int>*)regConfigVoidPtr))
+    {
+        printf("The register of child creators: constructing\n");
+        configure(map, regConfig);
+    }
     virtual ~CCreatorsRegister() {printf("The register of child creators: destructing\n");}
 
     virtual void* newChildBasedOnEvent(int event);
 
-    void configure() {
-        ::configure(map);
-    }
-
     private:
     std::list<std::unique_ptr<CChildCreatorIf>> map;    
+    std::vector<int>& regConfig;
 };
 
-CCreatorsRegisterIf* CCreatorsRegisterIf::createNew() {
-    CCreatorsRegister* x = new CCreatorsRegister;
-    x->configure();
-    return x;
+CCreatorsRegisterIf* CCreatorsRegisterIf::createNew(void* regConfigVoidPtr ) {
+    if(nullptr == regConfigVoidPtr) {
+        struct CSimpleChildSelector : CCreatorsRegisterIf {
+            CSimpleChildSelector() {printf("The simple child selector: constructing\n"); }
+            virtual ~CSimpleChildSelector() {printf("The simple child selector: destructing\n");}
+            virtual void* newChildBasedOnEvent(int event) {
+                return (void*)simple(event);
+            }
+
+        };
+        return new  CSimpleChildSelector;
+    }
+    return new CCreatorsRegister(regConfigVoidPtr);
 }
 
 void* CCreatorsRegister::newChildBasedOnEvent(int event) {
-    if (0 == event) {
-        throw "Clean exit: event 'EXIT' in newChildBasedOnEvent";
-    }
     for(std::unique_ptr<CChildCreatorIf>& childCreator : map) {
-        if(nullptr == childCreator) continue;
+        if(nullptr == childCreator) {
+            THROW2("Clean exit", " (event 'EXIT' in sequenceOfEvents)");
+        }
         void* tryToGetChild = (void*)childCreator->createNewChildIfIsNumber(event);
         if(nullptr != tryToGetChild) {
             printf("The register of child creators: new child created based on event %i\n",

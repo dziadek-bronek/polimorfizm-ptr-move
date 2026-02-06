@@ -34,32 +34,11 @@
         }
 
         currentEvent = (*sequenceOfEvents)[indexOfCurrentEvent];
-        if(0 == currentEvent) {
-            THROW2("Clean exit", " (event 'EXIT' in sequenceOfEvents)");
-        }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    CFramework::CFramework() {
+    void CFramework::mainLoop(CInput& input, void* regConfigVoidPtr) {
         creatorsRegister = 
-        std::unique_ptr<CCreatorsRegisterIf>(CCreatorsRegisterIf::createNew());
-    }
-
-    void CFramework::mainLoop(CInput& input) {
+                std::unique_ptr<CCreatorsRegisterIf>(CCreatorsRegisterIf::createNew(regConfigVoidPtr));
         for(int event = input.getCurrentEvent(); ;
                 event = input.nextCurrentEvent() /* input++*/ )
         {
