@@ -14,7 +14,7 @@
     void CChild3::action() { printf("behavior specific for child 3\n"); }
     CChild3::~CChild3() {printf("child 3 destructor\n");}
 
-    CChild4::CChild4() {printf("child 3 constructor\n");}
+    CChild4::CChild4() {printf("child 4 constructor\n");}
     void CChild4::action() { printf("behavior specific for child 4\n"); }
     CChild4::~CChild4() {printf("child 4 destructor\n");}
 

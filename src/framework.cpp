@@ -57,7 +57,6 @@ struct CFramework : CFrameworkIf {
     }
      
     virtual void mainLoop(CInput& input) {
-
         for(int event = input.getCurrentEvent(); ;
                 event = input.nextCurrentEvent() /* input++*/ )
         {

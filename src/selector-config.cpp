@@ -80,13 +80,13 @@ struct CChildCreatorSimple : CChildCreatorIf {
 
     virtual void* createNewChildIfIsNumber(int id_) {
         switch(id_) {
-        case 0: throw "exit event simple";
+        case 0: THROW2("Clean exit", " on event EXIT");
         case 1: return new CChild1;
         case 2: return new CChild2;
         case 3: return new CChild3;
         case 4: return new CChild4;
         }
-        throw "unknownd event simple";
+        THROW2("Exit", " on error: an event unknown - Simple Selector");
     }
 };
 

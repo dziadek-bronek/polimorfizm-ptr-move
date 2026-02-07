@@ -42,8 +42,7 @@ struct CChildSelector : CChildSelectorIf {
     MapOfUptrChCrIf map;    
 };
 
-CChildSelectorIf* CChildSelectorIf::createNew(void* selectorConfigVoidPtr ) {
-    if(nullptr == selectorConfigVoidPtr) {
+
         struct CSimpleChildSelector : CChildSelectorIf {
             CSimpleChildSelector() {
                 printf("The simple child selector: constructing\n"); fflush(NULL);
@@ -57,6 +56,11 @@ CChildSelectorIf* CChildSelectorIf::createNew(void* selectorConfigVoidPtr ) {
             private:
             UptrChCrIf single;
         };
+
+
+
+CChildSelectorIf* CChildSelectorIf::createNew(void* selectorConfigVoidPtr ) {
+    if(nullptr == selectorConfigVoidPtr) {
         return new CSimpleChildSelector;
     }
     
