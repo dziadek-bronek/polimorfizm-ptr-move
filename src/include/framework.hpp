@@ -17,8 +17,12 @@ struct CInput {
 };
 
 struct CFrameworkIf {
-    static CFrameworkIf* createNew();
-    virtual void mainLoop(CInput& input, void* regConfigVoidPtr) = 0;
+    // CFrameworkIf(void* selectorConfigVoidPtr);
     virtual ~CFrameworkIf(){}
+
+    virtual void selectorConfigAdd(void*) = 0;
+    virtual void mainLoop(CInput& input) = 0;
+
+    static CFrameworkIf* createNew(void* selectorConfigVoidPtr);
 };
 

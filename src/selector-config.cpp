@@ -1,3 +1,4 @@
+#include"include/selector-config.hpp"
 #include"include/children.hpp"
 #include"include/child-creator.hpp"
 #include"include/throw.hpp"
@@ -8,41 +9,17 @@
 #include<vector>
 
 #include<cstdio>
+#include"include/child-creators.hpp"
 
 using UptrChCrIf = std::unique_ptr<CChildCreatorIf>;
 using MapOfUptrChCrIf = std::list<UptrChCrIf>;
-
-template <typename CHILD>
-struct CChildCreator : CChildCreatorIf {
-    CChildCreator(int id_): id(id_)
-    {
-        printf("ChildCreator constructor for  %s event %i \n",
-                typeid(CHILD).name() + 1, id);
-    }
-    ~CChildCreator(){
-        printf("ChildCreator destructor for  %s event %i \n",
-                typeid(CHILD).name() + 1, id);
-    }
-
-    virtual void* createNewChildIfIsNumber(int id_) {
-        if(id_ == id) {
-            printf("CChildCreator on event %i is creating new %s\n",
-                id, typeid(CHILD).name() + 1);
-            return new CHILD;
-        }
-        return nullptr;
-    }
-
-    private:
-    int id;
-};
 
 struct CChildCreatorExit : CChildCreatorIf {
     CChildCreatorExit(int id_): id(id_)
     {
         printf("ChildCreator constructor for  EXIT event %i \n", id);
     }
-    ~CChildCreatorExit(){
+    virtual ~CChildCreatorExit(){
         printf("ChildCreator destructor for  EXIT event %i \n", id);
     }
 
@@ -80,8 +57,29 @@ void configureSelection(void* mapVoidPtr, void* selectorConfigVoidPtr) {
     }
 }
 
-void* simpleSelection(int event) {
-    switch(event) {
+
+
+
+
+
+
+
+void configAdd(void* mapVoidPtr, void* newChildCreatorVoidPtr){
+    MapOfUptrChCrIf* mapPtr = (MapOfUptrChCrIf*)mapVoidPtr;
+
+    UptrChCrIf* x = (UptrChCrIf*)newChildCreatorVoidPtr;
+    mapPtr->push_back(std::move(*x));
+}
+
+
+struct CChildCreatorSimple : CChildCreatorIf {
+
+    virtual ~CChildCreatorSimple(){
+        printf("ChildCreatorSimpleSelection destructor\n");
+    }
+
+    virtual void* createNewChildIfIsNumber(int id_) {
+        switch(id_) {
         case 0: throw "exit event simple";
         case 1: return new CChild1;
         case 2: return new CChild2;
@@ -89,4 +87,10 @@ void* simpleSelection(int event) {
         case 4: return new CChild4;
         }
         throw "unknownd event simple";
+    }
+};
+
+void* configureSimpleSelection(){
+    return new CChildCreatorSimple;
 }
+

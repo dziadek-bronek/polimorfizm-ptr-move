@@ -5,7 +5,7 @@ project(polimorfizm-ptr-move-proj)
 add_library(mylib SHARED
     src/children.cpp
 
-    src/child-creators.cpp
+    src/selector-config.cpp
     src/child-selector.cpp
     
     src/framework.cpp

@@ -1,2 +1,3 @@
 void configureSelection(void* map, void* selectorConfig);
-void* simpleSelection(int event);
+void configAdd(void* mapVoidPtr, void* newChildCreatorVoidPtr);
+void* configureSimpleSelection();

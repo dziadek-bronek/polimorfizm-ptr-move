@@ -2,6 +2,8 @@
 #include"include/parent.hpp"
 #include"include/child-selector.hpp"
 
+#include"include/selector-config.hpp"
+
 #include"include/throw.hpp"
 
 #include"include/framework.hpp"
@@ -36,13 +38,26 @@
         currentEvent = (*sequenceOfEvents)[indexOfCurrentEvent];
     }
 
-struct CFramework : CFrameworkIf{
-    ~CFramework(){ printf("CFramework destructor\n"); }
-     
-    virtual void mainLoop(CInput& input, void* selectorConfigVoidPtr) {
+struct CFramework : CFrameworkIf {
+    CFramework(void* selectorConfigVoidPtr) {
+
         childSelector =  std::unique_ptr<CChildSelectorIf>(
                         CChildSelectorIf::createNew(selectorConfigVoidPtr)
                     );
+    }
+    ~CFramework(){ printf("CFramework destructor\n"); }
+
+    virtual void selectorConfigAdd(void* newChildCreatorVoidPtr) {
+        void* selectorConfigReadyVoidPtr = childSelector->getConfig();
+        if(selectorConfigReadyVoidPtr) {
+            configAdd(selectorConfigReadyVoidPtr, newChildCreatorVoidPtr);
+        } else {
+            printf("No Add allowed in current configuration of selection!!!\n");
+        }
+    }
+     
+    virtual void mainLoop(CInput& input) {
+
         for(int event = input.getCurrentEvent(); ;
                 event = input.nextCurrentEvent() /* input++*/ )
         {
@@ -56,6 +71,6 @@ struct CFramework : CFrameworkIf{
     std::unique_ptr<CChildSelectorIf> childSelector;
 };
 
-CFrameworkIf* CFrameworkIf::createNew() {
-    return new CFramework;
+CFrameworkIf* CFrameworkIf::createNew(void* selectorConfigVoidPtr) {
+    return new CFramework(selectorConfigVoidPtr);
 }
