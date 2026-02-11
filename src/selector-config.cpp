@@ -53,7 +53,11 @@ void configureSelection(void* mapVoidPtr, void* selectorConfigVoidPtr) {
 
     int size = selectorConfigPtr->size();
     for(int i = 1; i < size; ++i) {
-        mapPtr->push_back(UptrChCrIf(createNew(i,selectorConfigPtr->at(i))));
+        int event = selectorConfigPtr->at(i);
+        if(event < 0) {
+            continue;
+        }
+        mapPtr->push_back(UptrChCrIf(createNew(i,event)));
     }
 }
 

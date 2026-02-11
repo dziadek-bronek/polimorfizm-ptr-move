@@ -34,8 +34,9 @@ struct CChildSelector : CChildSelectorIf {
                 return tryToGetChild;
             }
         }
+        return nullptr;
 
-        THROW2("Exit", " on error: unknown event");
+        //THROW2("Exit", " on error: unknown event");
     }
     
     private:

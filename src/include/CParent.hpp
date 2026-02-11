@@ -1,5 +1,5 @@
-#ifndef PARENT_HPP
-#define PARENT_HPP
+#ifndef CPARENT_HPP
+#define CPARENT_HPP
 
 struct CParent {
     virtual void action() = 0;

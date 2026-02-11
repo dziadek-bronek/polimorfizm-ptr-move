@@ -1,5 +1,5 @@
 
-#include"include/parent.hpp"
+#include"include/CParent.hpp"
 #include"include/child-selector.hpp"
 
 #include"include/selector-config.hpp"
@@ -47,10 +47,10 @@ struct CFramework : CFrameworkIf {
     }
     ~CFramework(){ printf("CFramework destructor\n"); }
 
-    virtual void selectorConfigAdd(void* newChildCreatorVoidPtr) {
+    virtual void selectorConfigAdd(void* childCreatorVoidPtr) {
         void* selectorConfigReadyVoidPtr = childSelector->getConfig();
         if(selectorConfigReadyVoidPtr) {
-            configAdd(selectorConfigReadyVoidPtr, newChildCreatorVoidPtr);
+            configAdd(selectorConfigReadyVoidPtr, childCreatorVoidPtr);
         } else {
             printf("No Add allowed in current configuration of selection!!!\n");
         }
@@ -60,9 +60,12 @@ struct CFramework : CFrameworkIf {
         for(int event = input.getCurrentEvent(); ;
                 event = input.nextCurrentEvent() /* input++*/ )
         {
-            std::unique_ptr<CParent> child(
-                        (CParent*)(childSelector->newChildBasedOnEvent(event))
-                    );
+            void* x = childSelector->newChildBasedOnEvent(event);
+            if(x == nullptr) {
+                printf("-------- UNKNOWN EVENT %i.\n", event);
+                continue;
+            }
+            std::unique_ptr<CParent> child((CParent*)x);
             child->action();
         }
     }
