@@ -26,7 +26,7 @@ struct CChildCreatorExit : CChildCreatorIf {
     virtual void* createNewChildIfIsNumber(int id_) {
         if(id_ == id) {
             printf("CChildCreator on event %i : exit\n", id);
-            THROW2("Clean exit", " (event 'EXIT' in sequenceOfEvents)");
+            THROW2("Clean exit", " (event 'EXIT' on input)");
         }
         return nullptr;
     }
@@ -84,13 +84,13 @@ struct CChildCreatorSimple : CChildCreatorIf {
 
     virtual void* createNewChildIfIsNumber(int id_) {
         switch(id_) {
-        case 0: THROW2("Clean exit", " on event EXIT");
+        case 0: THROW2("Clean exit", " (event 'EXIT' on input)");
         case 1: return new CChild1;
         case 2: return new CChild2;
         case 3: return new CChild3;
         case 4: return new CChild4;
         }
-        THROW2("Exit", " on error: an event unknown - Simple Selector");
+        return nullptr;
     }
 };
 
