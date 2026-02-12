@@ -13,11 +13,11 @@ int main() {
     using UPtrFrameworkIf = std::unique_ptr<CFrameworkIf>;
     UPtrFrameworkIf framework;
 
-    // framework = UPtrFrameworkIf( CFrameworkIf::createNew(&selectorConfig ) );
+    framework = UPtrFrameworkIf(CFrameworkIf::createNew(&selectorConfig));
     /* Use option below to use simple selector (simple hardcoded switch)
        instead the complex one
     */
-    framework = UPtrFrameworkIf(CFrameworkIf::createNew(nullptr));
+    // framework = UPtrFrameworkIf(CFrameworkIf::createNew(nullptr));
 
     /* Mock input - vector represents input sequence */
     CInput input;

@@ -27,17 +27,15 @@ int main() {
     framework = UPtrFrameworkIf(CFrameworkIf::createNew(&selectorConfig));
 
     /* Example action defined by developer (see CDevChild definition) - adding
-       to framework. Technically: a 'creator' is instantiated which is dedicated
-       for CDevChild class, It is initialized with int 8. After adding this
-       creator to framework several lines below it will creates objects of class
+       to framework. Technically: a 'creator' is instantiated, dedicated
+       for CDevChild class. It is initialized with int 8. After adding this
+       creator to framework (next line) it will creates objects of class
        CDevChild, every time when input is 8.
     */
     using UPtrCreatorIf = std::unique_ptr<CChildCreatorIf>;
     UPtrCreatorIf newCreator;
     newCreator = UPtrCreatorIf(new CChildCreator<CDevChild>(8));
-    /* Add creator to framework with para
-
-     */
+    /* Add creator to framework */
     framework->selectorConfigAdd(&newCreator);
 
     /* Mock of input - vector represents input sequence */
