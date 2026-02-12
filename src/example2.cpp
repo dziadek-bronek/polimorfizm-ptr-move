@@ -1,56 +1,59 @@
 /* To define and add an action provided by a developer. */
-#include"include/CParent.hpp"
-#include"include/child-creators.hpp"
+#include "include/CParent.hpp"
+#include "include/child-creators.hpp"
 
 /* New action defined by a developer, to be added (registered) to framework
    (example/demonstration).
 */
 struct CDevChild : CParent {
-    CDevChild() {printf("child CDevChild constructor\n");}
-    virtual void action() { printf("behavior specific for CDevChild  --------------\n"); }
-    virtual ~CDevChild() {printf("child CDevChild destructor\n");}
+  CDevChild() { printf("child CDevChild constructor\n"); }
+  virtual void action() {
+    printf("behavior specific for CDevChild  --------------\n");
+  }
+  virtual ~CDevChild() { printf("child CDevChild destructor\n"); }
 };
 
 int main() {
-    try {
-        using UPtrFrameworkIf = std::unique_ptr<CFrameworkIf>;
-        UPtrFrameworkIf framework;
-            /* Configuration for framework.
-                    exit: input 7,
-                    actions of CChild1, CChild2, CChild3 - disabled
-                    to perform action of CChild4 input 4
-            */
-            std::vector<int> selectorConfig({7, -1, -1, -1, 4});
+  try {
+    using UPtrFrameworkIf = std::unique_ptr<CFrameworkIf>;
+    UPtrFrameworkIf framework;
+    /* Configuration for framework.
+            exit: input 7,
+            actions of CChild1, CChild2, CChild3 - disabled
+            to perform action of CChild4 input 4
+    */
+    std::vector<int> selectorConfig({7, -1, -1, -1, 4});
 
-            framework = UPtrFrameworkIf( CFrameworkIf::createNew(&selectorConfig));
-        
-        /* Example action defined by developer (see CDevChild definition) - adding to framework.
-           Technically: a 'creator' is instantiated which is dedicated for CDevChild class,
-           It is initialized with int 8.
-           After adding this creator to framework several lines below
-           it will creates objects of class CDevChild, every time when input is 8.
-        */
-        using UPtrCreatorIf = std::unique_ptr<CChildCreatorIf>;
-        UPtrCreatorIf newCreator;
-        newCreator = UPtrCreatorIf(new CChildCreator<CDevChild>(8));
-        /* Add creator to framework with para
-           
-         */
-        framework->selectorConfigAdd(&newCreator);
+    framework = UPtrFrameworkIf(CFrameworkIf::createNew(&selectorConfig));
 
-        /* Mock of input - vector represents input sequence */
-        CInput input;
-        input.init(new std::vector<int>{2, 4, 3, 8, 0, 7});
+    /* Example action defined by developer (see CDevChild definition) - adding
+       to framework. Technically: a 'creator' is instantiated which is dedicated
+       for CDevChild class, It is initialized with int 8. After adding this
+       creator to framework several lines below it will creates objects of class
+       CDevChild, every time when input is 8.
+    */
+    using UPtrCreatorIf = std::unique_ptr<CChildCreatorIf>;
+    UPtrCreatorIf newCreator;
+    newCreator = UPtrCreatorIf(new CChildCreator<CDevChild>(8));
+    /* Add creator to framework with para
 
-        framework->mainLoop(input);
+     */
+    framework->selectorConfigAdd(&newCreator);
 
-    } catch(const char* result) {
-        printf("%s.\n", result); fflush(NULL);
-        return 0;
-    } catch(...) {
-        printf("FATAL ERROR! Unhandled exception.");
-        return 1;
-    }
+    /* Mock of input - vector represents input sequence */
+    CInput input;
+    input.init(new std::vector<int>{2, 4, 3, 8, 0, 7});
 
+    framework->mainLoop(input);
+
+  } catch (const char *result) {
+    printf("%s.\n", result);
+    fflush(NULL);
     return 0;
-}        
+  } catch (...) {
+    printf("FATAL ERROR! Unhandled exception.");
+    return 1;
+  }
+
+  return 0;
+}
