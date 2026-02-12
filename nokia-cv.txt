@@ -1,0 +1,20 @@
+Styczen - luty 2026
+Autorski pomysl, i stopniowa implementacja czegos co roboczo nazwalem frameworkiem.
+Cele:
+Proba demonstracji C++ w zakresie 'dobrych praktyk' inzynierii oprogramowania, ale tez przecwiczenie sie (sprawdzenie sie) w tych praktykach/technikach w kontekscie C++ (min. klasy i polimorfizm, RAII, wyjatki, templates).
+Inspiracja byla rozmowa z kolega o korzysciach z uzywania C++ zamiast C. Korzysciach czyli ulatwieniach dla tworzeniu kodu wysokiej jakosci, uporzadkowanego, modulowego, zgodnego z 'dobrymi praktykami'.
+
+Nokia: maj 2022 - kwiecien 2024.
+
+Charakterystyka ogolna: 'Software Development', Linux embedded, userspace na pograniczu kernela, programowanie systemowe w C i C++ z zakresu komunikacji miedzy programami z uzyciem rozmaitych protokolow komunikacji
+(takze specyficznych dla tworzonego produktu), struktur danych, i API o niskim poziomie abstrakcji (ale nie tym najnizszym, nie sprzetowym odwolujacym sie do stanow napiec)
+
+
+Zadania: rozwoj kodu, pielegnacja i ulepszanie jakosci kodu (typowe: refaktoring dla poprawy modulowosci), testy komponentowe (spora czesc pracy),
+continuous integration,  testy wydajnosciowe, rowniez pielegnacja testow jednostkowych.
+
+Praktyki/techniki programistyczne stosowane rutynowo: wyjatki (C++), SBRM/RAII (C++), remote function invocation(FAPI vs MAPI), wielowatkowosc.
+
+Narzedzia: Linux system API, C (kod legacy, zatem glownie utrzymanie, zmiany w konfiguracji itp), C++ (glowna czesc pracy z zastosowaniem technik/praktyk wymienionych powyzej).
+CMake, Make, gcc (cross-compilation); czasem Python (przy automatyzacji zadan glownie przy testach). VIM, VScode, git, gerit.
+
