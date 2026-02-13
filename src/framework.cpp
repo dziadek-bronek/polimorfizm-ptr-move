@@ -1,78 +1,75 @@
 
-#include"include/CParent.hpp"
-#include"include/child-selector.hpp"
+#include "include/CParent.hpp"
+#include "include/child-selector.hpp"
 
-#include"include/selector-config.hpp"
+#include "include/selector-config.hpp"
 
-#include"include/throw.hpp"
+#include "include/throw.hpp"
 
-#include"include/framework.hpp"
+#include "include/framework.hpp"
 
-#include<memory>
-#include<vector>
+#include <memory>
+#include <vector>
+#include <cstdio>
 
-    void CInput::init(std::vector<int>* sequenceOfEvents_) {
-        sequenceOfEvents = std::unique_ptr<std::vector<int>> (sequenceOfEvents_);
-	    setCurrentEvent();
-    }
+void CInput::init(std::vector<int>* sequenceOfEvents_) {
+  sequenceOfEvents = std::unique_ptr<std::vector<int>>(sequenceOfEvents_);
+  setCurrentEvent();
+}
 
-    int CInput::getCurrentEvent() {
-        return currentEvent;
-    }
+int CInput::getCurrentEvent() { return currentEvent; }
 
-    int CInput::nextCurrentEvent() {
-	    ++indexOfCurrentEvent;
-        setCurrentEvent();
-        return currentEvent;
-    }
+int CInput::nextCurrentEvent() {
+  ++indexOfCurrentEvent;
+  setCurrentEvent();
+  return currentEvent;
+}
 
-    void CInput::setCurrentEvent() {
-        if (indexOfCurrentEvent < 0) {
-            THROW2("Exit",  " on error: invalid index of event");
-        }
+void CInput::setCurrentEvent() {
+  if (indexOfCurrentEvent < 0) {
+    THROW2("Exit", " on error: invalid index of event");
+  }
 
-        if (sequenceOfEvents->size() <= indexOfCurrentEvent) {
-            THROW2("Clean exit", " (no more events)");
-        }
+  if (sequenceOfEvents->size() <= indexOfCurrentEvent) {
+    THROW2("Clean exit", " (no more events)");
+  }
 
-        currentEvent = (*sequenceOfEvents)[indexOfCurrentEvent];
-    }
+  currentEvent = (*sequenceOfEvents)[indexOfCurrentEvent];
+}
 
 struct CFramework : CFrameworkIf {
-    CFramework(void* selectorConfigVoidPtr) {
+  CFramework(void* selectorConfigVoidPtr) {
+    childSelector = std::unique_ptr<CChildSelectorIf>(
+        CChildSelectorIf::createNew(selectorConfigVoidPtr));
+  }
+  ~CFramework() { printf("CFramework destructor\n"); }
 
-        childSelector =  std::unique_ptr<CChildSelectorIf>(
-                        CChildSelectorIf::createNew(selectorConfigVoidPtr)
-                    );
+  virtual void selectorConfigAdd(void* childCreatorVoidPtr) {
+    void* selectorConfigReadyVoidPtr = childSelector->getConfig();
+    if (selectorConfigReadyVoidPtr) {
+      configAdd(selectorConfigReadyVoidPtr, childCreatorVoidPtr);
+    } else {
+      printf("No Add allowed in current configuration of selection!!!\n");
     }
-    ~CFramework(){ printf("CFramework destructor\n"); }
+  }
 
-    virtual void selectorConfigAdd(void* childCreatorVoidPtr) {
-        void* selectorConfigReadyVoidPtr = childSelector->getConfig();
-        if(selectorConfigReadyVoidPtr) {
-            configAdd(selectorConfigReadyVoidPtr, childCreatorVoidPtr);
-        } else {
-            printf("No Add allowed in current configuration of selection!!!\n");
-        }
+  virtual void mainLoop(CInput& input) {
+    for (int event = input.getCurrentEvent();;
+         event = input.nextCurrentEvent() /* input++*/) {
+      void* x = childSelector->newChildBasedOnEvent(event);
+      if (x == nullptr) {
+        printf("-------- UNKNOWN EVENT %i.\n", event);
+        continue;
+      }
+      std::unique_ptr<CParent> child((CParent*)x);
+      child->action();
     }
-     
-    virtual void mainLoop(CInput& input) {
-        for(int event = input.getCurrentEvent(); ;
-                event = input.nextCurrentEvent() /* input++*/ )
-        {
-            void* x = childSelector->newChildBasedOnEvent(event);
-            if(x == nullptr) {
-                printf("-------- UNKNOWN EVENT %i.\n", event);
-                continue;
-            }
-            std::unique_ptr<CParent> child((CParent*)x);
-            child->action();
-        }
-    }
-    private:
-    std::unique_ptr<CChildSelectorIf> childSelector;
+  }
+
+ private:
+  std::unique_ptr<CChildSelectorIf> childSelector;
 };
 
 CFrameworkIf* CFrameworkIf::createNew(void* selectorConfigVoidPtr) {
-    return new CFramework(selectorConfigVoidPtr);
+  return new CFramework(selectorConfigVoidPtr);
 }
