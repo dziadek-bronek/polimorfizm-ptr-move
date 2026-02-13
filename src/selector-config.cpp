@@ -94,4 +94,6 @@ struct CChildCreatorSimple : CChildCreatorIf {
   }
 };
 
-void* configureSimpleSelection() { return new CChildCreatorSimple; }
+void* configureSimpleSelection() {
+  return new CChildCreatorSimple;
+}

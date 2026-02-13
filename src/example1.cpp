@@ -25,7 +25,7 @@ int main() {
 
     framework->mainLoop(input);
 
-  } catch (const char *result) {
+  } catch (const char* result) {
     printf("%s.\n", result);
     fflush(NULL);
     return 0;

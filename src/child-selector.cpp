@@ -5,10 +5,10 @@
 
 #include "include/throw.hpp"
 
+#include <cstdio>
 #include <list>
 #include <memory>
 #include <vector>
-#include <cstdio>
 
 using UptrChCrIf = std::unique_ptr<CChildCreatorIf>;
 using MapOfUptrChCrIf = std::list<UptrChCrIf>;

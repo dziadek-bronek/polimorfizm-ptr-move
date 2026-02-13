@@ -8,16 +8,18 @@
 
 #include "include/framework.hpp"
 
+#include <cstdio>
 #include <memory>
 #include <vector>
-#include <cstdio>
 
 void CInput::init(std::vector<int>* sequenceOfEvents_) {
   sequenceOfEvents = std::unique_ptr<std::vector<int>>(sequenceOfEvents_);
   setCurrentEvent();
 }
 
-int CInput::getCurrentEvent() { return currentEvent; }
+int CInput::getCurrentEvent() {
+  return currentEvent;
+}
 
 int CInput::nextCurrentEvent() {
   ++indexOfCurrentEvent;
