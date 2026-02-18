@@ -2,8 +2,8 @@
 #define CHILD_CREATOR_HPP
 
 struct CChildCreatorIf {
-    virtual void* createNewChildIfIsNumber(int number_) = 0;
-    virtual ~CChildCreatorIf() {}
+  virtual void* createNewChildIfIsNumber(int number_) = 0;
+  virtual ~CChildCreatorIf() {}
 };
 
 #endif

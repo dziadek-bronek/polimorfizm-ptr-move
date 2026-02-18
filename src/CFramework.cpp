@@ -1,4 +1,3 @@
-
 #include "include/CParent.hpp"
 #include "include/child-selector.hpp"
 
@@ -6,39 +5,12 @@
 
 #include "include/throw.hpp"
 
-#include "include/framework.hpp"
+#include "include/CFrameworkIf.hpp"
+#include "include/CInput.hpp"
 
 #include <cstdio>
 #include <memory>
 #include <vector>
-
-void CInput::init(std::vector<int>* sequenceOfEvents_) {
-  sequenceOfEvents = std::unique_ptr<std::vector<int>>(sequenceOfEvents_);
-  setCurrentEvent();
-}
-
-int CInput::getCurrentEvent() {
-  return currentEvent;
-}
-
-int CInput::nextCurrentEvent() {
-  ++indexOfCurrentEvent;
-  setCurrentEvent();
-  return currentEvent;
-}
-
-void CInput::setCurrentEvent() {
-  if (indexOfCurrentEvent < 0) {
-    THROW2("Exit", " on error: invalid index of event");
-  }
-
-  if (sequenceOfEvents->size() <= indexOfCurrentEvent) {
-    THROW2("Clean exit", " (no more events)");
-  }
-
-  currentEvent = (*sequenceOfEvents)[indexOfCurrentEvent];
-}
-
 struct CFramework : CFrameworkIf {
   CFramework(void* selectorConfigVoidPtr) {
     childSelector = std::unique_ptr<CChildSelectorIf>(
@@ -55,9 +27,10 @@ struct CFramework : CFrameworkIf {
     }
   }
 
-  virtual void mainLoop(CInput& input) {
-    for (int event = input.getCurrentEvent();;
-         event = input.nextCurrentEvent() /* input++*/) {
+  virtual void mainLoop(void* inputVoidPtr) {
+    CInput* input = (CInput*)inputVoidPtr;
+    for (int event = input->getCurrentEvent();;
+         event = input->nextCurrentEvent() /* input++*/) {
       void* x = childSelector->newChildBasedOnEvent(event);
       if (x == nullptr) {
         printf("-------- UNKNOWN EVENT %i.\n", event);

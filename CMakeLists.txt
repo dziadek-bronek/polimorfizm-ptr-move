@@ -1,18 +1,23 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(polimorfizm-ptr-move-proj)
-
-add_library(mylib SHARED
-    src/children.cpp
-
-    src/selector-config.cpp
-    src/child-selector.cpp
-    
-    src/framework.cpp
+project(
+	polimorfizm-ptr-move-proj
 )
 
-add_executable(polimorfizm-ptr-move
-    src/main.cpp
-    )
+add_library (
+	mylib SHARED
+		src/children.cpp
+
+		src/selector-config.cpp
+		src/child-selector.cpp
+
+		src/CInput.cpp
+		src/CFramework.cpp
+)
+
+add_executable (
+	polimorfizm-ptr-move
+		src/main.cpp
+)
 
 target_link_libraries(polimorfizm-ptr-move mylib)

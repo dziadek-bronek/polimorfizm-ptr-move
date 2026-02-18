@@ -15,8 +15,6 @@ struct CDevChild : CParent {
 
 int main() {
   try {
-    using UPtrFrameworkIf = std::unique_ptr<CFrameworkIf>;
-    UPtrFrameworkIf framework;
     /* Configuration for framework.
             exit: input 7,
             actions of CChild1, CChild2, CChild3 - disabled
@@ -24,17 +22,20 @@ int main() {
     */
     std::vector<int> selectorConfig({7, -1, -1, -1, 4});
 
-    framework = UPtrFrameworkIf(CFrameworkIf::createNew(&selectorConfig));
+    using UPtrFrameworkIf = std::unique_ptr<CFrameworkIf>;
+    UPtrFrameworkIf framework(
+        UPtrFrameworkIf(CFrameworkIf::createNew(&selectorConfig)));
 
-    /* Example action defined by developer (see CDevChild definition) - adding
-       to framework. Technically: a 'creator' is instantiated, dedicated
-       for CDevChild class. It is initialized with int 8. After adding this
-       creator to framework (next line) it will creates objects of class
-       CDevChild, every time when input is 8.
+    /* Example action defined by developer (see CDevChild definition) -
+       adding to framework. Technically: a 'creator' is instantiated,
+       dedicated for CDevChild class. It is initialized with int 8. After
+       adding this creator to framework (next line) it will creates objects
+       of class CDevChild, every time when input is 8.
     */
     using UPtrCreatorIf = std::unique_ptr<CChildCreatorIf>;
     UPtrCreatorIf newCreator;
     newCreator = UPtrCreatorIf(new CChildCreator<CDevChild>(8));
+
     /* Add creator to framework */
     framework->selectorConfigAdd(&newCreator);
 
@@ -42,7 +43,7 @@ int main() {
     CInput input;
     input.init(new std::vector<int>{2, 4, 3, 8, 0, 7});
 
-    framework->mainLoop(input);
+    framework->mainLoop(&input);
 
   } catch (const char* result) {
     printf("%s.\n", result);

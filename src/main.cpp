@@ -53,7 +53,8 @@ developer on his own)
 
 */
 
-#include "include/framework.hpp"
+#include "include/CFrameworkIf.hpp"
+#include "include/CInput.hpp"
 
 /* Needed for unique_ptr */
 #include <memory>
