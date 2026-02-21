@@ -1,6 +1,6 @@
 #include "include/selector-config.hpp"
+#include "include/CChildren.hpp"
 #include "include/child-creator.hpp"
-#include "include/children.hpp"
 #include "include/throw.hpp"
 
 #include <list>

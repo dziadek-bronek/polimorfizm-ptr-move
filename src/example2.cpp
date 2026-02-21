@@ -8,7 +8,9 @@
 struct CDevChild : CParent {
   CDevChild() { printf("child CDevChild constructor\n"); }
   virtual ~CDevChild() override { printf("child CDevChild destructor\n"); }
-  virtual void action() override { printf("behavior specific for CDevChild  --------------\n"); }
+  virtual void action() override {
+    printf("behavior specific for CDevChild  --------------\n");
+  }
   virtual void constr() override { printf("child CDevChild constructor\n"); }
   virtual void destr() override { printf("child CDevChild destructor\n"); }
 };

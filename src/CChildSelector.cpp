@@ -1,4 +1,4 @@
-#include "include/child-selector.hpp"
+#include "include/CChildSelector.hpp"
 
 #include "include/child-creator.hpp"
 #include "include/selector-config.hpp"
