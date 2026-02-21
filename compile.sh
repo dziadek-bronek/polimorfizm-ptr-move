@@ -1,11 +1,14 @@
 # in the higher level, where CMakeLists.txt is located, create directory 'build' and go to this directory
-clear ; rm -rf build/* ; cmake ..
+#clear ; rm -rf build/* ; cmake ..
 
-cd build
-clear ; rm -rf ~/cprogs/github/polimorfizm-ptr-move/build/* ; cmake ..
-clear ; make # alternative: cmake --build .
-clear ; ./polimorfizm-ptr-move 
 
-# to format:
-clang-format -i -style=chromium src/*.cpp
-clang-format -i -style=chromium src/include/*.hpp
+clear
+
+cd ~/cprogs/github/polimorfizm-ptr-move/build && rm -rf ~/cprogs/github/polimorfizm-ptr-move/build/* ; cmake ..
+
+# clear
+
+cmake --build .  # alternative command: make
+
+# clear
+./polimorfizm-ptr-move 
