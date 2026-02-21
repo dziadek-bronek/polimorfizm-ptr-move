@@ -4,27 +4,35 @@
 #include "CParent.hpp"
 
 struct CChild1 : CParent {
-  CChild1();
-  virtual void action();
-  virtual ~CChild1();
+  CChild1() {constr();};
+  virtual ~CChild1() {destr();}
+  virtual void action() override;
+  virtual void constr() override;
+  virtual void destr() override;
 };
 
 struct CChild2 : CParent {
-  CChild2();
-  virtual void action();
-  virtual ~CChild2();
+  CChild2() {constr();}
+  virtual ~CChild2() {destr();}
+  virtual void action() override;
+  virtual void constr() override;
+  virtual void destr() override;
 };
 
 struct CChild3 : CParent {
-  CChild3();
-  virtual void action();
-  virtual ~CChild3();
+  CChild3() {constr();};
+  virtual ~CChild3() {destr();}
+  virtual void action() override;
+  virtual void constr() override;
+  virtual void destr() override;
 };
 
 struct CChild4 : CParent {
-  CChild4();
-  virtual void action();
-  virtual ~CChild4();
+  CChild4() {constr();}
+  virtual ~CChild4() {destr();}
+  virtual void action() override;
+  virtual void constr() override;
+  virtual void destr() override;
 };
 
 #endif

@@ -1,12 +1,27 @@
 Registering child creator with given event: check for existing events and prevent from assignment
 
+to change names of files
+to construct library with headers exposed
+commands for build lib and executable, and commands to build and run tests: to be added to files or to CMakeLists.txt
+to prepare CChild1 destructor for unit tests
 
+to format code
+
+
+
+
+to produce simple units tests for CChild1 constructor and destructor
 
 change name: worker(instead child), workerIf(instead parent), workerSelector, workerCreator,
 
 Create library 'framework', library implementation.
 
 
+idea
+
+
+
+old:
 integrate child-creator.hpp into children.hpp, and child-creator.cpp into children.cpp
 
 
@@ -14,7 +29,7 @@ int  main() {
 
 	for(int i = 0; i < 10; ++i) {
 		input = 1, 2, 
-		swithc(input) {
+		switch(input) {
 			framework.register(1) // Child no, event no is auto starting from 1
 			framework.register(2)
 			framework.register(3)
