@@ -12,6 +12,10 @@ to format code
 
 to produce simple units tests for CChild1 constructor and destructor
 
+build-and-run, CMakeLists -- separate modules
+format - separate module
+unit tests  - separate module
+
 change name: worker(instead child), workerIf(instead parent), workerSelector, workerCreator,
 
 Create library 'framework', library implementation.
