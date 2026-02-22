@@ -6,8 +6,8 @@
    (example/demonstration).
 */
 struct CDevChild : CParent {
-  CDevChild() { printf("child CDevChild constructor\n"); }
-  virtual ~CDevChild() override { printf("child CDevChild destructor\n"); }
+  CDevChild() { constr(); }
+  virtual ~CDevChild() override { destr(); }
   virtual void action() override {
     printf("behavior specific for CDevChild  --------------\n");
   }
