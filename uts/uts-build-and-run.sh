@@ -1,0 +1,8 @@
+clear
+mkdir /home/dtstgseete/cprogs/github/polimorfizm-ptr-move/uts/build-uts
+cd /home/dtstgseete/cprogs/github/polimorfizm-ptr-move/uts/build-uts
+#if clear-all, then:
+rm -rf /home/dtstgseete/cprogs/github/polimorfizm-ptr-move/uts/build-uts/*
+cmake .. &&  cmake --build . &&  { echo; echo; echo; ./mytests; }
+# for the command 'cmake --build .' alternative is command: 'make'
+

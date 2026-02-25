@@ -1,8 +1,12 @@
-# from the directory polimorfizm-ptr-move issue commands:
-# makedir build-uts
-# cd build-uts
-# rm -rf ../build-uts/* && cmake ../uts
-# cmake ../uts && make && ./mytests
+#	project-dir
+#		/ src
+#		/ CMakeLists.txt
+#		/ build
+#
+#		/ uts
+#			/ src
+#			/ CMakeLists.txt
+#			/ build-uts
 
 cmake_minimum_required(VERSION 3.10)
 project(polimorfizm-ptr-move-uts)
@@ -25,8 +29,6 @@ add_executable(mytests
 
 target_link_libraries(mytests
 	/home/dtstgseete/cprogs/github/polimorfizm-ptr-move/build/libmylib.so
-	gtest #/home/dtstgseete/cprogs/github/polimorfizm-ptr-move/build-uts/lib/gtest.a
-	gmock_main #/home/dtstgseete/cprogs/github/polimorfizm-ptr-move/build-uts/lib/gmock_main.a
-	gmock #/home/dtstgseete/cprogs/github/polimorfizm-ptr-move/build-uts/lib/gmock.a
+	gtest gmock_main gmock
 )
 

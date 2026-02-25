@@ -1,3 +1,13 @@
+#	project-dir
+#		/ src
+#		/ CMakeLists.txt
+#		/ build
+#
+#		/ uts
+#			/ src
+#			/ CMakeLists.txt
+#			/ build-uts
+
 cmake_minimum_required(VERSION 3.5)
 
 project(polimorfizm-ptr-move-proj)
