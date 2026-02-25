@@ -24,9 +24,9 @@ int main() {
     */
     std::vector<int> selectorConfig({7, -1, -1, -1, 4});
 
-    using UPtrFrameworkIf = std::unique_ptr<CFrameworkIf>;
-    UPtrFrameworkIf framework(
-        UPtrFrameworkIf(CFrameworkIf::createNew(&selectorConfig)));
+    /* Set framework with configuration. */
+    std::unique_ptr<CFrameworkIf> framework(
+        CFrameworkIf::createNew(&selectorConfig));
 
     /* Example action defined by developer (see CDevChild definition) -
        adding to framework. Technically: a 'creator' is instantiated,
@@ -34,9 +34,8 @@ int main() {
        adding this creator to framework (next line) it will creates objects
        of class CDevChild, every time when input is 8.
     */
-    using UPtrCreatorIf = std::unique_ptr<CChildCreatorIf>;
-    UPtrCreatorIf newCreator;
-    newCreator = UPtrCreatorIf(new CChildCreator<CDevChild>(8));
+    std::unique_ptr<CChildCreatorIf> newCreator(
+        new CChildCreator<CDevChild>(8));
 
     /* Add creator to framework */
     framework->selectorConfigAdd(&newCreator);

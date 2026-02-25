@@ -10,10 +10,9 @@ int main() {
     std::vector<int> selectorConfig({7, 2, -1, 4});
 
     /* Set framework with configuration. */
-    using UPtrFrameworkIf = std::unique_ptr<CFrameworkIf>;
-    UPtrFrameworkIf framework;
+    std::unique_ptr<CFrameworkIf> framework(
+        CFrameworkIf::createNew(&selectorConfig));
 
-    framework = UPtrFrameworkIf(CFrameworkIf::createNew(&selectorConfig));
     /* Use option below to use simple selector (simple hardcoded switch)
        instead the complex one
     */
