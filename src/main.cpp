@@ -39,7 +39,7 @@ means that program is terminated on input number 7.
 For example configuration {7, 4} means that:
 If input number is 7 then terminate program.
 If input number is 4 then perform action defined in method 'action' of class
-CChild4. If input number is other than 4 and other than 7, then computers
+CChild1. If input number is other than 4 and other than 7, then computers
 informs about unknown input and terminate.
 
 THE EXAMPLE 1 IS NOT RECOMMENDED FOR USE IN DEVELOPMENT. INTENTION OF HAVING
