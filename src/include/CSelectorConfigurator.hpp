@@ -1,0 +1,5 @@
+struct CSelectorConfigurator {
+	CSelectorConfigurator() {}
+	~CSelectorConfigurator() {}
+
+};

@@ -24,7 +24,8 @@ enable_testing()
 add_test(mytests mytests)
 
 add_executable(mytests
-	src/ut.cpp
+#	src/ut.cpp
+	src/asc-ut.cpp
 )
 
 target_link_libraries(mytests
