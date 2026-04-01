@@ -4,7 +4,14 @@ to change names of files
 to construct library with headers exposed
 commands for build lib and executable, and commands to build and run tests: to be added to files or to CMakeLists.txt
 
+========================
 to format code -- add script to repository
+
+# to format:
+clang-format -i -style=chromium ~/cprogs/github/polimorfizm-ptr-move/src/*.cpp
+clang-format -i -style=chromium ~/cprogs/github/polimorfizm-ptr-move/src/include/*.hpp
+clang-format -i -style=chromium ~/cprogs/github/polimorfizm-ptr-move/uts/src/*.cpp
+========================
 
 
 configurator for factory - no exit option, can be configured as (is a list of child itself configured by vector and by 
@@ -54,3 +61,19 @@ int  main() {
 		run framework
 	}
 }
+
+
+========================
+
+tmux:
+0 - text editor, modify program files
+1 - buffer
+2 - build
+
+
+uwaga (0 moze byc zamienione z 2 bo nie pamietam jak to bylo)
+3 - git
+========================
+
+
+
