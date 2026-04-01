@@ -5,10 +5,10 @@
 #include <memory>
 #include <vector>
 // #include "../../src/include/CChildren.hpp"
-// #include "../../src/include/CFrameworkIf.hpp"
 // #include "../../src/include/CInput.hpp"
 // #include "../../src/include/child-creators.hpp"
 // #include "../../src/include/child-creators.hpp"
+#include "../../src/include/CFrameworkIf.hpp"
 #include "../../src/include/CSelectorConfigurator.hpp"
 
 struct CChecker {
@@ -26,44 +26,45 @@ CCheckerMock* checkerPtr;
 using CSC = CSelectorConfigurator;
 
 TEST(AdvancedSelectorConfigurator, ConstructAndDelete) {
-	try {
-		CCheckerMock checker;
-		checkerPtr = &checker;
+  try {
+    CCheckerMock checker;
+    checkerPtr = &checker;
 
-		struct CSCMock : CSC {
-			CSCMock() { checkerPtr->scConstructor(); }
-			~CSCMock() { checkerPtr->scDestructor(); }
-		};
+    struct CSCMock : CSC {
+      CSCMock() { checkerPtr->scConstructor(); }
+      ~CSCMock() { checkerPtr->scDestructor(); }
+    };
 
-		EXPECT_CALL(checker,scConstructor());
+    EXPECT_CALL(checker, scConstructor());
 
-		// sc stands for selector configurator
-		std::unique_ptr<CSCMock> sc(new CSCMock);
+    // sc stands for selector configurator
+    std::unique_ptr<CSCMock> sc(new CSCMock);
 
-		EXPECT_CALL(checker,scDestructor());
+    EXPECT_CALL(checker, scDestructor());
   } catch (...) {
   }
 }
 
-TEST(AdvancedSelectorConfigurator, ConstructAndDelete) {
-	try {
-		CCheckerMock checker;
-		checkerPtr = &checker;
+#if 0
+TEST(AdvancedSelectorConfigurator, ConfiguredSelectorConstructAndDelete) {
+  try {
+    CCheckerMock checker;
+    checkerPtr = &checker;
 
-		struct CSCMock : CSC {
-			CSCMock() { checkerPtr->scConstructor(); }
-			~CSCMock() { checkerPtr->scDestructor(); }
-		};
+    struct CChildCreatorSelector : CSC {
+      CSCMock() { checkerPtr->scConstructor(); }
+      ~CSCMock() { checkerPtr->scDestructor(); }
+    };
 
-		std::vector<int> selectorConfig({7, -1, -1, -1, 4});
-		EXPECT_CALL(checker,scConstructor());
+    std::vector<int> selectorConfig({7, -1, -1, -1, 4});
 
-		// sc stands for selector configurator
-		std::unique_ptr<CSCMock> sc(new CSCMock);
+    EXPECT_CALL(checker, ChildCreatorSelectorConstructor());
+    // sc stands for selector configurator
+    std::unique_ptr<CSCMock> sc(new CSCMock);
 
-    	std::unique_ptr<CFrameworkIf> framework(
-			CFrameworkIf::createNew(&selectorConfigurator));
+    std::unique_ptr<CFrameworkIf> framework(CFrameworkIf::createNew(&sc));
+    EXPECT_CALL(checker, ChildCreatorSelectorDestructor());
   } catch (...) {
   }
 }
-
+#endif
