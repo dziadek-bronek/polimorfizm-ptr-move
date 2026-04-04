@@ -109,17 +109,17 @@ TEST(MemoryManagement, CustomChildInFrameworkConstructorActionDestructor) {
 
 TEST(MemoryManagement, ChildDestructorInFrameworkParametrizedAction) {
   try {
-	  using CActionParameter = int;
-	  using CActionResult = int;
+    using CActionParameter = int;
+    using CActionResult = int;
     struct CChildMock : CChild1 {
       CChildMock() { checkerPtr->childConstructor(); }
       virtual ~CChildMock() override { checkerPtr->childDestructor(); }
 
-      virtual void* action(void* actionParameterVoidPtr) override
-      {
-	      CActionParameter* actionParameterPtr = (CActionParameter*)actionParameterVoidPtr;
-	      ++(*actionParameterPtr);
-	      return actionParameterVoidPtr;
+      virtual void* action(void* actionParameterVoidPtr) override {
+        CActionParameter* actionParameterPtr =
+            (CActionParameter*)actionParameterVoidPtr;
+        ++(*actionParameterPtr);
+        return actionParameterVoidPtr;
       }
     };
 
@@ -141,7 +141,8 @@ TEST(MemoryManagement, ChildDestructorInFrameworkParametrizedAction) {
 
     std::unique_ptr<CParent> x((CParent*)framework->getChildBasedOnNumber(8));
 
-    CActionResult* actionResultPtr = (CActionResult*)(x->action((void*)&actionParameter));
+    CActionResult* actionResultPtr =
+        (CActionResult*)(x->action((void*)&actionParameter));
 
     EXPECT_EQ(INIT_VALUE_RANDOM_EXAMPLE + 1, *actionResultPtr);
     EXPECT_EQ(actionParameter, *actionResultPtr);
@@ -183,4 +184,3 @@ TEST(MemoryManagement, ChildDestructorInFrameworkLoop) {
   } catch (...) {
   }
 }
-

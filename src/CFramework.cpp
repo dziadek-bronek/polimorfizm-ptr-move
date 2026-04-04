@@ -42,7 +42,7 @@ struct CFramework : CFrameworkIf {
   }
 
   virtual void* getChildBasedOnNumber(int n) {
-      return childSelector->newChildBasedOnEvent(n);
+    return childSelector->newChildBasedOnEvent(n);
   }
 
  private:
