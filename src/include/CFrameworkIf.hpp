@@ -4,4 +4,5 @@ struct CFrameworkIf {
 
   virtual void selectorConfigAdd(void*) = 0;
   virtual void mainLoop(void* inputVoidPtr) = 0;
+  virtual void* getChildBasedOnNumber(int n) = 0;
 };

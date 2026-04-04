@@ -40,8 +40,9 @@ TEST(MemoryManagement, Child1Destructor) {
   };
 
   EXPECT_CALL(checker, childConstructor());
-  EXPECT_CALL(checker, childDestructor());
   std::unique_ptr<CChildMock> childMock(new CChildMock);
+
+  EXPECT_CALL(checker, childDestructor());
 }
 
 TEST(MemoryManagement, ChildCreatorDestructorInFramework) {
@@ -69,18 +70,95 @@ TEST(MemoryManagement, ChildCreatorDestructorInFramework) {
     input.init(new std::vector<int>{8, 0, 7});
 
     EXPECT_CALL(checker, creatorDestructor());
+
     framework->mainLoop(&input);
   } catch (...) {
   }
 }
 
-TEST(MemoryManagement, ChildDestructorInFramework) {
+TEST(MemoryManagement, CustomChildInFrameworkConstructorActionDestructor) {
   try {
     struct CChildMock : CChild1 {
      public:
       CChildMock() { checkerPtr->childConstructor(); }
-      virtual void action() override { checkerPtr->action(); }
       virtual ~CChildMock() override { checkerPtr->childDestructor(); }
+      virtual void action() override { checkerPtr->action(); }
+    };
+
+    CCheckerMock checker;
+    checkerPtr = &checker;
+
+    std::vector<int> selectorConfig({7});
+    std::unique_ptr<CFrameworkIf> framework(
+        CFrameworkIf::createNew(&selectorConfig));
+
+    std::unique_ptr<CChildCreatorIf> newCreator(
+        new CChildCreator<CChildMock>(8));
+    framework->selectorConfigAdd(&newCreator);
+
+    EXPECT_CALL(checker, childConstructor());
+    EXPECT_CALL(checker, action());
+
+    std::unique_ptr<CParent> x((CParent*)framework->getChildBasedOnNumber(8));
+    x->action();
+
+    EXPECT_CALL(checker, childDestructor());
+  } catch (...) {
+  }
+}
+
+TEST(MemoryManagement, ChildDestructorInFrameworkParametrizedAction) {
+  try {
+	  using CActionParameter = int;
+	  using CActionResult = int;
+    struct CChildMock : CChild1 {
+      CChildMock() { checkerPtr->childConstructor(); }
+      virtual ~CChildMock() override { checkerPtr->childDestructor(); }
+
+      virtual void* action(void* actionParameterVoidPtr) override
+      {
+	      CActionParameter* actionParameterPtr = (CActionParameter*)actionParameterVoidPtr;
+	      ++(*actionParameterPtr);
+	      return actionParameterVoidPtr;
+      }
+    };
+
+    CCheckerMock checker;
+    checkerPtr = &checker;
+
+    std::vector<int> selectorConfig({7});
+    std::unique_ptr<CFrameworkIf> framework(
+        CFrameworkIf::createNew(&selectorConfig));
+
+    std::unique_ptr<CChildCreatorIf> newCreator(
+        new CChildCreator<CChildMock>(8));
+    framework->selectorConfigAdd(&newCreator);
+
+    constexpr int INIT_VALUE_RANDOM_EXAMPLE = 29;
+    int actionParameter(INIT_VALUE_RANDOM_EXAMPLE);
+
+    EXPECT_CALL(checker, childConstructor());
+
+    std::unique_ptr<CParent> x((CParent*)framework->getChildBasedOnNumber(8));
+
+    CActionResult* actionResultPtr = (CActionResult*)(x->action((void*)&actionParameter));
+
+    EXPECT_EQ(INIT_VALUE_RANDOM_EXAMPLE + 1, *actionResultPtr);
+    EXPECT_EQ(actionParameter, *actionResultPtr);
+
+    EXPECT_CALL(checker, childDestructor());
+
+  } catch (...) {
+  }
+}
+
+TEST(MemoryManagement, ChildDestructorInFrameworkLoop) {
+  try {
+    struct CChildMock : CChild1 {
+     public:
+      CChildMock() { checkerPtr->childConstructor(); }
+      virtual ~CChildMock() override { checkerPtr->childDestructor(); }
+      virtual void action() override { checkerPtr->action(); }
     };
 
     CCheckerMock checker;
@@ -100,8 +178,9 @@ TEST(MemoryManagement, ChildDestructorInFramework) {
     EXPECT_CALL(checker, childConstructor());
     EXPECT_CALL(checker, action());
     EXPECT_CALL(checker, childDestructor());
-    framework->mainLoop(&input);
 
+    framework->mainLoop(&input);
   } catch (...) {
   }
 }
+

@@ -41,6 +41,10 @@ struct CFramework : CFrameworkIf {
     }
   }
 
+  virtual void* getChildBasedOnNumber(int n) {
+      return childSelector->newChildBasedOnEvent(n);
+  }
+
  private:
   std::unique_ptr<CChildSelectorIf> childSelector;
 };
