@@ -17,6 +17,8 @@ target_sources(mylib
 	PRIVATE
 		src/CChildren.cpp
 
+		src/CConfigChild.cpp
+
 		src/selector-config.cpp
 		src/CChildSelector.cpp
 

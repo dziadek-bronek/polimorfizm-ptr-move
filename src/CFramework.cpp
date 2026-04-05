@@ -15,14 +15,35 @@ struct CFramework : CFrameworkIf {
   CFramework(void* selectorConfigVoidPtr) {
     childSelector = std::unique_ptr<CChildSelectorIf>(
         CChildSelectorIf::createNew(selectorConfigVoidPtr));
+    selectorConfigReadyVoidPtr = childSelector->getConfig();
   }
   ~CFramework() { printf("CFramework destructor\n"); }
 
   virtual void selectorConfigAdd(void* childCreatorVoidPtr) {
-    void* selectorConfigReadyVoidPtr = childSelector->getConfig();
     if (selectorConfigReadyVoidPtr) {
       configAdd(selectorConfigReadyVoidPtr, childCreatorVoidPtr);
-    } else {
+
+
+struct CActionParams {
+  void* mapPtr;
+  void* creator;
+};
+
+CActionParams actionParams;
+actionParams.mapPtr = selectorConfigReadyVoidPtr;
+actionParams.creator = childCreatorVoidPtr;
+
+    std::unique_ptr<CParent> configChild((CParent*)getChildBasedOnNumber(222));
+    configChild->action(&actionParams);
+}
+
+
+
+
+
+
+
+     else {
       printf("No Add allowed in current configuration of selection!!!\n");
     }
   }

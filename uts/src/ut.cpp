@@ -28,11 +28,11 @@ CCheckerMock* checkerPtr;
 
 /* ====================================== */
 
-TEST(MemoryManagement, Child1Destructor) {
+TEST(MemoryManagement, ChildDestructor) {
   CCheckerMock checker;
   checkerPtr = &checker;
 
-  struct CChildMock : CChild1 {
+  struct CChildMock : CParent {
    public:
     CChildMock() { checkerPtr->childConstructor(); }
     virtual void action() override { checkerPtr->action(); }
@@ -50,8 +50,8 @@ TEST(MemoryManagement, ChildCreatorDestructorInFramework) {
     CCheckerMock checker;
     checkerPtr = &checker;
 
-    struct CChildCreatorMock : CChildCreator<CChild1> {
-      CChildCreatorMock(int id_) : CChildCreator<CChild1>(id_) {
+    struct CChildCreatorMock : CChildCreator<CChild2> {
+      CChildCreatorMock(int id_) : CChildCreator<CChild2>(id_) {
         checkerPtr->creatorConstructor();
       }
       virtual ~CChildCreatorMock() override { checkerPtr->creatorDestructor(); }
@@ -61,10 +61,14 @@ TEST(MemoryManagement, ChildCreatorDestructorInFramework) {
     std::unique_ptr<CFrameworkIf> framework(
         CFrameworkIf::createNew(&selectorConfig));
 
+    {
     EXPECT_CALL(checker, creatorConstructor());
+
     std::unique_ptr<CChildCreatorIf> newCreator(new CChildCreatorMock(8));
 
     framework->selectorConfigAdd(&newCreator);
+    EXPECT_CALL(checker, creatorDestructor()).Times(0);
+    }
 
     CInput input;
     input.init(new std::vector<int>{8, 0, 7});
@@ -78,7 +82,7 @@ TEST(MemoryManagement, ChildCreatorDestructorInFramework) {
 
 TEST(MemoryManagement, CustomChildInFrameworkConstructorActionDestructor) {
   try {
-    struct CChildMock : CChild1 {
+    struct CChildMock : CParent {
      public:
       CChildMock() { checkerPtr->childConstructor(); }
       virtual ~CChildMock() override { checkerPtr->childDestructor(); }
@@ -111,7 +115,8 @@ TEST(MemoryManagement, ChildDestructorInFrameworkParametrizedAction) {
   try {
     using CActionParameter = int;
     using CActionResult = int;
-    struct CChildMock : CChild1 {
+
+    struct CChildMock : CParent {
       CChildMock() { checkerPtr->childConstructor(); }
       virtual ~CChildMock() override { checkerPtr->childDestructor(); }
 
@@ -142,8 +147,9 @@ TEST(MemoryManagement, ChildDestructorInFrameworkParametrizedAction) {
     std::unique_ptr<CParent> x((CParent*)framework->getChildBasedOnNumber(8));
 
     CActionResult* actionResultPtr =
-        (CActionResult*)(x->action((void*)&actionParameter));
+        (CActionResult*)(x->action(&actionParameter));
 
+    ASSERT_TRUE(nullptr != actionResultPtr);
     EXPECT_EQ(INIT_VALUE_RANDOM_EXAMPLE + 1, *actionResultPtr);
     EXPECT_EQ(actionParameter, *actionResultPtr);
 
@@ -155,7 +161,7 @@ TEST(MemoryManagement, ChildDestructorInFrameworkParametrizedAction) {
 
 TEST(MemoryManagement, ChildDestructorInFrameworkLoop) {
   try {
-    struct CChildMock : CChild1 {
+    struct CChildMock : CParent {
      public:
       CChildMock() { checkerPtr->childConstructor(); }
       virtual ~CChildMock() override { checkerPtr->childDestructor(); }

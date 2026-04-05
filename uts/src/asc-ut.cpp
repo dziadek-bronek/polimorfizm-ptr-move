@@ -4,21 +4,25 @@
 
 #include <memory>
 #include <vector>
-// #include "../../src/include/CChildren.hpp"
+#include "../../src/include/CChildren.hpp"
+#include "../../src/include/CConfigChild.hpp"
 // #include "../../src/include/CInput.hpp"
-// #include "../../src/include/child-creators.hpp"
-// #include "../../src/include/child-creators.hpp"
+#include "../../src/include/child-creators.hpp"
 #include "../../src/include/CFrameworkIf.hpp"
 #include "../../src/include/CSelectorConfigurator.hpp"
 
 struct CChecker {
-  virtual void scConstructor() {}
-  virtual void scDestructor() {}
+  virtual void CSCMockConstructor() {}
+  virtual void CSCMockDestructor() {}
+  virtual void CChildMockConstructor() {}
+  virtual void CChildMockDestructor() {}
 };
 
 struct CCheckerMock : CChecker {
-  MOCK_METHOD(void, scConstructor, (), (override));
-  MOCK_METHOD(void, scDestructor, (), (override));
+  MOCK_METHOD(void, CSCMockConstructor, (), (override));
+  MOCK_METHOD(void, CSCMockDestructor, (), (override));
+  MOCK_METHOD(void, CChildMockConstructor, (), (override));
+  MOCK_METHOD(void, CChildMockDestructor, (), (override));
 };
 
 CCheckerMock* checkerPtr;
@@ -31,19 +35,87 @@ TEST(AdvancedSelectorConfigurator, ConstructAndDelete) {
     checkerPtr = &checker;
 
     struct CSCMock : CSC {
-      CSCMock() { checkerPtr->scConstructor(); }
-      ~CSCMock() { checkerPtr->scDestructor(); }
+      CSCMock() { checkerPtr->CSCMockConstructor(); }
+      ~CSCMock() { checkerPtr->CSCMockDestructor(); }
     };
 
-    EXPECT_CALL(checker, scConstructor());
+    EXPECT_CALL(checker, CSCMockConstructor());
 
     // sc stands for selector configurator
     std::unique_ptr<CSCMock> sc(new CSCMock);
 
-    EXPECT_CALL(checker, scDestructor());
+    EXPECT_CALL(checker, CSCMockDestructor());
   } catch (...) {
   }
 }
+
+TEST(AdvancedSelectorConfigurator, CChildConfigAddsChildWhichIsIncrementingParameter) {
+  try {
+    using CActionParameter = int;
+    using CActionResult = int;
+
+
+    struct CChildMock : CParent {
+      CChildMock() { checkerPtr->CChildMockConstructor(); }
+      virtual ~CChildMock() override { checkerPtr->CChildMockDestructor(); }
+
+      virtual void* action(void* actionParameterVoidPtr) override {
+        CActionParameter* actionParameterPtr =
+            (CActionParameter*)actionParameterVoidPtr;
+        ++(*actionParameterPtr);
+        return actionParameterVoidPtr;
+      }
+    };
+
+    CCheckerMock checker;
+    checkerPtr = &checker;
+
+    std::vector<int> selectorConfig({7, 1});
+    std::unique_ptr<CFrameworkIf> framework(
+        CFrameworkIf::createNew(&selectorConfig));
+
+
+{
+
+    std::unique_ptr<CChildCreatorIf> mockChildCreator(
+        new CChildCreator<CChildMock>(11));
+
+
+struct CActionParams {
+  void* mapPtr;
+  void* creator;
+};
+
+CActionParams actionParams;
+actionParams.mapPtr = framework->selectorConfigReadyVoidPtr;
+actionParams.creator = &mockChildCreator;
+
+    std::unique_ptr<CParent> configChild((CParent*)framework->getChildBasedOnNumber(222));
+    configChild->action(&actionParams);
+}
+
+
+    constexpr int INIT_VALUE_RANDOM_EXAMPLE = 29;
+    int actionParameter(INIT_VALUE_RANDOM_EXAMPLE);
+
+    EXPECT_CALL(checker, CChildMockConstructor());
+
+    std::unique_ptr<CParent> childMock((CParent*)framework->getChildBasedOnNumber(11));
+    CActionResult* actionResultPtr =
+        (CActionResult*)(childMock->action(&actionParameter));
+
+    ASSERT_TRUE(nullptr != actionResultPtr);
+    EXPECT_EQ(INIT_VALUE_RANDOM_EXAMPLE + 1, *actionResultPtr);
+    EXPECT_EQ(actionParameter, *actionResultPtr);
+
+    EXPECT_CALL(checker, CChildMockDestructor());
+
+  } catch (...) {
+  }
+}
+
+
+
 
 #if 0
 TEST(AdvancedSelectorConfigurator, ConfiguredSelectorConstructAndDelete) {
