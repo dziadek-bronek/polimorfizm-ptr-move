@@ -7,9 +7,9 @@
 #include "../../src/include/CChildren.hpp"
 #include "../../src/include/CConfigChild.hpp"
 // #include "../../src/include/CInput.hpp"
-#include "../../src/include/child-creators.hpp"
 #include "../../src/include/CFrameworkIf.hpp"
 #include "../../src/include/CSelectorConfigurator.hpp"
+#include "../../src/include/child-creators.hpp"
 
 struct CChecker {
   virtual void CSCMockConstructor() {}
@@ -49,11 +49,11 @@ TEST(AdvancedSelectorConfigurator, ConstructAndDelete) {
   }
 }
 
-TEST(AdvancedSelectorConfigurator, CChildConfigAddsChildWhichIsIncrementingParameter) {
+TEST(AdvancedSelectorConfigurator,
+     CChildConfigAddsChildWhichIsIncrementingParameter) {
   try {
     using CActionParameter = int;
     using CActionResult = int;
-
 
     struct CChildMock : CParent {
       CChildMock() { checkerPtr->CChildMockConstructor(); }
@@ -74,33 +74,31 @@ TEST(AdvancedSelectorConfigurator, CChildConfigAddsChildWhichIsIncrementingParam
     std::unique_ptr<CFrameworkIf> framework(
         CFrameworkIf::createNew(&selectorConfig));
 
+    {
+      std::unique_ptr<CChildCreatorIf> mockChildCreator(
+          new CChildCreator<CChildMock>(11));
 
-{
+      struct CActionParams {
+        void* mapPtr;
+        void* creator;
+      };
 
-    std::unique_ptr<CChildCreatorIf> mockChildCreator(
-        new CChildCreator<CChildMock>(11));
+      CActionParams actionParams;
+      actionParams.mapPtr = framework->selectorConfigReadyVoidPtr;
+      actionParams.creator = &mockChildCreator;
 
-
-struct CActionParams {
-  void* mapPtr;
-  void* creator;
-};
-
-CActionParams actionParams;
-actionParams.mapPtr = framework->selectorConfigReadyVoidPtr;
-actionParams.creator = &mockChildCreator;
-
-    std::unique_ptr<CParent> configChild((CParent*)framework->getChildBasedOnNumber(222));
-    configChild->action(&actionParams);
-}
-
+      std::unique_ptr<CParent> configChild(
+          (CParent*)framework->getChildBasedOnNumber(222));
+      configChild->action(&actionParams);
+    }
 
     constexpr int INIT_VALUE_RANDOM_EXAMPLE = 29;
     int actionParameter(INIT_VALUE_RANDOM_EXAMPLE);
 
     EXPECT_CALL(checker, CChildMockConstructor());
 
-    std::unique_ptr<CParent> childMock((CParent*)framework->getChildBasedOnNumber(11));
+    std::unique_ptr<CParent> childMock(
+        (CParent*)framework->getChildBasedOnNumber(11));
     CActionResult* actionResultPtr =
         (CActionResult*)(childMock->action(&actionParameter));
 
@@ -113,9 +111,6 @@ actionParams.creator = &mockChildCreator;
   } catch (...) {
   }
 }
-
-
-
 
 #if 0
 TEST(AdvancedSelectorConfigurator, ConfiguredSelectorConstructAndDelete) {

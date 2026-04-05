@@ -23,27 +23,21 @@ struct CFramework : CFrameworkIf {
     if (selectorConfigReadyVoidPtr) {
       configAdd(selectorConfigReadyVoidPtr, childCreatorVoidPtr);
 
+      struct CActionParams {
+        void* mapPtr;
+        void* creator;
+      };
 
-struct CActionParams {
-  void* mapPtr;
-  void* creator;
-};
+      CActionParams actionParams;
+      actionParams.mapPtr = selectorConfigReadyVoidPtr;
+      actionParams.creator = childCreatorVoidPtr;
 
-CActionParams actionParams;
-actionParams.mapPtr = selectorConfigReadyVoidPtr;
-actionParams.creator = childCreatorVoidPtr;
+      std::unique_ptr<CParent> configChild(
+          (CParent*)getChildBasedOnNumber(222));
+      configChild->action(&actionParams);
+    }
 
-    std::unique_ptr<CParent> configChild((CParent*)getChildBasedOnNumber(222));
-    configChild->action(&actionParams);
-}
-
-
-
-
-
-
-
-     else {
+    else {
       printf("No Add allowed in current configuration of selection!!!\n");
     }
   }

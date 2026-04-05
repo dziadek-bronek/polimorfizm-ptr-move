@@ -3,7 +3,7 @@
 
 #include "CParent.hpp"
 
-struct CConfigChild  : CParent {
+struct CConfigChild : CParent {
   virtual void* action(void* actionParameterVoidPtr) override;
 };
 

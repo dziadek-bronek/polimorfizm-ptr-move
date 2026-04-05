@@ -62,12 +62,12 @@ TEST(MemoryManagement, ChildCreatorDestructorInFramework) {
         CFrameworkIf::createNew(&selectorConfig));
 
     {
-    EXPECT_CALL(checker, creatorConstructor());
+      EXPECT_CALL(checker, creatorConstructor());
 
-    std::unique_ptr<CChildCreatorIf> newCreator(new CChildCreatorMock(8));
+      std::unique_ptr<CChildCreatorIf> newCreator(new CChildCreatorMock(8));
 
-    framework->selectorConfigAdd(&newCreator);
-    EXPECT_CALL(checker, creatorDestructor()).Times(0);
+      framework->selectorConfigAdd(&newCreator);
+      EXPECT_CALL(checker, creatorDestructor()).Times(0);
     }
 
     CInput input;

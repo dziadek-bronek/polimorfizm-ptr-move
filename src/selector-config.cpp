@@ -1,8 +1,8 @@
 #include "include/selector-config.hpp"
 #include "include/CChildren.hpp"
+#include "include/CConfigChild.hpp"
 #include "include/child-creator.hpp"
 #include "include/throw.hpp"
-#include "include/CConfigChild.hpp"
 
 #include <list>
 #include <memory>
@@ -53,21 +53,18 @@ void configureSelection(void* mapVoidPtr, void* selectorConfigVoidPtr) {
   std::vector<int>* selectorConfigPtr =
       (std::vector<int>*)selectorConfigVoidPtr;
 
-  mapPtr->push_back(
-      UptrChCrIf(new CChildCreator<CConfigChild>(222)));
+  mapPtr->push_back(UptrChCrIf(new CChildCreator<CConfigChild>(222)));
 
   int vSize = selectorConfigPtr->size();
 
-  if(0 < vSize) {
-  mapPtr->push_back(
-      UptrChCrIf(new CChildCreatorExit(selectorConfigPtr->at(0))));
+  if (0 < vSize) {
+    mapPtr->push_back(
+        UptrChCrIf(new CChildCreatorExit(selectorConfigPtr->at(0))));
   }
-  
-  else
-  {
-  mapPtr->push_back(
-      UptrChCrIf(new CChildCreatorExit(0)));
-  return;
+
+  else {
+    mapPtr->push_back(UptrChCrIf(new CChildCreatorExit(0)));
+    return;
   }
 
   for (int i = 1; i < vSize; ++i) {
