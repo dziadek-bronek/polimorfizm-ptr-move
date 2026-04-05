@@ -15,30 +15,24 @@ struct CFramework : CFrameworkIf {
   CFramework(void* selectorConfigVoidPtr) {
     childSelector = std::unique_ptr<CChildSelectorIf>(
         CChildSelectorIf::createNew(selectorConfigVoidPtr));
-    selectorConfigReadyVoidPtr = childSelector->getConfig();
   }
   ~CFramework() { printf("CFramework destructor\n"); }
 
-  virtual void selectorConfigAdd(void* childCreatorVoidPtr) {
+  virtual void configAction(int x, void* childCreatorVoidPtr) {
+    void* selectorConfigReadyVoidPtr = childSelector->getConfig();
     if (selectorConfigReadyVoidPtr) {
-      configAdd(selectorConfigReadyVoidPtr, childCreatorVoidPtr);
-
       struct CActionParams {
         void* mapPtr;
         void* creator;
-      };
+      } actionParams = {.mapPtr = selectorConfigReadyVoidPtr,
+                        .creator = childCreatorVoidPtr};
 
-      CActionParams actionParams;
-      actionParams.mapPtr = selectorConfigReadyVoidPtr;
-      actionParams.creator = childCreatorVoidPtr;
-
-      std::unique_ptr<CParent> configChild(
-          (CParent*)getChildBasedOnNumber(222));
+      std::unique_ptr<CParent> configChild((CParent*)getChildBasedOnNumber(x));
       configChild->action(&actionParams);
     }
 
     else {
-      printf("No Add allowed in current configuration of selection!!!\n");
+      printf("No action allowed in current configuration of selection!!!\n");
     }
   }
 

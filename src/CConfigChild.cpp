@@ -14,7 +14,7 @@ void* CConfigChild::action(void* actionParameterVoidPtr) {
     UptrChCrIf* creator;
   };
 
-  printf("configChild adding \n");
+  printf("configChild is adding creator\n");
   CAddParams* x = ((CAddParams*)(actionParameterVoidPtr));
 
   (x->mapPtr)->push_back(std::move(*(x->creator)));

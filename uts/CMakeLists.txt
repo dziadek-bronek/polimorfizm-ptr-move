@@ -25,6 +25,7 @@ add_test(mytests mytests)
 
 add_executable(mytests
 #	src/ut.cpp
+#	src/asc-ut.cpp
 	src/asc-ut.cpp
 )
 

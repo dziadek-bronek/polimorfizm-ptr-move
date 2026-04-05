@@ -38,7 +38,7 @@ int main() {
         new CChildCreator<CDevChild>(8));
 
     /* Add creator to framework */
-    framework->selectorConfigAdd(&newCreator);
+    framework->configAction(222, &newCreator);
 
     /* Mock of input - vector represents input sequence */
     CInput input;

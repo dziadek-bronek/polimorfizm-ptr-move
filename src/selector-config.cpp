@@ -76,13 +76,6 @@ void configureSelection(void* mapVoidPtr, void* selectorConfigVoidPtr) {
   }
 }
 
-void configAdd(void* mapVoidPtr, void* newChildCreatorVoidPtr) {
-  MapOfUptrChCrIf* mapPtr = (MapOfUptrChCrIf*)mapVoidPtr;
-
-  UptrChCrIf* x = (UptrChCrIf*)newChildCreatorVoidPtr;
-  mapPtr->push_back(std::move(*x));
-}
-
 struct CChildCreatorSimple : CChildCreatorIf {
   virtual ~CChildCreatorSimple() {
     printf("ChildCreatorSimpleSelection destructor\n");

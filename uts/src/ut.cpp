@@ -66,7 +66,7 @@ TEST(MemoryManagement, ChildCreatorDestructorInFramework) {
 
       std::unique_ptr<CChildCreatorIf> newCreator(new CChildCreatorMock(8));
 
-      framework->selectorConfigAdd(&newCreator);
+      framework->configAction(222, &newCreator);
       EXPECT_CALL(checker, creatorDestructor()).Times(0);
     }
 
@@ -98,7 +98,7 @@ TEST(MemoryManagement, CustomChildInFrameworkConstructorActionDestructor) {
 
     std::unique_ptr<CChildCreatorIf> newCreator(
         new CChildCreator<CChildMock>(8));
-    framework->selectorConfigAdd(&newCreator);
+    framework->configAction(222, &newCreator);
 
     EXPECT_CALL(checker, childConstructor());
     EXPECT_CALL(checker, action());
@@ -137,7 +137,7 @@ TEST(MemoryManagement, ChildDestructorInFrameworkParametrizedAction) {
 
     std::unique_ptr<CChildCreatorIf> newCreator(
         new CChildCreator<CChildMock>(8));
-    framework->selectorConfigAdd(&newCreator);
+    framework->configAction(222, &newCreator);
 
     constexpr int INIT_VALUE_RANDOM_EXAMPLE = 29;
     int actionParameter(INIT_VALUE_RANDOM_EXAMPLE);
@@ -177,7 +177,7 @@ TEST(MemoryManagement, ChildDestructorInFrameworkLoop) {
 
     std::unique_ptr<CChildCreatorIf> newCreator(
         new CChildCreator<CChildMock>(8));
-    framework->selectorConfigAdd(&newCreator);
+    framework->configAction(222, &newCreator);
 
     CInput input;
     input.init(new std::vector<int>{8, 0, 7});

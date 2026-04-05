@@ -50,7 +50,7 @@ TEST(AdvancedSelectorConfigurator, ConstructAndDelete) {
 }
 
 TEST(AdvancedSelectorConfigurator,
-     CChildConfigAddsChildWhichIsIncrementingParameter) {
+     ConfigActionAddsChildWhichIsIncrementingParameter) {
   try {
     using CActionParameter = int;
     using CActionResult = int;
@@ -70,26 +70,14 @@ TEST(AdvancedSelectorConfigurator,
     CCheckerMock checker;
     checkerPtr = &checker;
 
-    std::vector<int> selectorConfig({7, 1});
+    std::vector<int> selectorConfig({7});
     std::unique_ptr<CFrameworkIf> framework(
         CFrameworkIf::createNew(&selectorConfig));
 
     {
       std::unique_ptr<CChildCreatorIf> mockChildCreator(
           new CChildCreator<CChildMock>(11));
-
-      struct CActionParams {
-        void* mapPtr;
-        void* creator;
-      };
-
-      CActionParams actionParams;
-      actionParams.mapPtr = framework->selectorConfigReadyVoidPtr;
-      actionParams.creator = &mockChildCreator;
-
-      std::unique_ptr<CParent> configChild(
-          (CParent*)framework->getChildBasedOnNumber(222));
-      configChild->action(&actionParams);
+      framework->configAction(222, &mockChildCreator);
     }
 
     constexpr int INIT_VALUE_RANDOM_EXAMPLE = 29;
