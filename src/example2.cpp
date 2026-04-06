@@ -1,5 +1,6 @@
 /* To define and add an action provided by a developer. */
 #include "include/CParent.hpp"
+#include "include/CSelectorConfigurator.hpp"
 #include "include/child-creators.hpp"
 
 /* New action defined by a developer, to be added (registered) to framework
@@ -22,11 +23,13 @@ int main() {
             actions of CChild1, CChild2, CChild3 - disabled
             to perform action of CChild4 input 4
     */
-    std::vector<int> selectorConfig({7, -1, -1, -1, 4});
+    std::vector<int> selectorInitConfig({7, -1, -1, -1, 4});
+    std::unique_ptr<CSelectorConfiguratorIf> selectorConfigurator(
+        CSelectorConfiguratorIf::createNew(&selectorInitConfig));
 
     /* Set framework with configuration. */
     std::unique_ptr<CFrameworkIf> framework(
-        CFrameworkIf::createNew(&selectorConfig));
+        CFrameworkIf::createNew(&selectorConfigurator));
 
     /* Example action defined by developer (see CDevChild definition) -
        adding to framework. Technically: a 'creator' is instantiated,

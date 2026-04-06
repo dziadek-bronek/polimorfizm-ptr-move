@@ -1,6 +1,7 @@
 #include "include/CChildSelector.hpp"
 #include "include/CParent.hpp"
 
+#include "include/CSelectorConfigurator.hpp"
 #include "include/selector-config.hpp"
 
 #include "include/throw.hpp"
@@ -13,8 +14,12 @@
 #include <vector>
 struct CFramework : CFrameworkIf {
   CFramework(void* selectorConfigVoidPtr) {
+    std::unique_ptr<CSelectorConfiguratorIf>* selectorConfigPtr =
+        ((std::unique_ptr<CSelectorConfiguratorIf>*)(selectorConfigVoidPtr));
+
     childSelector = std::unique_ptr<CChildSelectorIf>(
-        CChildSelectorIf::createNew(selectorConfigVoidPtr));
+        CChildSelectorIf::createNew((*selectorConfigPtr)->getInitConfig()));
+    (*selectorConfigPtr)->setMap(childSelector->getConfig());
   }
   ~CFramework() { printf("CFramework destructor\n"); }
 

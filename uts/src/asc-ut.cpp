@@ -27,7 +27,7 @@ struct CCheckerMock : CChecker {
 
 CCheckerMock* checkerPtr;
 
-using CSC = CSelectorConfigurator;
+using CSC = CSelectorConfiguratorIf;
 
 TEST(AdvancedSelectorConfigurator, ConstructAndDelete) {
   try {
@@ -70,9 +70,12 @@ TEST(AdvancedSelectorConfigurator,
     CCheckerMock checker;
     checkerPtr = &checker;
 
-    std::vector<int> selectorConfig({7});
+    std::vector<int> selectorInitConfig({7, -1, -1, -1, 4});
+    std::unique_ptr<CSelectorConfiguratorIf> selectorConfigurator(
+        CSelectorConfiguratorIf::createNew(&selectorInitConfig));
+
     std::unique_ptr<CFrameworkIf> framework(
-        CFrameworkIf::createNew(&selectorConfig));
+        CFrameworkIf::createNew(&selectorConfigurator));
 
     {
       std::unique_ptr<CChildCreatorIf> mockChildCreator(
@@ -87,6 +90,7 @@ TEST(AdvancedSelectorConfigurator,
 
     std::unique_ptr<CParent> childMock(
         (CParent*)framework->getChildBasedOnNumber(11));
+    ASSERT_TRUE(nullptr != childMock);
     CActionResult* actionResultPtr =
         (CActionResult*)(childMock->action(&actionParameter));
 
@@ -100,26 +104,53 @@ TEST(AdvancedSelectorConfigurator,
   }
 }
 
-#if 0
-TEST(AdvancedSelectorConfigurator, ConfiguredSelectorConstructAndDelete) {
+TEST(AdvancedSelectorConfigurator, ClassConfiguratorForSelectorInAction) {
   try {
+    using CActionParameter = int;
+    using CActionResult = int;
+
     CCheckerMock checker;
     checkerPtr = &checker;
 
-    struct CChildCreatorSelector : CSC {
-      CSCMock() { checkerPtr->scConstructor(); }
-      ~CSCMock() { checkerPtr->scDestructor(); }
+    struct CChildMock : CParent {
+      CChildMock() { checkerPtr->CChildMockConstructor(); }
+      virtual ~CChildMock() override { checkerPtr->CChildMockDestructor(); }
+
+      virtual void* action(void* actionParameterVoidPtr) override {
+        CActionParameter* actionParameterPtr =
+            (CActionParameter*)actionParameterVoidPtr;
+        ++(*actionParameterPtr);
+        return actionParameterVoidPtr;
+      }
     };
 
-    std::vector<int> selectorConfig({7, -1, -1, -1, 4});
+    std::vector<int> selectorInitConfig({7, -1, -1, -1, 4});
+    std::unique_ptr<CSelectorConfiguratorIf> selectorConfigurator(
+        CSelectorConfiguratorIf::createNew(&selectorInitConfig));
 
-    EXPECT_CALL(checker, ChildCreatorSelectorConstructor());
-    // sc stands for selector configurator
-    std::unique_ptr<CSCMock> sc(new CSCMock);
+    std::unique_ptr<CFrameworkIf> framework(
+        CFrameworkIf::createNew(&selectorConfigurator));
 
-    std::unique_ptr<CFrameworkIf> framework(CFrameworkIf::createNew(&sc));
-    EXPECT_CALL(checker, ChildCreatorSelectorDestructor());
+    {
+      std::unique_ptr<CChildCreatorIf> mockChildCreator(
+          new CChildCreator<CChildMock>(73));
+      selectorConfigurator->action(222, &mockChildCreator);
+    }
+
+    constexpr int INIT_VALUE_RANDOM_EXAMPLE = 29;
+    int actionParameter(INIT_VALUE_RANDOM_EXAMPLE);
+
+    std::unique_ptr<CParent> childMock(
+        (CParent*)framework->getChildBasedOnNumber(73));
+    ASSERT_TRUE(nullptr != childMock);
+    CActionResult* actionResultPtr =
+        (CActionResult*)(childMock->action(&actionParameter));
+
+    ASSERT_TRUE(nullptr != actionResultPtr);
+    EXPECT_EQ(INIT_VALUE_RANDOM_EXAMPLE + 1, *actionResultPtr);
+    EXPECT_EQ(actionParameter, *actionResultPtr);
+
+    EXPECT_CALL(checker, CChildMockDestructor());
   } catch (...) {
   }
 }
-#endif

@@ -1,3 +1,17 @@
+check carefully
+	where is used framework->configAction(222
+		using CConfigChild
+	  	tutaj mozna zrobic tak, ze
+			class CAddConfig(number - 222, map, creator) 
+			tez ze configChild ma pole w ktorym przechowuje mape, czyli configChild->action
+	and where is used selectorConfigurator
+
+
+
+
+
+
+
 Registering child creator with given event: check for existing events and prevent from assignment
 
 to change names of files
