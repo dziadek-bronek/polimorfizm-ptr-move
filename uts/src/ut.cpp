@@ -6,6 +6,7 @@
 #include "../../src/include/CChildren.hpp"
 #include "../../src/include/CFrameworkIf.hpp"
 #include "../../src/include/CInput.hpp"
+#include "../../src/include/CSelectorConfigurator.hpp"
 #include "../../src/include/child-creators.hpp"
 
 struct CChecker {
@@ -32,15 +33,15 @@ TEST(MemoryManagement, ChildDestructor) {
   CCheckerMock checker;
   checkerPtr = &checker;
 
-  struct CChildMock : CParent {
+  struct CChild : CParent {
    public:
-    CChildMock() { checkerPtr->childConstructor(); }
+    CChild() { checkerPtr->childConstructor(); }
     virtual void action() override { checkerPtr->action(); }
-    virtual ~CChildMock() override { checkerPtr->childDestructor(); }
+    virtual ~CChild() override { checkerPtr->childDestructor(); }
   };
 
   EXPECT_CALL(checker, childConstructor());
-  std::unique_ptr<CChildMock> childMock(new CChildMock);
+  std::unique_ptr<CChild> child(new CChild);
 
   EXPECT_CALL(checker, childDestructor());
 }
@@ -50,23 +51,27 @@ TEST(MemoryManagement, ChildCreatorDestructorInFramework) {
     CCheckerMock checker;
     checkerPtr = &checker;
 
-    struct CChildCreatorMock : CChildCreator<CChild2> {
-      CChildCreatorMock(int id_) : CChildCreator<CChild2>(id_) {
+    struct CChildCreatorX : CChildCreator<CChild2> {
+      CChildCreatorX(int id_) : CChildCreator<CChild2>(id_) {
         checkerPtr->creatorConstructor();
       }
-      virtual ~CChildCreatorMock() override { checkerPtr->creatorDestructor(); }
+      virtual ~CChildCreatorX() override { checkerPtr->creatorDestructor(); }
     };
 
-    std::vector<int> selectorConfig({7});
+    std::vector<int> selectorInitConfig({7});
+    std::unique_ptr<CSelectorConfiguratorIf> selectorConfigurator(
+        CSelectorConfiguratorIf::createNew(&selectorInitConfig));
+
     std::unique_ptr<CFrameworkIf> framework(
-        CFrameworkIf::createNew(&selectorConfig));
+        CFrameworkIf::createNew(&selectorConfigurator));
 
     {
       EXPECT_CALL(checker, creatorConstructor());
 
-      std::unique_ptr<CChildCreatorIf> newCreator(new CChildCreatorMock(8));
+      std::unique_ptr<CChildCreatorIf> newCreator(new CChildCreatorX(8));
 
       framework->configAction(222, &newCreator);
+
       EXPECT_CALL(checker, creatorDestructor()).Times(0);
     }
 
@@ -82,22 +87,24 @@ TEST(MemoryManagement, ChildCreatorDestructorInFramework) {
 
 TEST(MemoryManagement, CustomChildInFrameworkConstructorActionDestructor) {
   try {
-    struct CChildMock : CParent {
-     public:
-      CChildMock() { checkerPtr->childConstructor(); }
-      virtual ~CChildMock() override { checkerPtr->childDestructor(); }
-      virtual void action() override { checkerPtr->action(); }
-    };
-
     CCheckerMock checker;
     checkerPtr = &checker;
 
-    std::vector<int> selectorConfig({7});
-    std::unique_ptr<CFrameworkIf> framework(
-        CFrameworkIf::createNew(&selectorConfig));
+    struct CChild : CParent {
+     public:
+      CChild() { checkerPtr->childConstructor(); }
+      virtual ~CChild() override { checkerPtr->childDestructor(); }
+      virtual void action() override { checkerPtr->action(); }
+    };
 
-    std::unique_ptr<CChildCreatorIf> newCreator(
-        new CChildCreator<CChildMock>(8));
+    std::vector<int> selectorInitConfig({7});
+    std::unique_ptr<CSelectorConfiguratorIf> selectorConfigurator(
+        CSelectorConfiguratorIf::createNew(&selectorInitConfig));
+
+    std::unique_ptr<CFrameworkIf> framework(
+        CFrameworkIf::createNew(&selectorConfigurator));
+
+    std::unique_ptr<CChildCreatorIf> newCreator(new CChildCreator<CChild>(8));
     framework->configAction(222, &newCreator);
 
     EXPECT_CALL(checker, childConstructor());
@@ -113,12 +120,15 @@ TEST(MemoryManagement, CustomChildInFrameworkConstructorActionDestructor) {
 
 TEST(MemoryManagement, ChildDestructorInFrameworkParametrizedAction) {
   try {
+    CCheckerMock checker;
+    checkerPtr = &checker;
+
     using CActionParameter = int;
     using CActionResult = int;
 
-    struct CChildMock : CParent {
-      CChildMock() { checkerPtr->childConstructor(); }
-      virtual ~CChildMock() override { checkerPtr->childDestructor(); }
+    struct CChild : CParent {
+      CChild() { checkerPtr->childConstructor(); }
+      virtual ~CChild() override { checkerPtr->childDestructor(); }
 
       virtual void* action(void* actionParameterVoidPtr) override {
         CActionParameter* actionParameterPtr =
@@ -128,15 +138,14 @@ TEST(MemoryManagement, ChildDestructorInFrameworkParametrizedAction) {
       }
     };
 
-    CCheckerMock checker;
-    checkerPtr = &checker;
+    std::vector<int> selectorInitConfig({7});
+    std::unique_ptr<CSelectorConfiguratorIf> selectorConfigurator(
+        CSelectorConfiguratorIf::createNew(&selectorInitConfig));
 
-    std::vector<int> selectorConfig({7});
     std::unique_ptr<CFrameworkIf> framework(
-        CFrameworkIf::createNew(&selectorConfig));
+        CFrameworkIf::createNew(&selectorConfigurator));
 
-    std::unique_ptr<CChildCreatorIf> newCreator(
-        new CChildCreator<CChildMock>(8));
+    std::unique_ptr<CChildCreatorIf> newCreator(new CChildCreator<CChild>(8));
     framework->configAction(222, &newCreator);
 
     constexpr int INIT_VALUE_RANDOM_EXAMPLE = 29;
@@ -161,22 +170,24 @@ TEST(MemoryManagement, ChildDestructorInFrameworkParametrizedAction) {
 
 TEST(MemoryManagement, ChildDestructorInFrameworkLoop) {
   try {
-    struct CChildMock : CParent {
+    struct CChild : CParent {
      public:
-      CChildMock() { checkerPtr->childConstructor(); }
-      virtual ~CChildMock() override { checkerPtr->childDestructor(); }
+      CChild() { checkerPtr->childConstructor(); }
+      virtual ~CChild() override { checkerPtr->childDestructor(); }
       virtual void action() override { checkerPtr->action(); }
     };
 
     CCheckerMock checker;
     checkerPtr = &checker;
 
-    std::vector<int> selectorConfig({7, -1, -1, -1, 4});
-    std::unique_ptr<CFrameworkIf> framework(
-        CFrameworkIf::createNew(&selectorConfig));
+    std::vector<int> selectorInitConfig({7, -1, -1, -1, 4});
+    std::unique_ptr<CSelectorConfiguratorIf> selectorConfigurator(
+        CSelectorConfiguratorIf::createNew(&selectorInitConfig));
 
-    std::unique_ptr<CChildCreatorIf> newCreator(
-        new CChildCreator<CChildMock>(8));
+    std::unique_ptr<CFrameworkIf> framework(
+        CFrameworkIf::createNew(&selectorConfigurator));
+
+    std::unique_ptr<CChildCreatorIf> newCreator(new CChildCreator<CChild>(8));
     framework->configAction(222, &newCreator);
 
     CInput input;

@@ -4,7 +4,7 @@ check carefully
 	  	tutaj mozna zrobic tak, ze
 			class CAddConfig(number - 222, map, creator) 
 			tez ze configChild ma pole w ktorym przechowuje mape, czyli configChild->action
-	and where is used selectorConfigurator
+	and where is used selectorConfigurator->action
 
 
 

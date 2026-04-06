@@ -50,7 +50,7 @@ TEST(AdvancedSelectorConfigurator, ConstructAndDelete) {
 }
 
 TEST(AdvancedSelectorConfigurator,
-     ConfigActionAddsChildWhichIsIncrementingParameter) {
+     ConfigChildActionAddsChildWhichIsIncrementingParameter) {
   try {
     using CActionParameter = int;
     using CActionResult = int;
@@ -104,7 +104,8 @@ TEST(AdvancedSelectorConfigurator,
   }
 }
 
-TEST(AdvancedSelectorConfigurator, ClassConfiguratorForSelectorInAction) {
+TEST(AdvancedSelectorConfigurator,
+     ConfiguratorClassActionAddsChildWhichIsIncrementingParameter) {
   try {
     using CActionParameter = int;
     using CActionResult = int;

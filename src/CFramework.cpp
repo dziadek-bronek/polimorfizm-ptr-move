@@ -11,15 +11,21 @@
 
 #include <cstdio>
 #include <memory>
-#include <vector>
 struct CFramework : CFrameworkIf {
-  CFramework(void* selectorConfigVoidPtr) {
-    std::unique_ptr<CSelectorConfiguratorIf>* selectorConfigPtr =
-        ((std::unique_ptr<CSelectorConfiguratorIf>*)(selectorConfigVoidPtr));
+  CFramework(void* _selectorConfiguratorVoidPtr) {
+    selectorConfiguratorVoidPtr = _selectorConfiguratorVoidPtr;
+
+    std::unique_ptr<CSelectorConfiguratorIf>* selectorConfiguratorPtr =
+        ((std::unique_ptr<
+            CSelectorConfiguratorIf>*)(selectorConfiguratorVoidPtr));
+
+    void* selectorCore = nullptr;
+    if (nullptr != selectorConfiguratorPtr) {
+      selectorCore = (*selectorConfiguratorPtr)->init();
+    }
 
     childSelector = std::unique_ptr<CChildSelectorIf>(
-        CChildSelectorIf::createNew((*selectorConfigPtr)->getInitConfig()));
-    (*selectorConfigPtr)->setMap(childSelector->getConfig());
+        CChildSelectorIf::createNew(selectorCore));
   }
   ~CFramework() { printf("CFramework destructor\n"); }
 
@@ -61,6 +67,7 @@ struct CFramework : CFrameworkIf {
 
  private:
   std::unique_ptr<CChildSelectorIf> childSelector;
+  void* selectorConfiguratorVoidPtr;
 };
 
 CFrameworkIf* CFrameworkIf::createNew(void* selectorConfigVoidPtr) {
