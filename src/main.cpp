@@ -67,4 +67,4 @@ developer on his own)
 
 /* Select definition of function main: from the file 'example1.cpp' or
  * 'example2.cpp'. */
-#include "example2.cpp"
+#include "example1.cpp"

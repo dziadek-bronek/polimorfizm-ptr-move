@@ -2,7 +2,6 @@
 #include "include/CParent.hpp"
 
 #include "include/CSelectorConfigurator.hpp"
-#include "include/selector-config.hpp"
 
 #include "include/throw.hpp"
 
@@ -19,13 +18,16 @@ struct CFramework : CFrameworkIf {
         ((std::unique_ptr<
             CSelectorConfiguratorIf>*)(selectorConfiguratorVoidPtr));
 
-    void* selectorCore = nullptr;
     if (nullptr != selectorConfiguratorPtr) {
-      selectorCore = (*selectorConfiguratorPtr)->init();
-    }
+      void* selectorCore = (*selectorConfiguratorPtr)->init();
+      childSelector = std::unique_ptr<CChildSelectorIf>(
+          CChildSelectorIf::createNew(selectorCore));
+    } else {
+      childSelector = std::unique_ptr<CChildSelectorIf>(
+          CChildSelectorIf::createNew(nullptr));
 
-    childSelector = std::unique_ptr<CChildSelectorIf>(
-        CChildSelectorIf::createNew(selectorCore));
+      configureSimpleSelection(childSelector->getConfig());
+    }
   }
   ~CFramework() { printf("CFramework destructor\n"); }
 

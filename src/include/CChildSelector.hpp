@@ -4,9 +4,9 @@
 struct CChildSelectorIf {
   static CChildSelectorIf* createNew(void* selectorConfigVoidPtr);
   virtual ~CChildSelectorIf() {}
-  virtual void* getConfig() = 0;
+  virtual void* getConfig() { return nullptr; }
 
-  virtual void* newChildBasedOnEvent(int event) = 0;
+  virtual void* newChildBasedOnEvent(int event) { return nullptr; }
 };
 
 #endif

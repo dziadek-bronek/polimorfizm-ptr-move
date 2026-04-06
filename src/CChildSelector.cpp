@@ -1,7 +1,6 @@
 #include "include/CChildSelector.hpp"
 
 #include "include/child-creator.hpp"
-#include "include/selector-config.hpp"
 
 #include "include/throw.hpp"
 
@@ -52,18 +51,17 @@ struct CSimpleChildSelector : CChildSelectorIf {
   CSimpleChildSelector() {
     printf("The simple child selector: constructing\n");
     fflush(NULL);
-    single = UptrChCrIf((CChildCreatorIf*)configureSimpleSelection());
   }
   virtual ~CSimpleChildSelector() {
     printf("The simple child selector: destructing\n");
   }
-  virtual void* getConfig() { return nullptr; }
+  virtual void* getConfig() { return &single; }
   virtual void* newChildBasedOnEvent(int event) {
     return single->createNewChildIfIsNumber(event);
   }
 
  private:
-  UptrChCrIf single;
+  CChildCreatorIf* single;
 };
 
 CChildSelectorIf* CChildSelectorIf::createNew(void* selectorCoreVoidPtr) {

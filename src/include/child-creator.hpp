@@ -2,7 +2,7 @@
 #define CHILD_CREATOR_HPP
 
 struct CChildCreatorIf {
-  virtual void* createNewChildIfIsNumber(int number_) = 0;
+  virtual void* createNewChildIfIsNumber(int number_) { return nullptr; }
   virtual ~CChildCreatorIf() {}
 };
 
