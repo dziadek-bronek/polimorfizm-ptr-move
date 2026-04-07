@@ -66,50 +66,63 @@ struct CChildCreatorSimple : CChildCreatorIf {
   }
 };
 
-void configureSimpleSelection(void* x) {
-  CChildCreatorIf** y = (CChildCreatorIf**)x;
-  *y = new CChildCreatorSimple;
-}
-
 struct CSelectorConfigurator : CSelectorConfiguratorIf {
   using UptrChCrIf = std::unique_ptr<CChildCreatorIf>;
   using MapOfUptrChCrIf = std::list<UptrChCrIf>;
 
   CSelectorConfigurator(void* selectorInitConfigVoidPtr) {
-    initConfig = *((std::vector<int>*)selectorInitConfigVoidPtr);
+    initConfigPtr = nullptr;
+    if (nullptr != selectorInitConfigVoidPtr) {
+      initConfigPtr = (std::vector<int>*)selectorInitConfigVoidPtr;
+    }
   }
 
-  virtual void* init() {
-    map.push_back(UptrChCrIf(new CChildCreator<CConfigChild>(222)));
+  void* getInitConfig() { return initConfigPtr; }
 
-    int vSize = initConfig.size();
+  virtual void init(void* mapVoidPtr) {
+    MapOfUptrChCrIf* mapPtr = (MapOfUptrChCrIf*)mapVoidPtr;
+
+    selectorCoreVoidPtr = mapPtr;
+
+    mapPtr->push_back(UptrChCrIf(new CChildCreator<CConfigChild>(222)));
+
+    int vSize = initConfigPtr->size();
 
     if (vSize <= 0) {
-      map.push_back(UptrChCrIf(new CChildCreatorExit(0)));
-      return &map;
+      mapPtr->push_back(UptrChCrIf(new CChildCreatorExit(0)));
+      return;
     }
 
-    map.push_back(UptrChCrIf(new CChildCreatorExit(initConfig.at(0))));
+    mapPtr->push_back(UptrChCrIf(new CChildCreatorExit(initConfigPtr->at(0))));
 
     for (int i = 1; i < vSize; ++i) {
-      int event = initConfig.at(i);
+      int event = initConfigPtr->at(i);
       if (event < 0) {
         continue;
       }
-      map.push_back(UptrChCrIf(::createCreatorForChildWithNumber(i, event)));
+      mapPtr->push_back(
+          UptrChCrIf(::createCreatorForChildWithNumber(i, event)));
     }
-    return &map;
+  }
+
+  void initSimple(void* creatorUptrVoidPtr) {
+    std::unique_ptr<CChildCreatorIf>* y =
+        (std::unique_ptr<CChildCreatorIf>*)creatorUptrVoidPtr;
+
+    *y = std::unique_ptr<CChildCreatorIf>(new CChildCreatorSimple);
+    selectorCoreVoidPtr = y;
   }
 
   virtual void action(int x, void* childCreatorVoidPtr) {
     UptrChCrIf* childCreatorPtr = (UptrChCrIf*)childCreatorVoidPtr;
+    MapOfUptrChCrIf* mapPtr = (MapOfUptrChCrIf*)selectorCoreVoidPtr;
 
-    map.push_back(std::move(*childCreatorPtr));
+    mapPtr->push_back(std::move(*childCreatorPtr));
   }
 
  private:
-  MapOfUptrChCrIf map;
-  std::vector<int> initConfig;
+  void* selectorCoreVoidPtr;
+  std::vector<int>* initConfigPtr;
 };
 
 CSelectorConfiguratorIf* CSelectorConfiguratorIf::createNew(

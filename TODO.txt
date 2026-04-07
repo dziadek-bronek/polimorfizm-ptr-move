@@ -1,3 +1,5 @@
+create UTs based on example1
+
 check carefully
 	where is used framework->configAction(222
 		using CConfigChild
@@ -5,12 +7,6 @@ check carefully
 			class CAddConfig(number - 222, map, creator) 
 			tez ze configChild ma pole w ktorym przechowuje mape, czyli configChild->action
 	and where is used selectorConfigurator->action
-
-
-
-
-
-
 
 Registering child creator with given event: check for existing events and prevent from assignment
 
@@ -52,6 +48,7 @@ unit tests  - separate git submodule
 
 change name: worker(instead child), workerIf(instead parent), workerSelector, workerCreator,
 
+factory, selector
 Create library 'framework', library implementation.
 
 

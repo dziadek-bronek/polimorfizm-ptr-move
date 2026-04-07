@@ -24,7 +24,10 @@ int main() {
     /* Use option below to use simple selector (simple hardcoded switch)
        instead the complex one
     */
-    std::unique_ptr<CFrameworkIf> framework(CFrameworkIf::createNew(nullptr));
+    std::unique_ptr<CSelectorConfiguratorIf> selectorConfigurator(
+        CSelectorConfiguratorIf::createNew(nullptr));
+    std::unique_ptr<CFrameworkIf> framework(
+        CFrameworkIf::createNew(&selectorConfigurator));
 
 #endif
 

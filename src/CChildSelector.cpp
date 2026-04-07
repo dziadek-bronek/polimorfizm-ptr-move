@@ -15,17 +15,16 @@ using MapOfUptrChCrIf = std::list<UptrChCrIf>;
 struct CChildSelector : CChildSelectorIf {
   CChildSelector(void* selectorCoreVoidPtr) {
     printf("The selector of child creators: constructing\n");
-    mapPtr = (MapOfUptrChCrIf*)selectorCoreVoidPtr;
   }
 
   virtual ~CChildSelector() {
     printf("The selector of child creators: destructing\n");
   }
 
-  virtual void* getConfig() { return mapPtr; }
+  virtual void* getConfig() { return &map; }
 
   virtual void* newChildBasedOnEvent(int event) {
-    for (std::unique_ptr<CChildCreatorIf>& childCreator : *mapPtr) {
+    for (std::unique_ptr<CChildCreatorIf>& childCreator : map) {
       if (nullptr == childCreator) {
         THROW2("Clean exit", " (event 'EXIT' in sequenceOfEvents)");
       }
@@ -44,7 +43,7 @@ struct CChildSelector : CChildSelectorIf {
   }
 
  private:
-  MapOfUptrChCrIf* mapPtr;
+  MapOfUptrChCrIf map;
 };
 
 struct CSimpleChildSelector : CChildSelectorIf {
@@ -61,7 +60,7 @@ struct CSimpleChildSelector : CChildSelectorIf {
   }
 
  private:
-  CChildCreatorIf* single;
+  std::unique_ptr<CChildCreatorIf> single;
 };
 
 CChildSelectorIf* CChildSelectorIf::createNew(void* selectorCoreVoidPtr) {
