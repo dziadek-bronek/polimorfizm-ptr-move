@@ -1,6 +1,6 @@
-#include "include/CConfigChild.hpp"
 #include <list>
 #include <memory>
+#include "include/CConfigChild.hpp"
 
 #include <cstdio>
 #include "include/child-creators.hpp"

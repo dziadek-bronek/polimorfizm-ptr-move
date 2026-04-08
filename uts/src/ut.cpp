@@ -57,8 +57,7 @@ TEST(MemoryManagement, ChildCreatorDestructorInFrameworkZeroConfig) {
       virtual ~CChildCreatorX() override { checkerPtr->creatorDestructor(); }
     };
 
-    std::unique_ptr<CFrameworkIf> framework(
-        CFrameworkIf::createNew(nullptr));
+    std::unique_ptr<CFrameworkIf> framework(CFrameworkIf::createNew(nullptr));
 
     {
       EXPECT_CALL(checker, creatorConstructor());
@@ -67,27 +66,16 @@ TEST(MemoryManagement, ChildCreatorDestructorInFrameworkZeroConfig) {
 
       framework->configAction(222, &newCreator);
 
-    EXPECT_CALL(checker, creatorDestructor());
+      EXPECT_CALL(checker, creatorDestructor());
     }
 
     CInput input;
     input.init(new std::vector<int>{8, 0, 7});
 
-
     framework->mainLoop(&input);
   } catch (...) {
   }
 }
-
-
-
-
-
-
-
-
-
-
 
 TEST(MemoryManagement, ChildCreatorDestructorInFramework) {
   try {
@@ -125,15 +113,6 @@ TEST(MemoryManagement, ChildCreatorDestructorInFramework) {
   } catch (...) {
   }
 }
-
-
-
-
-
-
-
-
-
 
 TEST(MemoryManagement, CustomChildInFrameworkConstructorActionDestructor) {
   try {

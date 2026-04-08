@@ -36,11 +36,11 @@ int main() {
        of class CDevChild, every time when input is 8.
     */
     {
-    std::unique_ptr<CChildCreatorIf> newCreator(
-        new CChildCreator<CDevChild>(8));
+      std::unique_ptr<CChildCreatorIf> newCreator(
+          new CChildCreator<CDevChild>(8));
 
-    /* Add creator to framework */
-    framework->configAction(222, &newCreator);
+      /* Add creator to framework */
+      framework->configAction(222, &newCreator);
     }
 
     /* Mock of input - vector represents input sequence */

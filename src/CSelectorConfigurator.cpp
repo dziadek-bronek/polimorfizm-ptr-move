@@ -8,6 +8,9 @@
 
 #include <vector>
 
+using UptrChCrIf = std::unique_ptr<CChildCreatorIf>;
+using MapOfUptrChCrIf = std::list<UptrChCrIf>;
+
 struct CChildCreatorExit : CChildCreatorIf {
   CChildCreatorExit(int id_) : id(id_) {
     printf("ChildCreator constructor for  EXIT event %i \n", id);
@@ -42,59 +45,57 @@ static CChildCreatorIf* createCreatorForChildWithNumber(int childClass,
   }
   throw;
 }
-  void initializeSelector(void* mapVoidPtr, void* mapVoidPtr) {
-    MapOfUptrChCrIf* mapPtr = (MapOfUptrChCrIf*)mapVoidPtr;
 
-    selectorCoreVoidPtr = mapPtr;
+void initializeSelector(void* mapVoidPtr, void* initConfigVoidPtr) {
+  MapOfUptrChCrIf* mapPtr = (MapOfUptrChCrIf*)mapVoidPtr;
+  std::vector<int>* initConfig = (std::vector<int>*)initConfigVoidPtr;
 
-    mapPtr->push_back(UptrChCrIf(new CChildCreator<CConfigChild>(222)));
+  mapPtr->push_back(UptrChCrIf(new CChildCreator<CConfigChild>(222)));
 
-    int vSize = initConfigPtr->size();
+  int vSize = initConfig->size();
 
-    if (vSize <= 0) {
-      mapPtr->push_back(UptrChCrIf(new CChildCreatorExit(0)));
-      return;
+  if (vSize <= 0) {
+    mapPtr->push_back(UptrChCrIf(new CChildCreatorExit(0)));
+    return;
+  }
+
+  mapPtr->push_back(UptrChCrIf(new CChildCreatorExit(initConfig->at(0))));
+
+  for (int i = 1; i < vSize; ++i) {
+    int event = initConfig->at(i);
+    if (event < 0) {
+      continue;
+    }
+    mapPtr->push_back(UptrChCrIf(::createCreatorForChildWithNumber(i, event)));
+  }
+}
+
+void* initializeSimpleSelector() {
+  struct CChildCreatorSimple : CChildCreatorIf {
+    virtual ~CChildCreatorSimple() {
+      printf("ChildCreatorSimpleSelection destructor\n");
     }
 
-    mapPtr->push_back(UptrChCrIf(new CChildCreatorExit(initConfigPtr->at(0))));
-
-    for (int i = 1; i < vSize; ++i) {
-      int event = initConfigPtr->at(i);
-      if (event < 0) {
-        continue;
+    virtual void* createNewChildIfIsNumber(int id_) {
+      switch (id_) {
+        case 0:
+          THROW2("Clean exit", " (event 'EXIT' on input)");
+        case 1:
+          return new CChild1;
+        case 2:
+          return new CChild2;
+        case 3:
+          return new CChild3;
+        case 4:
+          return new CChild4;
       }
-      mapPtr->push_back(
-          UptrChCrIf(::createCreatorForChildWithNumber(i, event)));
+      return nullptr;
     }
-  }
+  };
 
-
-
-  void* initSimpleSelector() {
-struct CChildCreatorSimple : CChildCreatorIf {
-  virtual ~CChildCreatorSimple() {
-    printf("ChildCreatorSimpleSelection destructor\n");
-  }
-
-  virtual void* createNewChildIfIsNumber(int id_) {
-    switch (id_) {
-      case 0:
-        THROW2("Clean exit", " (event 'EXIT' on input)");
-      case 1:
-        return new CChild1;
-      case 2:
-        return new CChild2;
-      case 3:
-        return new CChild3;
-      case 4:
-        return new CChild4;
-    }
-    return nullptr;
-  }
-};
-
-    return new CChildCreatorSimple;;
-  }
+  return new CChildCreatorSimple;
+  ;
+}
 
 #if 0
 CSelectorConfiguratorIf* CSelectorConfiguratorIf::createNew(

@@ -27,8 +27,8 @@ struct CCheckerMock : CChecker {
 
 CCheckerMock* checkerPtr;
 
-using CSC = CSelectorConfiguratorIf;
 
+#if 0
 TEST(AdvancedSelectorConfigurator, ConstructAndDelete) {
   try {
     CCheckerMock checker;
@@ -48,6 +48,7 @@ TEST(AdvancedSelectorConfigurator, ConstructAndDelete) {
   } catch (...) {
   }
 }
+#endif
 
 TEST(AdvancedSelectorConfigurator,
      ConfigChildActionAddsChildWhichIsIncrementingParameter) {
@@ -180,4 +181,3 @@ int type{1};
   }
 }
 #endif
-

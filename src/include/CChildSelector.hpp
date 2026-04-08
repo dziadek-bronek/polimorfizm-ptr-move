@@ -3,12 +3,10 @@
 
 struct CChildSelectorIf {
   static CChildSelectorIf* createNew(void* selectorConfigVoidPtr);
-  virtual void init() {}
-
   virtual ~CChildSelectorIf() {}
 
+  virtual void init() {}
   virtual void* getConfig() { return nullptr; }
-
   virtual void* newChildBasedOnEvent(int event) { return nullptr; }
 };
 

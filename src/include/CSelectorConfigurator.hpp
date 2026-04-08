@@ -1,2 +1,2 @@
-  void initializeSelector(void* mapPtrVoidPtr, void* selectorInitConfigVoidPtr);
-  void* initSimpleSelector();
+void initializeSelector(void* mapPtrVoidPtr, void* selectorInitConfigVoidPtr);
+void* initializeSimpleSelector();
