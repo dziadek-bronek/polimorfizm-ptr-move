@@ -13,7 +13,8 @@ using UptrChCrIf = std::unique_ptr<CChildCreatorIf>;
 using MapOfUptrChCrIf = std::list<UptrChCrIf>;
 
 struct CChildSelector : CChildSelectorIf {
-  CChildSelector(void* selectorCoreVoidPtr) {
+  CChildSelector(void* selectorInintConfigVoidPtr) {
+	  selectorInitConfig = (std::vector<int>*)selectorInitConfigVoidPtr;
     printf("The selector of child creators: constructing\n");
   }
 
@@ -21,7 +22,8 @@ struct CChildSelector : CChildSelectorIf {
     printf("The selector of child creators: destructing\n");
   }
 
-  virtual void* getConfig() { return &map; }
+  // virtual void* getConfig() { return &map; }
+  virtual void init() { initializeSelector(&map, selectorInitConfig); }
 
   virtual void* newChildBasedOnEvent(int event) {
     for (std::unique_ptr<CChildCreatorIf>& childCreator : map) {
@@ -44,23 +46,29 @@ struct CChildSelector : CChildSelectorIf {
 
  private:
   MapOfUptrChCrIf map;
+  std::vector<int>* selectorInitConfig;
 };
 
 struct CSimpleChildSelector : CChildSelectorIf {
   CSimpleChildSelector() {
+	  singleChildCreator = nullptr;
     printf("The simple child selector: constructing\n");
     fflush(NULL);
   }
+  virtual void init() { initializeSimpleSelector(singleChildCreator); }
   virtual ~CSimpleChildSelector() {
     printf("The simple child selector: destructing\n");
   }
-  virtual void* getConfig() { return &single; }
+  virtual void* getConfig() { return &singleChildCreator; }
   virtual void* newChildBasedOnEvent(int event) {
-    return single->createNewChildIfIsNumber(event);
+    return singleChildCreator->createNewChildIfIsNumber(event);
+  }
+  virtual CSimpleChildSelector(){
+	  delete singleChildCreator;
   }
 
  private:
-  std::unique_ptr<CChildCreatorIf> single;
+  CChildCreatorIf* singleChildCreator;
 };
 
 CChildSelectorIf* CChildSelectorIf::createNew(void* selectorCoreVoidPtr) {

@@ -1,4 +1,3 @@
-#include "include/CSelectorConfigurator.hpp"
 #include <cstdio>
 #include <list>
 #include <memory>
@@ -43,42 +42,7 @@ static CChildCreatorIf* createCreatorForChildWithNumber(int childClass,
   }
   throw;
 }
-
-struct CChildCreatorSimple : CChildCreatorIf {
-  virtual ~CChildCreatorSimple() {
-    printf("ChildCreatorSimpleSelection destructor\n");
-  }
-
-  virtual void* createNewChildIfIsNumber(int id_) {
-    switch (id_) {
-      case 0:
-        THROW2("Clean exit", " (event 'EXIT' on input)");
-      case 1:
-        return new CChild1;
-      case 2:
-        return new CChild2;
-      case 3:
-        return new CChild3;
-      case 4:
-        return new CChild4;
-    }
-    return nullptr;
-  }
-};
-
-struct CSelectorConfigurator : CSelectorConfiguratorIf {
-  using UptrChCrIf = std::unique_ptr<CChildCreatorIf>;
-  using MapOfUptrChCrIf = std::list<UptrChCrIf>;
-
-  CSelectorConfigurator(void* selectorInitConfigVoidPtr) {
-    initConfigPtr = nullptr;
-    if (nullptr == selectorInitConfigVoidPtr) {
-	    return;
-    }
-      initConfigPtr = (std::vector<int>*)selectorInitConfigVoidPtr;
-  }
-
-  virtual void init(void* mapVoidPtr) {
+  void initializeSelector(void* mapVoidPtr, void* mapVoidPtr) {
     MapOfUptrChCrIf* mapPtr = (MapOfUptrChCrIf*)mapVoidPtr;
 
     selectorCoreVoidPtr = mapPtr;
@@ -104,27 +68,37 @@ struct CSelectorConfigurator : CSelectorConfiguratorIf {
     }
   }
 
-  void initSimple(void* creatorUptrVoidPtr) {
-    std::unique_ptr<CChildCreatorIf>* y =
-        (std::unique_ptr<CChildCreatorIf>*)creatorUptrVoidPtr;
 
-    *y = std::unique_ptr<CChildCreatorIf>(new CChildCreatorSimple);
-    selectorCoreVoidPtr = y;
+
+  void* initSimpleSelector() {
+struct CChildCreatorSimple : CChildCreatorIf {
+  virtual ~CChildCreatorSimple() {
+    printf("ChildCreatorSimpleSelection destructor\n");
   }
 
-  virtual void action(int x, void* childCreatorVoidPtr) {
-    UptrChCrIf* childCreatorPtr = (UptrChCrIf*)childCreatorVoidPtr;
-    MapOfUptrChCrIf* mapPtr = (MapOfUptrChCrIf*)selectorCoreVoidPtr;
-
-    mapPtr->push_back(std::move(*childCreatorPtr));
+  virtual void* createNewChildIfIsNumber(int id_) {
+    switch (id_) {
+      case 0:
+        THROW2("Clean exit", " (event 'EXIT' on input)");
+      case 1:
+        return new CChild1;
+      case 2:
+        return new CChild2;
+      case 3:
+        return new CChild3;
+      case 4:
+        return new CChild4;
+    }
+    return nullptr;
   }
-
- private:
-  void* selectorCoreVoidPtr;
-  std::vector<int>* initConfigPtr;
 };
 
+    return new CChildCreatorSimple;;
+  }
+
+#if 0
 CSelectorConfiguratorIf* CSelectorConfiguratorIf::createNew(
     void* selectorInitConfigVoidPtr) {
-  return new CSelectorConfigurator(selectorInitConfigVoidPtr);
+  return new CSelectorInitializer(selectorInitConfigVoidPtr);
 }
+#endif
