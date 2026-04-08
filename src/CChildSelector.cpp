@@ -84,3 +84,5 @@ CChildSelectorIf* CChildSelectorIf::createNew(void* selectorCoreVoidPtr) {
 
   return new CChildSelector(selectorCoreVoidPtr);
 }
+
+CChildSelectorIf::~CChildSelectorIf() {}

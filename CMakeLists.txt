@@ -20,10 +20,11 @@ target_sources(mylib
 		src/CConfigChild.cpp
 
 		src/CSelectorConfigurator.cpp
-		#src/selector-config.cpp
 		src/CChildSelector.cpp
 
 		src/CInput.cpp
+
+		src/CFrameworkIf.cpp
 		src/CFramework.cpp
 
 	PUBLIC

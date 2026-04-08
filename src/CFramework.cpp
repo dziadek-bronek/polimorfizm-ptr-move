@@ -59,7 +59,6 @@ struct CFramework : CFrameworkIf {
   void* childSelectorCore;
 };
 
-CFrameworkIf* CFrameworkIf::createNew(void* selectorInitConfigVoidPtr) {
+CFrameworkIf* newCFramework(void* selectorInitConfigVoidPtr) {
   return new CFramework(selectorInitConfigVoidPtr);
 }
-CFrameworkIf::~CFrameworkIf() {}
