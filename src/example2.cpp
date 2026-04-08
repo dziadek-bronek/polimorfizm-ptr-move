@@ -24,12 +24,10 @@ int main() {
             to perform action of CChild4 input 4
     */
     std::vector<int> selectorInitConfig({7, -1, -1, -1, 4});
-    std::unique_ptr<CSelectorConfiguratorIf> selectorConfigurator(
-        CSelectorConfiguratorIf::createNew(&selectorInitConfig));
 
     /* Set framework with configuration. */
     std::unique_ptr<CFrameworkIf> framework(
-        CFrameworkIf::createNew(&selectorConfigurator));
+        CFrameworkIf::createNew(&selectorInitConfig));
 
     /* Example action defined by developer (see CDevChild definition) -
        adding to framework. Technically: a 'creator' is instantiated,
@@ -37,11 +35,13 @@ int main() {
        adding this creator to framework (next line) it will creates objects
        of class CDevChild, every time when input is 8.
     */
+    {
     std::unique_ptr<CChildCreatorIf> newCreator(
         new CChildCreator<CDevChild>(8));
 
     /* Add creator to framework */
-    selectorConfigurator->action(222, &newCreator);
+    framework->configAction(222, &newCreator);
+    }
 
     /* Mock of input - vector represents input sequence */
     CInput input;

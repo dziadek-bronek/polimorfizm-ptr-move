@@ -45,6 +45,49 @@ TEST(MemoryManagement, ChildDestructor) {
 
   EXPECT_CALL(checker, childDestructor());
 }
+TEST(MemoryManagement, ChildCreatorDestructorInFrameworkZeroConfig) {
+  try {
+    CCheckerMock checker;
+    checkerPtr = &checker;
+
+    struct CChildCreatorX : CChildCreator<CChild2> {
+      CChildCreatorX(int id_) : CChildCreator<CChild2>(id_) {
+        checkerPtr->creatorConstructor();
+      }
+      virtual ~CChildCreatorX() override { checkerPtr->creatorDestructor(); }
+    };
+
+    std::unique_ptr<CFrameworkIf> framework(
+        CFrameworkIf::createNew(nullptr));
+
+    {
+      EXPECT_CALL(checker, creatorConstructor());
+
+      std::unique_ptr<CChildCreatorIf> newCreator(new CChildCreatorX(8));
+
+      framework->configAction(222, &newCreator);
+
+    EXPECT_CALL(checker, creatorDestructor());
+    }
+
+    CInput input;
+    input.init(new std::vector<int>{8, 0, 7});
+
+
+    framework->mainLoop(&input);
+  } catch (...) {
+  }
+}
+
+
+
+
+
+
+
+
+
+
 
 TEST(MemoryManagement, ChildCreatorDestructorInFramework) {
   try {
@@ -59,11 +102,9 @@ TEST(MemoryManagement, ChildCreatorDestructorInFramework) {
     };
 
     std::vector<int> selectorInitConfig({7});
-    std::unique_ptr<CSelectorConfiguratorIf> selectorConfigurator(
-        CSelectorConfiguratorIf::createNew(&selectorInitConfig));
 
     std::unique_ptr<CFrameworkIf> framework(
-        CFrameworkIf::createNew(&selectorConfigurator));
+        CFrameworkIf::createNew(&selectorInitConfig));
 
     {
       EXPECT_CALL(checker, creatorConstructor());
@@ -85,6 +126,15 @@ TEST(MemoryManagement, ChildCreatorDestructorInFramework) {
   }
 }
 
+
+
+
+
+
+
+
+
+
 TEST(MemoryManagement, CustomChildInFrameworkConstructorActionDestructor) {
   try {
     CCheckerMock checker;
@@ -98,11 +148,9 @@ TEST(MemoryManagement, CustomChildInFrameworkConstructorActionDestructor) {
     };
 
     std::vector<int> selectorInitConfig({7});
-    std::unique_ptr<CSelectorConfiguratorIf> selectorConfigurator(
-        CSelectorConfiguratorIf::createNew(&selectorInitConfig));
 
     std::unique_ptr<CFrameworkIf> framework(
-        CFrameworkIf::createNew(&selectorConfigurator));
+        CFrameworkIf::createNew(&selectorInitConfig));
 
     std::unique_ptr<CChildCreatorIf> newCreator(new CChildCreator<CChild>(8));
     framework->configAction(222, &newCreator);
@@ -139,11 +187,9 @@ TEST(MemoryManagement, ChildDestructorInFrameworkParametrizedAction) {
     };
 
     std::vector<int> selectorInitConfig({7});
-    std::unique_ptr<CSelectorConfiguratorIf> selectorConfigurator(
-        CSelectorConfiguratorIf::createNew(&selectorInitConfig));
 
     std::unique_ptr<CFrameworkIf> framework(
-        CFrameworkIf::createNew(&selectorConfigurator));
+        CFrameworkIf::createNew(&selectorInitConfig));
 
     std::unique_ptr<CChildCreatorIf> newCreator(new CChildCreator<CChild>(8));
     framework->configAction(222, &newCreator);
@@ -181,11 +227,9 @@ TEST(MemoryManagement, ChildDestructorInFrameworkLoop) {
     checkerPtr = &checker;
 
     std::vector<int> selectorInitConfig({7, -1, -1, -1, 4});
-    std::unique_ptr<CSelectorConfiguratorIf> selectorConfigurator(
-        CSelectorConfiguratorIf::createNew(&selectorInitConfig));
 
     std::unique_ptr<CFrameworkIf> framework(
-        CFrameworkIf::createNew(&selectorConfigurator));
+        CFrameworkIf::createNew(&selectorInitConfig));
 
     std::unique_ptr<CChildCreatorIf> newCreator(new CChildCreator<CChild>(8));
     framework->configAction(222, &newCreator);

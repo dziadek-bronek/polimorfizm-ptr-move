@@ -12,22 +12,18 @@ int main() {
 
 #if 0
     std::vector<int> selectorInitConfig({7, 2, -1, 4});
-    std::unique_ptr<CSelectorConfiguratorIf> selectorConfigurator(
-        CSelectorConfiguratorIf::createNew(&selectorInitConfig));
 
     /* Set framework with configuration. */
     std::unique_ptr<CFrameworkIf> framework(
-        CFrameworkIf::createNew(&selectorConfigurator));
+        CFrameworkIf::createNew(&selectorInitConfig));
 
 #else
 
     /* Use option below to use simple selector (simple hardcoded switch)
        instead the complex one
     */
-    std::unique_ptr<CSelectorConfiguratorIf> selectorConfigurator(
-        CSelectorConfiguratorIf::createNew(nullptr));
     std::unique_ptr<CFrameworkIf> framework(
-        CFrameworkIf::createNew(&selectorConfigurator));
+        CFrameworkIf::createNew(nullptr));
 
 #endif
 

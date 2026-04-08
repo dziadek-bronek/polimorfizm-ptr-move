@@ -72,12 +72,11 @@ struct CSelectorConfigurator : CSelectorConfiguratorIf {
 
   CSelectorConfigurator(void* selectorInitConfigVoidPtr) {
     initConfigPtr = nullptr;
-    if (nullptr != selectorInitConfigVoidPtr) {
-      initConfigPtr = (std::vector<int>*)selectorInitConfigVoidPtr;
+    if (nullptr == selectorInitConfigVoidPtr) {
+	    return;
     }
+      initConfigPtr = (std::vector<int>*)selectorInitConfigVoidPtr;
   }
-
-  void* getInitConfig() { return initConfigPtr; }
 
   virtual void init(void* mapVoidPtr) {
     MapOfUptrChCrIf* mapPtr = (MapOfUptrChCrIf*)mapVoidPtr;

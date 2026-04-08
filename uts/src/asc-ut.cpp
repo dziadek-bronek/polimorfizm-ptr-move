@@ -71,11 +71,9 @@ TEST(AdvancedSelectorConfigurator,
     checkerPtr = &checker;
 
     std::vector<int> selectorInitConfig({7, -1, -1, -1, 4});
-    std::unique_ptr<CSelectorConfiguratorIf> selectorConfigurator(
-        CSelectorConfiguratorIf::createNew(&selectorInitConfig));
 
     std::unique_ptr<CFrameworkIf> framework(
-        CFrameworkIf::createNew(&selectorConfigurator));
+        CFrameworkIf::createNew(&selectorInitConfig));
 
     {
       std::unique_ptr<CChildCreatorIf> mockChildCreator(
@@ -126,16 +124,14 @@ TEST(AdvancedSelectorConfigurator,
     };
 
     std::vector<int> selectorInitConfig({7, -1, -1, -1, 4});
-    std::unique_ptr<CSelectorConfiguratorIf> selectorConfigurator(
-        CSelectorConfiguratorIf::createNew(&selectorInitConfig));
 
     std::unique_ptr<CFrameworkIf> framework(
-        CFrameworkIf::createNew(&selectorConfigurator));
+        CFrameworkIf::createNew(&selectorInitConfig));
 
     {
       std::unique_ptr<CChildCreatorIf> mockChildCreator(
           new CChildCreator<CChildMock>(73));
-      selectorConfigurator->action(222, &mockChildCreator);
+      framework->configAction(222, &mockChildCreator);
     }
 
     constexpr int INIT_VALUE_RANDOM_EXAMPLE = 29;
@@ -155,3 +151,33 @@ TEST(AdvancedSelectorConfigurator,
   } catch (...) {
   }
 }
+
+#if 0
+TEST(AdvancedSelectorConfigurator, AdvancedSelectorVsSimpleSelector) {
+try{
+
+
+CSelectorConfig {
+
+int type{1};
+    std::vector<int> config{7}};
+} selectorInitConfig;
+
+
+    std::unique_ptr<CSelectorConfiguratorIf> selectorConfigurator(
+        CSelectorConfiguratorIf::createNew(&selectorInitConfig));
+
+    std::unique_ptr<CFrameworkIf> framework(
+        CFrameworkIf::createNew(&selectorConfigurator));
+
+
+
+
+
+
+
+  } catch (...) {
+  }
+}
+#endif
+

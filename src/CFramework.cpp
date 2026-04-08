@@ -12,26 +12,29 @@
 #include <memory>
 
 struct CFramework : CFrameworkIf {
-  CFramework(void* selectorConfiguratorVoidPtr) {
-    selectorConfiguratorPtr =
-        ((std::unique_ptr<
-            CSelectorConfiguratorIf>*)(selectorConfiguratorVoidPtr));
+  CFramework(void* selectorInitConfigVoidPtr) {
+
+    selectorConfigurator = std::unique_ptr<CSelectorConfiguratorIf> (CSelectorConfiguratorIf::createNew(selectorInitConfigVoidPtr));
 
     childSelector =
-        std::unique_ptr<CChildSelectorIf>(CChildSelectorIf::createNew(
-            (*selectorConfiguratorPtr)->getInitConfig()));
+        std::unique_ptr<CChildSelectorIf>(CChildSelectorIf::createNew( selectorInitConfigVoidPtr));
 
-    if (nullptr == (*selectorConfiguratorPtr)->getInitConfig()) {
-      (*selectorConfiguratorPtr)->initSimple(childSelector->getConfig());
-    } else {
-      (*selectorConfiguratorPtr)->init(childSelector->getConfig());
+    if (nullptr == selectorInitConfigVoidPtr) {
+      selectorConfigurator->initSimple(childSelector->getConfig());
+      return;
     }
+      selectorConfigurator->init(childSelector->getConfig());
   }
   ~CFramework() { printf("CFramework destructor\n"); }
 
   virtual void configAction(int x, void* childCreatorVoidPtr) {
+
     void* selectorConfigReadyVoidPtr = childSelector->getConfig();
-    if (selectorConfigReadyVoidPtr) {
+
+    if (nullptr == selectorConfigReadyVoidPtr) {
+      printf("No action allowed in current configuration of selection!!!\n");
+	    return;
+    }
       struct CActionParams {
         void* mapPtr;
         void* creator;
@@ -39,13 +42,14 @@ struct CFramework : CFrameworkIf {
                         .creator = childCreatorVoidPtr};
 
       std::unique_ptr<CParent> configChild((CParent*)getChildBasedOnNumber(x));
-      configChild->action(&actionParams);
-    }
 
-    else {
-      printf("No action allowed in current configuration of selection!!!\n");
+      if(nullptr == configChild) {
+	      return;
+      }
+
+      configChild->action(&actionParams);
+
     }
-  }
 
   virtual void mainLoop(void* inputVoidPtr) {
     CInput* input = (CInput*)inputVoidPtr;
@@ -67,7 +71,7 @@ struct CFramework : CFrameworkIf {
 
  private:
   std::unique_ptr<CChildSelectorIf> childSelector;
-  std::unique_ptr<CSelectorConfiguratorIf>* selectorConfiguratorPtr;
+  std::unique_ptr<CSelectorConfiguratorIf> selectorConfigurator;
 };
 
 CFrameworkIf* CFrameworkIf::createNew(void* selectorConfigVoidPtr) {

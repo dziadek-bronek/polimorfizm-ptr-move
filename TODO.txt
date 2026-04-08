@@ -1,3 +1,6 @@
+czy mozna zrobic mock metody ktora jest static? To rozwiazywaloby akrobacje z klasa CChecker
+
+
 create UTs based on example1
 
 check carefully
