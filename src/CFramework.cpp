@@ -16,7 +16,7 @@ struct CFramework : CFrameworkIf {
     childSelector = std::unique_ptr<CChildSelectorIf>(
         CChildSelectorIf::createNew(selectorInitConfigVoidPtr));
 
-    childSelector->init();
+    childSelectorCore = childSelector->init();
   }
   ~CFramework() { printf("CFramework destructor\n"); }
 
@@ -31,7 +31,7 @@ struct CFramework : CFrameworkIf {
     struct CActionParams {
       void* mapPtr;
       void* creator;
-    } actionParams = {.mapPtr = childSelector->getConfig(),
+    } actionParams = {.mapPtr = childSelectorCore,
                       .creator = childCreatorVoidPtr};
     configChild->action(&actionParams);
   }
@@ -50,14 +50,16 @@ struct CFramework : CFrameworkIf {
     }
   }
 
-  virtual void* getChildBasedOnNumber(int n) {
+ private:
+  void* getChildBasedOnNumber(int n) {
     return childSelector->newChildBasedOnEvent(n);
   }
 
- private:
   std::unique_ptr<CChildSelectorIf> childSelector;
+  void* childSelectorCore;
 };
 
-CFrameworkIf* CFrameworkIf::createNew(void* selectorConfigVoidPtr) {
-  return new CFramework(selectorConfigVoidPtr);
+CFrameworkIf* CFrameworkIf::createNew(void* selectorInitConfigVoidPtr) {
+  return new CFramework(selectorInitConfigVoidPtr);
 }
+CFrameworkIf::~CFrameworkIf() {}

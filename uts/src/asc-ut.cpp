@@ -27,7 +27,6 @@ struct CCheckerMock : CChecker {
 
 CCheckerMock* checkerPtr;
 
-
 #if 0
 TEST(AdvancedSelectorConfigurator, ConstructAndDelete) {
   try {

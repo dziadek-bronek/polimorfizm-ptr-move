@@ -29,11 +29,12 @@ int main() {
     std::unique_ptr<CFrameworkIf> framework(
         CFrameworkIf::createNew(&selectorInitConfig));
 
-    /* Example action defined by developer (see CDevChild definition) -
-       adding to framework. Technically: a 'creator' is instantiated,
-       dedicated for CDevChild class. It is initialized with int 8. After
-       adding this creator to framework (next line) it will creates objects
-       of class CDevChild, every time when input is 8.
+    /* Example action is defined by developer in class CDevChild
+       Here we add it to framework. Technically: a 'creator' is instantiated,
+       dedicated for CDevChild class, parametrized by this class.
+       It is initialized with with number 8.
+       And then we add this creator to framework (next line).
+       The result is: on input 8 the object of class CDevChild is created.
     */
     {
       std::unique_ptr<CChildCreatorIf> newCreator(

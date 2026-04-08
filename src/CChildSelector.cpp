@@ -24,8 +24,10 @@ struct CChildSelector : CChildSelectorIf {
     printf("The selector of child creators: destructing\n");
   }
 
-  virtual void* getConfig() { return &map; }
-  virtual void init() { initializeSelector(&map, selectorInitConfig); }
+  virtual void* init() {
+    initializeSelector(&map, selectorInitConfig);
+    return &map;
+  }
 
   virtual void* newChildBasedOnEvent(int event) {
     for (std::unique_ptr<CChildCreatorIf>& childCreator : map) {
@@ -59,13 +61,14 @@ struct CSimpleChildSelector : CChildSelectorIf {
   }
   virtual ~CSimpleChildSelector() {
     delete singleChildCreator;
+    singleChildCreator = nullptr;
     printf("The simple child selector: destructing\n");
   }
 
-  virtual void init() {
+  virtual void* init() {
     singleChildCreator = (CChildCreatorIf*)initializeSimpleSelector();
+    return singleChildCreator;
   }
-  virtual void* getConfig() { return &singleChildCreator; }
   virtual void* newChildBasedOnEvent(int event) {
     return singleChildCreator->createNewChildIfIsNumber(event);
   }
