@@ -1,4 +1,4 @@
-#include "include/CChildSelector.hpp"
+#include "include/CSelectorIf.hpp"
 #include "include/CParent.hpp"
 
 #include "include/CSelectorConfigurator.hpp"
@@ -13,10 +13,10 @@
 
 struct CFramework : CFrameworkIf {
   CFramework(void* selectorInitConfigVoidPtr) {
-    childSelector = std::unique_ptr<CChildSelectorIf>(
-        CChildSelectorIf::createNew(selectorInitConfigVoidPtr));
+    selector = std::unique_ptr<CSelectorIf>(
+        CSelectorIf::createNew(selectorInitConfigVoidPtr));
 
-    childSelectorCore = childSelector->init();
+    childSelectorCore = selector->init();
   }
   ~CFramework() { printf("CFramework destructor\n"); }
 
@@ -40,7 +40,7 @@ struct CFramework : CFrameworkIf {
     CInput* input = (CInput*)inputVoidPtr;
     for (int event = input->getCurrentEvent();;
          event = input->nextCurrentEvent() /* input++*/) {
-      void* x = childSelector->newChildBasedOnEvent(event);
+      void* x = selector->newChildBasedOnEvent(event);
       if (x == nullptr) {
         printf("-------- UNKNOWN EVENT %i.\n", event);
         continue;
@@ -50,15 +50,15 @@ struct CFramework : CFrameworkIf {
     }
   }
 
- private:
-  void* getChildBasedOnNumber(int n) {
-    return childSelector->newChildBasedOnEvent(n);
+  virtual void* getChildBasedOnNumber(int n) {
+    return selector->newChildBasedOnEvent(n);
   }
+ private:
 
-  std::unique_ptr<CChildSelectorIf> childSelector;
+  std::unique_ptr<CSelectorIf> selector;
   void* childSelectorCore;
 };
 
-CFrameworkIf* newCFramework(void* selectorInitConfigVoidPtr) {
+CFrameworkIf* createNewCFramework(void* selectorInitConfigVoidPtr) {
   return new CFramework(selectorInitConfigVoidPtr);
 }

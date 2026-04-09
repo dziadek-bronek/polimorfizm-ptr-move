@@ -52,37 +52,3 @@ struct CChildSelector : CChildSelectorIf {
   MapOfUptrChCrIf map;
   std::vector<int>* selectorInitConfig;
 };
-
-struct CSimpleChildSelector : CChildSelectorIf {
-  CSimpleChildSelector() {
-    singleChildCreator = nullptr;
-    printf("The simple child selector: constructing\n");
-    fflush(NULL);
-  }
-  virtual ~CSimpleChildSelector() {
-    delete singleChildCreator;
-    singleChildCreator = nullptr;
-    printf("The simple child selector: destructing\n");
-  }
-
-  virtual void* init() {
-    singleChildCreator = (CChildCreatorIf*)initializeSimpleSelector();
-    return singleChildCreator;
-  }
-  virtual void* newChildBasedOnEvent(int event) {
-    return singleChildCreator->createNewChildIfIsNumber(event);
-  }
-
- private:
-  CChildCreatorIf* singleChildCreator;
-};
-
-CChildSelectorIf* CChildSelectorIf::createNew(void* selectorCoreVoidPtr) {
-  if (nullptr == selectorCoreVoidPtr) {
-    return new CSimpleChildSelector;
-  }
-
-  return new CChildSelector(selectorCoreVoidPtr);
-}
-
-CChildSelectorIf::~CChildSelectorIf() {}

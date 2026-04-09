@@ -1,5 +1,5 @@
-#ifndef CHILD_CREATORS_REGISTER_HPP
-#define CHILD_CREATORS_REGISTER_HPP
+#ifndef CSELECTOR_HPP
+#define CSELECTOR_HPP
 
 struct CChildSelectorIf {
   static CChildSelectorIf* createNew(void* selectorInitConfigVoidPtr);

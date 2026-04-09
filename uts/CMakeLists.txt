@@ -21,16 +21,27 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(googletest)
 
 enable_testing()
-add_test(mytests mytests)
 
-add_executable(mytests
-#	src/ut.cpp
-#	src/asc-ut.cpp
+add_test(mytest-ut base)
+add_test(mytest-asc asc)
+
+add_executable(base
+	src/ut.cpp
+)
+
+add_executable(asc
 	src/asc-ut.cpp
 )
 
-target_link_libraries(mytests
+target_link_libraries(base
 	/home/dtstgseete/cprogs/github/polimorfizm-ptr-move/build/libmylib.so
 	gtest gmock_main gmock
 )
 
+target_link_libraries(asc
+	/home/dtstgseete/cprogs/github/polimorfizm-ptr-move/build/libmylib.so
+	gtest gmock_main gmock
+)
+
+add_custom_target(b COMMAND base DEPENDS base)
+add_custom_target(a COMMAND asc DEPENDS asc)

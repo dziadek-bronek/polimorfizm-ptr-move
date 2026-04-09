@@ -1,4 +1,4 @@
-#include "include/CFrameworkIf.hpp"
+#include "include/CFramework.hpp"
 
 // not implemented
 CFrameworkIf* newCFrameworkIfSO(void* selectorInitConfigVoidPtr) {
@@ -9,13 +9,11 @@ CFrameworkIf* newCFrameworkIfSO(void* selectorInitConfigVoidPtr) {
   return frameworkIfObjectPtr;
 }
 
-CFrameworkIf* newCFramework(void* selectorInitConfigVoidPtr);
-
 CFrameworkIf* CFrameworkIf::createNew(void* selectorInitConfigVoidPtr) {
   // not implemented:
   // return newCFrameworkIfSharedObject();
 
   // expect static 'newCFramework'
-  return newCFramework(selectorInitConfigVoidPtr);
+  return createNewCFramework(selectorInitConfigVoidPtr);
 }
 CFrameworkIf::~CFrameworkIf() {}

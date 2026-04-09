@@ -20,12 +20,17 @@ target_sources(mylib
 		src/CConfigChild.cpp
 
 		src/CSelectorConfigurator.cpp
-		src/CChildSelector.cpp
+
+		src/CSimpleSelector.cpp
+		src/CSelector.cpp
+
+		src/CSelectorIf.cpp
+
 
 		src/CInput.cpp
 
-		src/CFrameworkIf.cpp
 		src/CFramework.cpp
+		src/CFrameworkIf.cpp
 
 	PUBLIC
 		FILE_SET mylibHeaders
