@@ -69,8 +69,8 @@ TEST(MemoryManagement, ChildCreatorDestructorInFrameworkZeroConfig) {
       EXPECT_CALL(checker, creatorDestructor());
     }
 
-    CInput input;
-    input.init(new std::vector<int>{8, 0, 7});
+    std::unique_ptr<CInputIf> input(CInputIf::createNew());
+    input->init(new std::vector<int>{8, 0, 7});
 
     framework->mainLoop(&input);
   } catch (...) {
@@ -104,8 +104,8 @@ TEST(MemoryManagement, ChildCreatorDestructorInFramework) {
       EXPECT_CALL(checker, creatorDestructor()).Times(0);
     }
 
-    CInput input;
-    input.init(new std::vector<int>{8, 0, 7});
+    std::unique_ptr<CInputIf> input(CInputIf::createNew());
+    input->init(new std::vector<int>{8, 0, 7});
 
     EXPECT_CALL(checker, creatorDestructor());
 
@@ -213,8 +213,8 @@ TEST(MemoryManagement, ChildDestructorInFrameworkLoop) {
     std::unique_ptr<CChildCreatorIf> newCreator(new CChildCreator<CChild>(8));
     framework->configAction(222, &newCreator);
 
-    CInput input;
-    input.init(new std::vector<int>{8, 0, 7});
+    std::unique_ptr<CInputIf> input(CInputIf::createNew());
+    input->init(new std::vector<int>{8, 0, 7});
 
     EXPECT_CALL(checker, childConstructor());
     EXPECT_CALL(checker, action());

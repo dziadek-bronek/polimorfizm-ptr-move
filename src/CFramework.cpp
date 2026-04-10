@@ -1,3 +1,5 @@
+#include "include/CFramework.hpp"
+
 #include "include/CSelectorIf.hpp"
 #include "include/CParent.hpp"
 
@@ -5,8 +7,8 @@
 
 #include "include/throw.hpp"
 
-#include "include/CFrameworkIf.hpp"
-#include "include/CInput.hpp"
+#include "include/CInputIf.hpp"
+#include "include/throw.hpp"
 
 #include <cstdio>
 #include <memory>
@@ -37,7 +39,7 @@ struct CFramework : CFrameworkIf {
   }
 
   virtual void mainLoop(void* inputVoidPtr) {
-    CInput* input = (CInput*)inputVoidPtr;
+	  std::unique_ptr<CInputIf>& input = *((std::unique_ptr<CInputIf>*)inputVoidPtr);
     for (int event = input->getCurrentEvent();;
          event = input->nextCurrentEvent() /* input++*/) {
       void* x = selector->newChildBasedOnEvent(event);

@@ -40,6 +40,8 @@ add_executable(CFrameworkUTs
 
 target_link_libraries(CFrameworkUTs
 /home/dtstgseete/cprogs/github/polimorfizm-ptr-move/build/CMakeFiles/mylib.dir/src/CFramework.cpp.o
+/home/dtstgseete/cprogs/github/polimorfizm-ptr-move/build/CMakeFiles/mylib.dir/src/CFrameworkIf.cpp.o
+/home/dtstgseete/cprogs/github/polimorfizm-ptr-move/build/CMakeFiles/mylib.dir/src/CSelectorIf.cpp.o
 	gtest gmock_main gmock
 )
 

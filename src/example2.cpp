@@ -3,6 +3,8 @@
 #include "include/CSelectorConfigurator.hpp"
 #include "include/child-creators.hpp"
 
+#include "CInput.cpp"
+
 /* New action defined by a developer, to be added (registered) to framework
    (example/demonstration).
 */
@@ -45,8 +47,8 @@ int main() {
     }
 
     /* Mock of input - vector represents input sequence */
-    CInput input;
-    input.init(new std::vector<int>{2, 4, 3, 8, 0, 7});
+    std::unique_ptr<CInputIf> input(CInputIf::createNew());
+    input->init(new std::vector<int>{2, 4, 3, 8, 0, 7});
 
     framework->mainLoop(&input);
 

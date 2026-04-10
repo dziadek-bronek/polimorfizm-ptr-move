@@ -1,5 +1,9 @@
 #include "include/CParent.hpp"
 #include "include/CSelectorConfigurator.hpp"
+
+
+#include "include/CInputIf.hpp"
+
 int main() {
   try {
     /* Configuration for framework: example.
@@ -27,8 +31,8 @@ int main() {
 #endif
 
     /* Mock input - vector represents input sequence */
-    CInput input;
-    input.init(new std::vector<int>{2, 4, 3, 8, 0, 7});
+    std::unique_ptr<CInputIf> input(CInputIf::createNew());
+    input->init(new std::vector<int>{2, 4, 3, 8, 0, 7});
 
     framework->mainLoop(&input);
 

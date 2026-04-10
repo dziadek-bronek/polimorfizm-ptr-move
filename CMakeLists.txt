@@ -28,6 +28,7 @@ target_sources(mylib
 
 
 		src/CInput.cpp
+		src/CInputIf.cpp
 
 		src/CFramework.cpp
 		src/CFrameworkIf.cpp
@@ -39,7 +40,7 @@ target_sources(mylib
 			src/include
 		FILES
 			src/include/CFrameworkIf.hpp
-			src/include/CInput.hpp
+			src/include/CInputIf.hpp
 			src/include/CParent.hpp
 			src/include/child-creators.hpp
 )

@@ -54,7 +54,7 @@ developer on his own)
 */
 
 #include "include/CFrameworkIf.hpp"
-#include "include/CInput.hpp"
+#include "include/CInputIf.hpp"
 
 /* Needed for unique_ptr */
 #include <memory>
