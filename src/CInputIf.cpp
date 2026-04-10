@@ -3,5 +3,5 @@
 CInputIf::~CInputIf() {}
 
 CInputIf* CInputIf::createNew() {
-	return createNewCInput();
+  return createNewCInput();
 }

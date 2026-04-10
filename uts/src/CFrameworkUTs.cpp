@@ -1,65 +1,88 @@
+#include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
 #include "../../src/include/CFramework.hpp"
 
-#include "../../src/include/CSelectorIf.hpp"
 #include "../../src/include/CInputIf.hpp"
+#include "../../src/include/CSelectorIf.hpp"
 
-int* checkerInt;
-
-struct CSelector : CSelectorIf {
-  virtual ~CSelector(){}
-
-  virtual void* init(){return nullptr;}
-  virtual void* newChildBasedOnEvent(int event){return 0;}
+struct CChecker {
+  virtual void CSimpleSelectorConstructor() {}
+  virtual void CSelectorConstructor() {}
+  virtual void CSimpleSelectorDestructor() {}
+  virtual void CSelectorDestructor() {}
 };
 
-struct CSimpleSelector : CSelector {
-  virtual ~CSimpleSelector(){}
+struct CCheckerMock : CChecker {
+  MOCK_METHOD(void, CSimpleSelectorConstructor, (), (override));
+  MOCK_METHOD(void, CSelectorConstructor, (), (override));
+  MOCK_METHOD(void, CSimpleSelectorDestructor, (), (override));
+  MOCK_METHOD(void, CSelectorDestructor, (), (override));
+};
+
+CCheckerMock* checkerMockPtr;
+int* checkerIntPtr;
+
+struct CSimpleSelector : CSelectorIf {
+  CSimpleSelector() { checkerMockPtr->CSimpleSelectorConstructor(); }
+  virtual ~CSimpleSelector() { checkerMockPtr->CSimpleSelectorDestructor(); }
+  virtual void* init() { return nullptr; }
+  virtual void* newChildBasedOnEvent(int event) { return 0; }
+};
+
+struct CSelector : CSelectorIf {
+  CSelector() { checkerMockPtr->CSelectorConstructor(); }
+  virtual ~CSelector() { checkerMockPtr->CSelectorDestructor(); }
+  virtual void* init() { return nullptr; }
+  virtual void* newChildBasedOnEvent(int event) { return 0; }
 };
 
 CSelectorIf* createNewCSimpleSelector() {
-	*checkerInt = 1;
-	return new CSimpleSelector;
+  *checkerIntPtr = 1;
+  return new CSimpleSelector;
 }
 
-CSelectorIf* createNewCSelector(void* initConfigVoidPtr ) {
-	*checkerInt = 2;
-	return new CSelector;
+CSelectorIf* createNewCSelector(void* initConfigVoidPtr) {
+  *checkerIntPtr = 2;
+  return new CSelector;
 }
 
-struct CInput : CInputIf  {
-  int indexOfCurrentEvent{0};
-  std::unique_ptr<std::vector<int>> sequenceOfEvents;
-  int currentEvent{0};
-
+struct CInput : CInputIf {
   virtual void init(void* sequenceOfEvents_) {}
-
-  virtual int getCurrentEvent() {return 0;}
-
-  virtual int nextCurrentEvent() {return 0;}
-
+  virtual int getCurrentEvent() { return 0; }
+  virtual int nextCurrentEvent() { return 0; }
   virtual void setCurrentEvent() {}
 };
 
+TEST(CFrameworkUTSabc, CreateCSimpleSelector) {
+  int checkerInt = 0;
+  checkerIntPtr = &checkerInt;
 
-TEST(CFrameworkUTSabc, CreateSelector) {
-	int checker = 0;
-	checkerInt = &checker;
-try {
+  CCheckerMock checkerMock;
+  checkerMockPtr = &checkerMock;
+  try {
+    EXPECT_CALL(checkerMock, CSimpleSelectorConstructor());
+    std::unique_ptr<CFrameworkIf> framework(CFrameworkIf::createNew(nullptr));
+    EXPECT_EQ(checkerInt, 1);
+    EXPECT_CALL(checkerMock, CSimpleSelectorDestructor());
+  } catch (...) {
+  }
+}
 
-    {
-	    std::unique_ptr<CFrameworkIf> framework(CFrameworkIf::createNew(nullptr));
-	    EXPECT_EQ(checker, 1);
+TEST(CFrameworkUTSabc, CreateCSelector) {
+  int checkerInt = 0;
+  checkerIntPtr = &checkerInt;
 
-    }
+  CCheckerMock checkerMock;
+  checkerMockPtr = &checkerMock;
 
-    {
-      std::vector<int> selectorInitConfig({7, -1, -1, -1, 4});
-	    std::unique_ptr<CFrameworkIf> framework(CFrameworkIf::createNew(&selectorInitConfig));
-	    EXPECT_EQ(checker, 2);
-    }
-
+  try {
+    EXPECT_CALL(checkerMock, CSelectorConstructor());
+    std::vector<int> selectorInitConfig({7, -1, -1, -1, 4});
+    std::unique_ptr<CFrameworkIf> framework(
+        CFrameworkIf::createNew(&selectorInitConfig));
+    EXPECT_EQ(checkerInt, 2);
+    EXPECT_CALL(checkerMock, CSelectorDestructor());
   } catch (...) {
   }
 }

@@ -1,7 +1,6 @@
 #include "include/CParent.hpp"
 #include "include/CSelectorConfigurator.hpp"
 
-
 #include "include/CInputIf.hpp"
 
 int main() {

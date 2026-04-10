@@ -3,9 +3,7 @@
 #include <cstdio>
 #include "include/throw.hpp"
 
-
 struct CInput : CInputIf {
-
   virtual void init(void* sequenceOfEvents_);
 
   virtual int getCurrentEvent();
@@ -14,13 +12,11 @@ struct CInput : CInputIf {
 
   virtual void setCurrentEvent();
 
-	private:
+ private:
   int indexOfCurrentEvent{0};
   std::unique_ptr<std::vector<int>> sequenceOfEvents;
   int currentEvent{0};
 };
-
-
 
 void CInput::init(void* sequenceOfEvents_) {
   sequenceOfEvents =
@@ -50,5 +46,5 @@ void CInput::setCurrentEvent() {
   currentEvent = (*sequenceOfEvents)[indexOfCurrentEvent];
 }
 CInputIf* createNewCInput() {
-	return new CInput;
+  return new CInput;
 };

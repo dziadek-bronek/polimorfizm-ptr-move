@@ -54,6 +54,6 @@ struct CSelector : CSelectorIf {
   std::vector<int>* selectorInitConfig;
 };
 
-CSelectorIf* createNewCSelector(void* initConfigVoidPtr){
-	return new CSelector(initConfigVoidPtr);
+CSelectorIf* createNewCSelector(void* initConfigVoidPtr) {
+  return new CSelector(initConfigVoidPtr);
 }

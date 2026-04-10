@@ -6,4 +6,3 @@
 CSelectorIf* createNewCSelector(void* selectorCoreVoidPtr);
 
 #endif
-

@@ -1,7 +1,7 @@
 #include "include/CSimpleSelector.hpp"
-#include "include/child-creator.hpp"
-#include "include/CSelectorConfigurator.hpp"
 #include <cstdio>
+#include "include/CSelectorConfigurator.hpp"
+#include "include/child-creator.hpp"
 
 struct CSimpleSelector : CSelectorIf {
   CSimpleSelector() {
@@ -27,6 +27,6 @@ struct CSimpleSelector : CSelectorIf {
   CChildCreatorIf* singleCreator;
 };
 
-CSelectorIf* createNewCSimpleSelector(){
-	return new CSimpleSelector();
+CSelectorIf* createNewCSimpleSelector() {
+  return new CSimpleSelector();
 };
