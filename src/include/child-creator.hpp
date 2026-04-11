@@ -3,10 +3,7 @@
 
 struct CChildCreatorIf
 {
-    virtual void *createNewChildIfIsNumber(int number_)
-    {
-        return nullptr;
-    }
+    virtual void *createNewChildIfIsNumber(int number_) = 0;
     virtual ~CChildCreatorIf()
     {
     }

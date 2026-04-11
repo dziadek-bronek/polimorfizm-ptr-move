@@ -54,9 +54,12 @@ static CChildCreatorIf *createCreatorForChildWithNumber(int childClass,
     throw;
 }
 
-void initializeSelector(void *mapVoidPtr, void *initConfigVoidPtr)
+void initializeSelector(void *mapPtrVoidPtr, void *initConfigVoidPtr)
 {
-    MapOfUptrChCrIf *mapPtr = (MapOfUptrChCrIf *)mapVoidPtr;
+    MapOfUptrChCrIf **mapPtrPtr = (MapOfUptrChCrIf **)mapPtrVoidPtr;
+    *mapPtrPtr = new MapOfUptrChCrIf;
+    MapOfUptrChCrIf *mapPtr = *mapPtrPtr;
+
     std::vector<int> *initConfig = (std::vector<int> *)initConfigVoidPtr;
 
     mapPtr->push_back(UptrChCrIf(new CChildCreator<CConfigChild>(222)));
@@ -83,7 +86,7 @@ void initializeSelector(void *mapVoidPtr, void *initConfigVoidPtr)
     }
 }
 
-void *initializeSimpleSelector()
+void initializeSimpleSelector(void *creatorPtrVoidPtr)
 {
     struct CChildCreatorSimple : CChildCreatorIf
     {
@@ -111,7 +114,7 @@ void *initializeSimpleSelector()
         }
     };
 
-    return new CChildCreatorSimple;
+    *((CChildCreatorIf **)creatorPtrVoidPtr) = new CChildCreatorSimple;
     ;
 }
 

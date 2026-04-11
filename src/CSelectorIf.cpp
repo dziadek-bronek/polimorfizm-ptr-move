@@ -2,14 +2,14 @@
 #include "include/CSelector.hpp"
 #include "include/CSimpleSelector.hpp"
 
-CSelectorIf *CSelectorIf::createNew(void *initConfigVoidPtr)
+CSelectorIf *CSelectorIf::createNew(void **selectorCoreVoidPtrVoidPtr)
 {
-    if (nullptr == initConfigVoidPtr)
+    if (nullptr == *selectorCoreVoidPtrVoidPtr)
     {
-        return createNewCSimpleSelector();
+        return createNewCSimpleSelector(selectorCoreVoidPtrVoidPtr);
     }
 
-    return createNewCSelector(initConfigVoidPtr);
+    return createNewCSelector(selectorCoreVoidPtrVoidPtr);
 }
 
 CSelectorIf::~CSelectorIf()

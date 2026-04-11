@@ -17,21 +17,29 @@ struct CFramework : CFrameworkIf
 {
     CFramework(void *selectorInitConfigVoidPtr)
         : selector(nullptr),
-          childSelectorCore(nullptr)
+          selectorCore(selectorInitConfigVoidPtr)
     {
-        if (nullptr ==
-            (selector = CSelectorIf::createNew(selectorInitConfigVoidPtr)))
+        selector = CSelectorIf::createNew(&selectorCore);
+
+        if (nullptr == selector)
         {
             THROW2("TERMINATED", " - FATAL ERROR (selector is nulptr in "
                                  "CFramework::CFramework())!");
         }
 
-        if (nullptr == (childSelectorCore = selector->init()))
+        if (nullptr == selectorInitConfigVoidPtr)
         {
-            THROW2("TERMINATED",
-                   " - FATAL ERROR (childSelectorCore is nulptr in "
-                   "CFramework::CFramework())!");
+            initializeSimpleSelector(selectorCore);
+            return;
         }
+
+        if (nullptr == selectorCore)
+        {
+            THROW2("TERMINATED", " - FATAL ERROR (selectorCore is nulptr in "
+                                 "CFramework::CFramework())!");
+        }
+
+        initializeSelector(selectorCore, selectorInitConfigVoidPtr);
     }
 
     ~CFramework()
@@ -56,7 +64,7 @@ struct CFramework : CFrameworkIf
         {
             void *mapPtr;
             void *creator;
-        } actionParams = {.mapPtr = childSelectorCore,
+        } actionParams = {.mapPtr = *((void **)selectorCore),
                           .creator = childCreatorVoidPtr};
         configChild->action(&actionParams);
     }
@@ -86,7 +94,7 @@ struct CFramework : CFrameworkIf
 
   private:
     CSelectorIf *selector;
-    void *childSelectorCore;
+    void *selectorCore;
 };
 
 CFrameworkIf *createNewCFramework(void *selectorInitConfigVoidPtr)

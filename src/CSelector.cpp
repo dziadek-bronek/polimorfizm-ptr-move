@@ -17,50 +17,50 @@ using MapOfUptrChCrIf = std::list<UptrChCrIf>;
 
 struct CSelector : CSelectorIf
 {
-    CSelector(void *selectorInitConfigVoidPtr)
+    CSelector(void **selectorCoreVoidPtrVoidPtr)
+        : map(nullptr)
     {
-        selectorInitConfig = (std::vector<int> *)selectorInitConfigVoidPtr;
         printf("The selector of child creators: constructing\n");
+        *selectorCoreVoidPtrVoidPtr = &map;
     }
 
     virtual ~CSelector()
     {
         printf("The selector of child creators: destructing\n");
+        delete map;
+        map = nullptr;
     }
 
-    virtual void *init()
+#if 0
+    virtual void* init()
     {
-        initializeSelector(&map, selectorInitConfig);
-        return &map;
+        initializeSelector(map, selectorInitConfig);
+        return map;
     }
+#endif
 
     virtual void *at(int event)
     {
-        for (std::unique_ptr<CChildCreatorIf> &childCreator : map)
+        for (std::unique_ptr<CChildCreatorIf> &childCreator : *map)
         {
-            if (nullptr == childCreator)
-            {
-                THROW2("Clean exit", " (event 'EXIT' in sequenceOfEvents)");
-            }
-            void *tryToGetChild = childCreator->createNewChildIfIsNumber(event);
-            if (nullptr != tryToGetChild)
+            void *childPtr = childCreator->createNewChildIfIsNumber(event);
+            if (nullptr != childPtr)
             {
                 printf("The selector of child creators: new child created "
-                       "based on event %i\n", event);
-                return tryToGetChild;
+                       "based on event %i\n",
+                       event);
+                return childPtr;
             }
         }
         return nullptr;
-
-        // THROW2("Exit", " on error: unknown event");
     }
 
   private:
-    MapOfUptrChCrIf map;
+    MapOfUptrChCrIf *map;
     std::vector<int> *selectorInitConfig;
 };
 
-CSelectorIf *createNewCSelector(void *initConfigVoidPtr)
+CSelectorIf *createNewCSelector(void **selectorCoreVoidPtrVoidPtr)
 {
-    return new CSelector(initConfigVoidPtr);
+    return new CSelector(selectorCoreVoidPtrVoidPtr);
 }

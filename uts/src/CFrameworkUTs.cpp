@@ -73,13 +73,20 @@ struct CSelector : CSelectorIf
     }
 };
 
-CSelectorIf *createNewCSimpleSelector()
+void initializeSimpleSelector(void *)
+{
+}
+void initializeSelector(void *, void *)
+{
+}
+
+CSelectorIf *createNewCSimpleSelector(void **selectorCoreVoidPtrVoidPtr)
 {
     *checkerIntPtr = 1;
     return new CSimpleSelector;
 }
 
-CSelectorIf *createNewCSelector(void *initConfigVoidPtr)
+CSelectorIf *createNewCSelector(void **selectorCoreVoidPtrVoidPtr)
 {
     *checkerIntPtr = 2;
     return new CSelector;

@@ -5,23 +5,18 @@
 
 struct CSimpleSelector : CSelectorIf
 {
-    CSimpleSelector()
+    CSimpleSelector(void **selectorCoreVoidPtrVoidPtr)
+        : singleCreator(nullptr)
     {
-        singleCreator = nullptr;
         printf("The simple child selector: constructing\n");
         fflush(NULL);
+        *selectorCoreVoidPtrVoidPtr = &singleCreator;
     }
     virtual ~CSimpleSelector()
     {
+        printf("The simple child selector: destructing\n");
         delete singleCreator;
         singleCreator = nullptr;
-        printf("The simple child selector: destructing\n");
-    }
-
-    virtual void *init()
-    {
-        singleCreator = (CChildCreatorIf *)initializeSimpleSelector();
-        return singleCreator;
     }
 
     virtual void *at(int event)
@@ -33,7 +28,7 @@ struct CSimpleSelector : CSelectorIf
     CChildCreatorIf *singleCreator;
 };
 
-CSelectorIf *createNewCSimpleSelector()
+CSelectorIf *createNewCSimpleSelector(void **selectorCoreVoidPtrVoidPtr)
 {
-    return new CSimpleSelector();
+    return new CSimpleSelector(selectorCoreVoidPtrVoidPtr);
 };
