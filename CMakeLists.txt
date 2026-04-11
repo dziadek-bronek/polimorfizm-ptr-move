@@ -19,6 +19,9 @@ target_sources(mylib
 
 		src/CConfigChild.cpp
 
+#		src/CMap.cpp
+#		src/CMapIf.cpp
+
 		src/CSelectorConfigurator.cpp
 
 		src/CSimpleSelector.cpp

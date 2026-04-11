@@ -19,7 +19,8 @@ struct CSimpleSelector : CSelectorIf {
     singleCreator = (CChildCreatorIf*)initializeSimpleSelector();
     return singleCreator;
   }
-  virtual void* newChildBasedOnEvent(int event) {
+
+  virtual void* at(int event) {
     return singleCreator->createNewChildIfIsNumber(event);
   }
 

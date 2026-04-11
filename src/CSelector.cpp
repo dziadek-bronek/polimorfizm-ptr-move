@@ -30,7 +30,7 @@ struct CSelector : CSelectorIf {
     return &map;
   }
 
-  virtual void* newChildBasedOnEvent(int event) {
+  virtual void* at(int event) {
     for (std::unique_ptr<CChildCreatorIf>& childCreator : map) {
       if (nullptr == childCreator) {
         THROW2("Clean exit", " (event 'EXIT' in sequenceOfEvents)");

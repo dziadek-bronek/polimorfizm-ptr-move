@@ -15,15 +15,19 @@
 
 struct CFramework : CFrameworkIf {
   CFramework(void* selectorInitConfigVoidPtr) {
-    selector = std::unique_ptr<CSelectorIf>(
-        CSelectorIf::createNew(selectorInitConfigVoidPtr));
+    selector = nullptr;
+    selector = CSelectorIf::createNew(selectorInitConfigVoidPtr);
 
     childSelectorCore = selector->init();
   }
-  ~CFramework() { printf("CFramework destructor\n"); }
+  ~CFramework() {
+    printf("CFramework destructor\n");
+    delete selector;
+    selector = nullptr;
+  }
 
   virtual void configAction(int x, void* childCreatorVoidPtr) {
-    std::unique_ptr<CParent> configChild((CParent*)getChildBasedOnNumber(x));
+    std::unique_ptr<CParent> configChild((CParent*)selector->at(x));
 
     if (nullptr == configChild) {
       printf("No action allowed in current configuration of selection!!!\n");
@@ -43,7 +47,7 @@ struct CFramework : CFrameworkIf {
         *((std::unique_ptr<CInputIf>*)inputVoidPtr);
     for (int event = input->getCurrentEvent();;
          event = input->nextCurrentEvent() /* input++*/) {
-      void* x = selector->newChildBasedOnEvent(event);
+      void* x = selector->at(event);
       if (x == nullptr) {
         printf("-------- UNKNOWN EVENT %i.\n", event);
         continue;
@@ -53,12 +57,11 @@ struct CFramework : CFrameworkIf {
     }
   }
 
-  virtual void* getChildBasedOnNumber(int n) {
-    return selector->newChildBasedOnEvent(n);
-  }
+  virtual void* getChildBasedOnNumber(int n) { return selector->at(n); }
 
  private:
-  std::unique_ptr<CSelectorIf> selector;
+  // std::unique_ptr<CSelectorIf> selector;
+  CSelectorIf* selector;
   void* childSelectorCore;
 };
 

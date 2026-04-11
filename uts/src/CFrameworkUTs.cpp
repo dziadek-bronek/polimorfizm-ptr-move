@@ -27,14 +27,14 @@ struct CSimpleSelector : CSelectorIf {
   CSimpleSelector() { checkerMockPtr->CSimpleSelectorConstructor(); }
   virtual ~CSimpleSelector() { checkerMockPtr->CSimpleSelectorDestructor(); }
   virtual void* init() { return nullptr; }
-  virtual void* newChildBasedOnEvent(int event) { return 0; }
+  virtual void* at(int event) { return 0; }
 };
 
 struct CSelector : CSelectorIf {
   CSelector() { checkerMockPtr->CSelectorConstructor(); }
   virtual ~CSelector() { checkerMockPtr->CSelectorDestructor(); }
   virtual void* init() { return nullptr; }
-  virtual void* newChildBasedOnEvent(int event) { return 0; }
+  virtual void* at(int event) { return 0; }
 };
 
 CSelectorIf* createNewCSimpleSelector() {
