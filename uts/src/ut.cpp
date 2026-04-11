@@ -37,7 +37,7 @@ struct CCheckerMock : CChecker
     MOCK_METHOD(void, action, (), (override));
 };
 
-CCheckerMock *checkerPtr;
+CCheckerMock* checkerPtr;
 
 /* ====================================== */
 
@@ -195,7 +195,7 @@ TEST(MemoryManagement, CustomChildInFrameworkConstructorActionDestructor)
         EXPECT_CALL(checker, action());
 
         std::unique_ptr<CParent> x(
-            (CParent *)framework->getChildBasedOnNumber(8));
+            (CParent*)framework->getChildBasedOnNumber(8));
         x->action();
 
         EXPECT_CALL(checker, childDestructor());
@@ -226,10 +226,10 @@ TEST(MemoryManagement, ChildDestructorInFrameworkParametrizedAction)
                 checkerPtr->childDestructor();
             }
 
-            virtual void *action(void *actionParameterVoidPtr) override
+            virtual void* action(void* actionParameterVoidPtr) override
             {
-                CActionParameter *actionParameterPtr =
-                    (CActionParameter *)actionParameterVoidPtr;
+                CActionParameter* actionParameterPtr =
+                    (CActionParameter*)actionParameterVoidPtr;
                 ++(*actionParameterPtr);
                 return actionParameterVoidPtr;
             }
@@ -250,10 +250,10 @@ TEST(MemoryManagement, ChildDestructorInFrameworkParametrizedAction)
         EXPECT_CALL(checker, childConstructor());
 
         std::unique_ptr<CParent> x(
-            (CParent *)framework->getChildBasedOnNumber(8));
+            (CParent*)framework->getChildBasedOnNumber(8));
 
-        CActionResult *actionResultPtr =
-            (CActionResult *)(x->action(&actionParameter));
+        CActionResult* actionResultPtr =
+            (CActionResult*)(x->action(&actionParameter));
 
         ASSERT_TRUE(nullptr != actionResultPtr);
         EXPECT_EQ(INIT_VALUE_RANDOM_EXAMPLE + 1, *actionResultPtr);

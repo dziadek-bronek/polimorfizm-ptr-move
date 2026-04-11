@@ -41,21 +41,21 @@ template <typename CHILD> struct CChildCreator : CParentCreator
 
 template <typename CHILD>
 void assignChildCreatorToEvent(int event,
-                               std::list<std::unique_ptr<CParentCreator>> &map)
+                               std::list<std::unique_ptr<CParentCreator>>& map)
 {
     map.push_back(
         std::unique_ptr<CParentCreator>(new CChildCreator<CHILD>(event)));
 }
 
 std::unique_ptr<CParent> newChildBasedOnEvent(
-    int event, std::list<std::unique_ptr<CParentCreator>> &map)
+    int event, std::list<std::unique_ptr<CParentCreator>>& map)
 {
     if (0 == event)
     {
         throw "Clean exit: event 'EXIT' in newChildBasedOnEvent";
     }
 
-    for (std::unique_ptr<CParentCreator> &childCreator : map)
+    for (std::unique_ptr<CParentCreator>& childCreator : map)
     {
         if (childCreator->number == event)
         {
@@ -158,7 +158,7 @@ struct CChild3 : CParent
     }
 };
 
-void registerChildren(std::list<std::unique_ptr<CParentCreator>> &map)
+void registerChildren(std::list<std::unique_ptr<CParentCreator>>& map)
 {
     assignChildCreatorToEvent<CChild1>(1, map);
     assignChildCreatorToEvent<CChild2>(2, map);
@@ -186,7 +186,7 @@ int main()
             child->action();
         }
     }
-    catch (const char *result)
+    catch (const char* result)
     {
         printf("%s.\n", result);
         return 0;

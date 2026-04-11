@@ -23,12 +23,11 @@ target_sources(mylib
 #		src/CMapIf.cpp
 
 		src/CSelectorConfigurator.cpp
+		src/CSelectorConfiguratorIf.cpp
 
 		src/CSimpleSelector.cpp
 		src/CSelector.cpp
-
 		src/CSelectorIf.cpp
-
 
 		src/CInput.cpp
 		src/CInputIf.cpp

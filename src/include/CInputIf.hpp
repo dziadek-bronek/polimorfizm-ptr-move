@@ -6,10 +6,10 @@
 
 struct CInputIf
 {
-    static CInputIf *createNew();
+    static CInputIf* createNew();
     virtual ~CInputIf();
 
-    virtual void init(void *sequenceOfEvents_) = 0;
+    virtual void init(void* sequenceOfEvents_) = 0;
 
     virtual int getCurrentEvent() = 0;
 

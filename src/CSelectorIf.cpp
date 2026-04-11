@@ -2,8 +2,9 @@
 #include "include/CSelector.hpp"
 #include "include/CSimpleSelector.hpp"
 
-CSelectorIf *CSelectorIf::createNew(void **selectorCoreVoidPtrVoidPtr)
+CSelectorIf* CSelectorIf::createNew(void** selectorCoreVoidPtrVoidPtr)
 {
+    return nullptr;
     if (nullptr == *selectorCoreVoidPtrVoidPtr)
     {
         return createNewCSimpleSelector(selectorCoreVoidPtrVoidPtr);

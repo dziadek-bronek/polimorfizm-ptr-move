@@ -10,11 +10,11 @@ struct CMapList : CMapIf
     {
     }
 
-    virtual void *at(int number)
+    virtual void* at(int number)
     {
-        for (std::unique_ptr<CChildCreatorIf> &childCreator : map)
+        for (std::unique_ptr<CChildCreatorIf>& childCreator : map)
         {
-            void *tryToGetChild =
+            void* tryToGetChild =
                 childCreator->createNewChildIfIsNumber(number);
             if (nullptr != tryToGetChild)
             {
@@ -27,14 +27,14 @@ struct CMapList : CMapIf
         }
         return nullptr;
     }
-    virtual void push_back(void *)
+    virtual void push_back(void*)
     {
     }
 
     std::list<std::unique_ptr<CChildCreatorIf>> map;
 };
 
-CMapIf *createNewCMapList()
+CMapIf* createNewCMapList()
 {
     return new CMapList();
 }

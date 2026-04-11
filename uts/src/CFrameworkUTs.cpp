@@ -30,8 +30,8 @@ struct CCheckerMock : CChecker
     MOCK_METHOD(void, CSelectorDestructor, (), (override));
 };
 
-CCheckerMock *checkerMockPtr;
-int *checkerIntPtr;
+CCheckerMock* checkerMockPtr;
+int* checkerIntPtr;
 
 struct CSimpleSelector : CSelectorIf
 {
@@ -43,11 +43,11 @@ struct CSimpleSelector : CSelectorIf
     {
         checkerMockPtr->CSimpleSelectorDestructor();
     }
-    virtual void *init()
+    virtual void* init()
     {
         return nullptr;
     }
-    virtual void *at(int event)
+    virtual void* at(int event)
     {
         return 0;
     }
@@ -63,30 +63,30 @@ struct CSelector : CSelectorIf
     {
         checkerMockPtr->CSelectorDestructor();
     }
-    virtual void *init()
+    virtual void* init()
     {
         return nullptr;
     }
-    virtual void *at(int event)
+    virtual void* at(int event)
     {
         return 0;
     }
 };
 
-void initializeSimpleSelector(void *)
+void initializeSimpleSelector(void*)
 {
 }
-void initializeSelector(void *, void *)
+void initializeSelector(void*, void*)
 {
 }
 
-CSelectorIf *createNewCSimpleSelector(void **selectorCoreVoidPtrVoidPtr)
+CSelectorIf* createNewCSimpleSelector(void** selectorCoreVoidPtrVoidPtr)
 {
     *checkerIntPtr = 1;
     return new CSimpleSelector;
 }
 
-CSelectorIf *createNewCSelector(void **selectorCoreVoidPtrVoidPtr)
+CSelectorIf* createNewCSelector(void** selectorCoreVoidPtrVoidPtr)
 {
     *checkerIntPtr = 2;
     return new CSelector;
@@ -94,7 +94,7 @@ CSelectorIf *createNewCSelector(void **selectorCoreVoidPtrVoidPtr)
 
 struct CInput : CInputIf
 {
-    virtual void init(void *sequenceOfEvents_)
+    virtual void init(void* sequenceOfEvents_)
     {
     }
     virtual int getCurrentEvent()

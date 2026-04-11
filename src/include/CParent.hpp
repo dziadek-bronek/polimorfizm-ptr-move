@@ -21,7 +21,7 @@ struct CParent
     virtual void action()
     {
     }
-    virtual void *action(void *actionParameter)
+    virtual void* action(void* actionParameter)
     {
         return nullptr;
     }
@@ -33,6 +33,6 @@ struct CParent
     }
 };
 
-CParent *createNewChild(int number);
+CParent* createNewChild(int number);
 
 #endif

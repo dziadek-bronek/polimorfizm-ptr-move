@@ -17,33 +17,24 @@ using MapOfUptrChCrIf = std::list<UptrChCrIf>;
 
 struct CSelector : CSelectorIf
 {
-    CSelector(void **selectorCoreVoidPtrVoidPtr)
-        : map(nullptr)
+    CSelector(void* mapVoidPtr)
+        : mapPtr((MapOfUptrChCrIf*)mapVoidPtr)
     {
         printf("The selector of child creators: constructing\n");
-        *selectorCoreVoidPtrVoidPtr = &map;
     }
 
     virtual ~CSelector()
     {
         printf("The selector of child creators: destructing\n");
-        delete map;
-        map = nullptr;
+        delete mapPtr;
+        mapPtr = nullptr;
     }
 
-#if 0
-    virtual void* init()
+    virtual void* at(int event)
     {
-        initializeSelector(map, selectorInitConfig);
-        return map;
-    }
-#endif
-
-    virtual void *at(int event)
-    {
-        for (std::unique_ptr<CChildCreatorIf> &childCreator : *map)
+        for (std::unique_ptr<CChildCreatorIf>& childCreator : *mapPtr)
         {
-            void *childPtr = childCreator->createNewChildIfIsNumber(event);
+            void* childPtr = childCreator->createNewChildIfIsNumber(event);
             if (nullptr != childPtr)
             {
                 printf("The selector of child creators: new child created "
@@ -56,11 +47,10 @@ struct CSelector : CSelectorIf
     }
 
   private:
-    MapOfUptrChCrIf *map;
-    std::vector<int> *selectorInitConfig;
+    MapOfUptrChCrIf* mapPtr;
 };
 
-CSelectorIf *createNewCSelector(void **selectorCoreVoidPtrVoidPtr)
+CSelectorIf* createNewCSelector(void* mapVoidPtr)
 {
-    return new CSelector(selectorCoreVoidPtrVoidPtr);
+    return new CSelector(mapVoidPtr);
 }

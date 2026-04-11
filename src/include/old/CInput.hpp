@@ -14,7 +14,7 @@ struct CInputIf
     std::unique_ptr<std::vector<int>> sequenceOfEvents;
     int currentEvent{0};
 
-    virtual void init(void *sequenceOfEvents_) = 0;
+    virtual void init(void* sequenceOfEvents_) = 0;
 
     virtual int getCurrentEvent() = 0;
 

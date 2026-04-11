@@ -16,7 +16,7 @@ template <typename CHILD> struct CChildCreator : CChildCreatorIf
                typeid(CHILD).name() + 1, id);
     }
 
-    virtual void *createNewChildIfIsNumber(int id_)
+    virtual void* createNewChildIfIsNumber(int id_)
     {
         if (id_ == id)
         {

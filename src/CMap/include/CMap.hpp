@@ -3,6 +3,6 @@
 
 #include "CMapIf.hpp"
 
-CMapIf *createNewCMapList();
+CMapIf* createNewCMapList();
 
 #endif

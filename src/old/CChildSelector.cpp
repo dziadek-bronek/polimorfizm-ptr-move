@@ -16,9 +16,9 @@ using MapOfUptrChCrIf = std::list<UptrChCrIf>;
 
 struct CChildSelector : CChildSelectorIf
 {
-    CChildSelector(void *selectorInitConfigVoidPtr)
+    CChildSelector(void* selectorInitConfigVoidPtr)
     {
-        selectorInitConfig = (std::vector<int> *)selectorInitConfigVoidPtr;
+        selectorInitConfig = (std::vector<int>*)selectorInitConfigVoidPtr;
         printf("The selector of child creators: constructing\n");
     }
 
@@ -27,21 +27,21 @@ struct CChildSelector : CChildSelectorIf
         printf("The selector of child creators: destructing\n");
     }
 
-    virtual void *init()
+    virtual void* init()
     {
         initializeSelector(&map, selectorInitConfig);
         return &map;
     }
 
-    virtual void *newChildBasedOnEvent(int event)
+    virtual void* newChildBasedOnEvent(int event)
     {
-        for (std::unique_ptr<CChildCreatorIf> &childCreator : map)
+        for (std::unique_ptr<CChildCreatorIf>& childCreator : map)
         {
             if (nullptr == childCreator)
             {
                 THROW2("Clean exit", " (event 'EXIT' in sequenceOfEvents)");
             }
-            void *tryToGetChild = childCreator->createNewChildIfIsNumber(event);
+            void* tryToGetChild = childCreator->createNewChildIfIsNumber(event);
             if (nullptr != tryToGetChild)
             {
                 printf("The selector of child creators: new child created "
@@ -58,5 +58,5 @@ struct CChildSelector : CChildSelectorIf
 
   private:
     MapOfUptrChCrIf map;
-    std::vector<int> *selectorInitConfig;
+    std::vector<int>* selectorInitConfig;
 };

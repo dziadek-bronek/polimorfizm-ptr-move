@@ -1,7 +1,7 @@
 
 #include "include/CMap.hpp"
 
-CMapIf *CMapIf::createNew()
+CMapIf* CMapIf::createNew()
 {
     return createNewCMapList();
 };

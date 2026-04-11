@@ -35,7 +35,7 @@ struct CCheckerMock : CChecker
     MOCK_METHOD(void, CChildMockDestructor, (), (override));
 };
 
-CCheckerMock *checkerPtr;
+CCheckerMock* checkerPtr;
 
 #if 0
 TEST(AdvancedSelectorConfigurator, ConstructAndDelete) {
@@ -78,10 +78,10 @@ TEST(AdvancedSelectorConfigurator,
                 checkerPtr->CChildMockDestructor();
             }
 
-            virtual void *action(void *actionParameterVoidPtr) override
+            virtual void* action(void* actionParameterVoidPtr) override
             {
-                CActionParameter *actionParameterPtr =
-                    (CActionParameter *)actionParameterVoidPtr;
+                CActionParameter* actionParameterPtr =
+                    (CActionParameter*)actionParameterVoidPtr;
                 ++(*actionParameterPtr);
                 return actionParameterVoidPtr;
             }
@@ -107,10 +107,10 @@ TEST(AdvancedSelectorConfigurator,
         EXPECT_CALL(checker, CChildMockConstructor());
 
         std::unique_ptr<CParent> childMock(
-            (CParent *)framework->getChildBasedOnNumber(11));
+            (CParent*)framework->getChildBasedOnNumber(11));
         ASSERT_TRUE(nullptr != childMock);
-        CActionResult *actionResultPtr =
-            (CActionResult *)(childMock->action(&actionParameter));
+        CActionResult* actionResultPtr =
+            (CActionResult*)(childMock->action(&actionParameter));
 
         ASSERT_TRUE(nullptr != actionResultPtr);
         EXPECT_EQ(INIT_VALUE_RANDOM_EXAMPLE + 1, *actionResultPtr);
@@ -145,10 +145,10 @@ TEST(AdvancedSelectorConfigurator,
                 checkerPtr->CChildMockDestructor();
             }
 
-            virtual void *action(void *actionParameterVoidPtr) override
+            virtual void* action(void* actionParameterVoidPtr) override
             {
-                CActionParameter *actionParameterPtr =
-                    (CActionParameter *)actionParameterVoidPtr;
+                CActionParameter* actionParameterPtr =
+                    (CActionParameter*)actionParameterVoidPtr;
                 ++(*actionParameterPtr);
                 return actionParameterVoidPtr;
             }
@@ -169,10 +169,10 @@ TEST(AdvancedSelectorConfigurator,
         int actionParameter(INIT_VALUE_RANDOM_EXAMPLE);
 
         std::unique_ptr<CParent> childMock(
-            (CParent *)framework->getChildBasedOnNumber(73));
+            (CParent*)framework->getChildBasedOnNumber(73));
         ASSERT_TRUE(nullptr != childMock);
-        CActionResult *actionResultPtr =
-            (CActionResult *)(childMock->action(&actionParameter));
+        CActionResult* actionResultPtr =
+            (CActionResult*)(childMock->action(&actionParameter));
 
         ASSERT_TRUE(nullptr != actionResultPtr);
         EXPECT_EQ(INIT_VALUE_RANDOM_EXAMPLE + 1, *actionResultPtr);

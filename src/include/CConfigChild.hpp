@@ -5,7 +5,12 @@
 
 struct CConfigChild : CParent
 {
-    virtual void *action(void *actionParameterVoidPtr) override;
+    CConfigChild(void* mapVoidPtr)
+        : mapPtr(mapVoidPtr)
+    {
+    }
+    virtual void* action(void* actionParameterVoidPtr) override;
+    void* mapPtr;
 };
 
 #endif

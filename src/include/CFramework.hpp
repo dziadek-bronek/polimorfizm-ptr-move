@@ -3,6 +3,6 @@
 
 #include "CFrameworkIf.hpp"
 
-CFrameworkIf *createNewCFramework(void *selectorInitConfigVoidPtr);
+CFrameworkIf* createNewCFramework(void* selectorInitConfigVoidPtr);
 
 #endif

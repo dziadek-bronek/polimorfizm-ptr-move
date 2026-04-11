@@ -1,3 +1,4 @@
+#include "include/CSelectorConfigurator.hpp"
 #include "include/CChildren.hpp"
 #include "include/CConfigChild.hpp"
 #include "include/child-creators.hpp"
@@ -6,11 +7,13 @@
 #include <list>
 #include <memory>
 
+#include "include/CSelector.hpp"
+#include "include/CSelectorIf.hpp"
+#include "include/CSimpleSelector.hpp"
 #include <vector>
 
 using UptrChCrIf = std::unique_ptr<CChildCreatorIf>;
 using MapOfUptrChCrIf = std::list<UptrChCrIf>;
-
 struct CChildCreatorExit : CChildCreatorIf
 {
     CChildCreatorExit(int id_)
@@ -23,7 +26,7 @@ struct CChildCreatorExit : CChildCreatorIf
         printf("ChildCreator destructor for  EXIT event %i \n", id);
     }
 
-    virtual void *createNewChildIfIsNumber(int id_)
+    virtual void* createNewChildIfIsNumber(int id_)
     {
         if (id_ == id)
         {
@@ -37,7 +40,7 @@ struct CChildCreatorExit : CChildCreatorIf
     int id;
 };
 
-static CChildCreatorIf *createCreatorForChildWithNumber(int childClass,
+static CChildCreatorIf* createCreatorForChildWithNumber(int childClass,
                                                         int event)
 {
     switch (childClass)
@@ -54,73 +57,122 @@ static CChildCreatorIf *createCreatorForChildWithNumber(int childClass,
     throw;
 }
 
-void initializeSelector(void *mapPtrVoidPtr, void *initConfigVoidPtr)
+struct CChildCreatorConfig : CChildCreatorIf
 {
-    MapOfUptrChCrIf **mapPtrPtr = (MapOfUptrChCrIf **)mapPtrVoidPtr;
-    *mapPtrPtr = new MapOfUptrChCrIf;
-    MapOfUptrChCrIf *mapPtr = *mapPtrPtr;
-
-    std::vector<int> *initConfig = (std::vector<int> *)initConfigVoidPtr;
-
-    mapPtr->push_back(UptrChCrIf(new CChildCreator<CConfigChild>(222)));
-
-    int vSize = initConfig->size();
-
-    if (vSize <= 0)
+    CChildCreatorConfig(int number, void* mapVoidPtr)
+        : id(number),
+          mapPtr((MapOfUptrChCrIf*)mapVoidPtr)
     {
-        mapPtr->push_back(UptrChCrIf(new CChildCreatorExit(0)));
-        return;
     }
 
-    mapPtr->push_back(UptrChCrIf(new CChildCreatorExit(initConfig->at(0))));
-
-    for (int i = 1; i < vSize; ++i)
+    virtual void* createNewChildIfIsNumber(int id_)
     {
-        int event = initConfig->at(i);
-        if (event < 0)
+        if (id_ == id)
         {
-            continue;
+            printf("CChildCreator on event %i is creating new CConfigChild\n",
+                   id);
+            return new CConfigChild(mapPtr);
         }
-        mapPtr->push_back(
-            UptrChCrIf(::createCreatorForChildWithNumber(i, event)));
+        return nullptr;
     }
-}
 
-void initializeSimpleSelector(void *creatorPtrVoidPtr)
+  private:
+    int id;
+    MapOfUptrChCrIf* mapPtr;
+};
+
+struct CConfigurator : CSelectorConfiguratorIf
 {
-    struct CChildCreatorSimple : CChildCreatorIf
+    CConfigurator(void* initConfigVoidPtr)
+        : initConfig((std::vector<int>*)initConfigVoidPtr),
+          selectorCoreMap(nullptr)
     {
-        virtual ~CChildCreatorSimple()
+    }
+    virtual void* initialize()
+    {
+        selectorCoreMap = new MapOfUptrChCrIf;
+
+        selectorCoreMap->push_back(
+            UptrChCrIf(new CChildCreatorConfig(222, selectorCoreMap)));
+
+        int vSize = initConfig->size();
+
+        if (vSize <= 0)
         {
-            printf("ChildCreatorSimpleSelection destructor\n");
+            selectorCoreMap->push_back(UptrChCrIf(new CChildCreatorExit(0)));
+            return createNewCSelector(selectorCoreMap);
         }
 
-        virtual void *createNewChildIfIsNumber(int id_)
+        selectorCoreMap->push_back(
+            UptrChCrIf(new CChildCreatorExit(initConfig->at(0))));
+
+        for (int i = 1; i < vSize; ++i)
         {
-            switch (id_)
+            int event = initConfig->at(i);
+            if (event < 0)
             {
-            case 0:
-                THROW2("Clean exit", " (event 'EXIT' on input)");
-            case 1:
-                return new CChild1;
-            case 2:
-                return new CChild2;
-            case 3:
-                return new CChild3;
-            case 4:
-                return new CChild4;
+                continue;
             }
-            return nullptr;
+            selectorCoreMap->push_back(
+                UptrChCrIf(::createCreatorForChildWithNumber(i, event)));
         }
-    };
 
-    *((CChildCreatorIf **)creatorPtrVoidPtr) = new CChildCreatorSimple;
-    ;
+        return createNewCSelector(selectorCoreMap);
+    }
+
+  private:
+    std::vector<int>* initConfig;
+    MapOfUptrChCrIf* selectorCoreMap;
+};
+
+struct CSimpleConfigurator : CSelectorConfiguratorIf
+{
+    CSimpleConfigurator()
+        : selectorCoreSimpleCreator(nullptr)
+    {
+    }
+    virtual void* initialize()
+    {
+        struct CChildCreatorSimple : CChildCreatorIf
+        {
+            virtual ~CChildCreatorSimple()
+            {
+                printf("ChildCreatorSimpleSelection destructor\n");
+            }
+
+            virtual void* createNewChildIfIsNumber(int id_)
+            {
+                switch (id_)
+                {
+                case 0:
+                    THROW2("Clean exit", " (event 'EXIT' on input)");
+                case 1:
+                    return new CChild1;
+                case 2:
+                    return new CChild2;
+                case 3:
+                    return new CChild3;
+                case 4:
+                    return new CChild4;
+                }
+                return nullptr;
+            }
+        };
+
+        selectorCoreSimpleCreator = new CChildCreatorSimple;
+        return createNewCSimpleSelector(selectorCoreSimpleCreator);
+    }
+
+  private:
+    CChildCreatorIf* selectorCoreSimpleCreator;
+};
+
+CSelectorConfiguratorIf* createNewCSimpleSelectorConfigurator()
+{
+    return new CSimpleConfigurator;
 }
 
-#if 0
-CSelectorConfiguratorIf* CSelectorConfiguratorIf::createNew(
-    void* selectorInitConfigVoidPtr) {
-  return new CSelectorInitializer(selectorInitConfigVoidPtr);
+CSelectorConfiguratorIf* createNewCSelectorConfigurator(void* initConfigVoidPtr)
+{
+    return new CConfigurator(initConfigVoidPtr);
 }
-#endif

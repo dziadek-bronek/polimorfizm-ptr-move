@@ -6,7 +6,7 @@
 # x="Microsoft"
 # x="chromium"
 
-x="{$(cat /home/dtstgseete/cprogs/github/my-clang-format | tr '\n' ',')}"
+x="{$(cat /home/dtstgseete/cprogs/github/polimorfizm-ptr-move/code-style.txt  | tr '\n' ',')}"
 
 echo "$x"
 

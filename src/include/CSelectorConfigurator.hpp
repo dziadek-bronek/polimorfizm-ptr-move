@@ -1,2 +1,11 @@
-void initializeSelector(void *mapPtrVoidPtr, void *initConfigVoidPtr);
-void *initializeSimpleSelector(void *creatorPtrVoidPtr);
+#ifndef CSELECTORCONFIGURATOR_HPP
+#define CSELECTORCONFIGURATOR_HPP
+
+#include "CSelectorConfiguratorIf.hpp"
+
+CSelectorConfiguratorIf* createNewCSimpleSelectorConfigurator();
+
+CSelectorConfiguratorIf* createNewCSelectorConfigurator(
+    void* initConfigVoidPtr);
+
+#endif

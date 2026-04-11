@@ -3,6 +3,6 @@
 
 #include "CInputIf.hpp"
 
-CInputIf *createNewCInput();
+CInputIf* createNewCInput();
 
 #endif

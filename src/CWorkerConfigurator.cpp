@@ -8,16 +8,16 @@
 using UptrChCrIf = std::unique_ptr<CChildCreatorIf>;
 using MapOfUptrChCrIf = std::list<UptrChCrIf>;
 
-void *CConfigChild::action(void *actionParameterVoidPtr)
+void* CConfigChild::action(void* actionParameterVoidPtr)
 {
     struct CAddParams
     {
-        MapOfUptrChCrIf *mapPtr;
-        UptrChCrIf *creator;
+        MapOfUptrChCrIf* mapPtr;
+        UptrChCrIf* creator;
     };
 
     printf("configChild is adding creator\n");
-    CAddParams *x = ((CAddParams *)(actionParameterVoidPtr));
+    CAddParams* x = ((CAddParams*)(actionParameterVoidPtr));
 
     (x->mapPtr)->push_back(std::move(*(x->creator)));
 

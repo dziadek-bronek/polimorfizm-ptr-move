@@ -5,7 +5,7 @@
 
 struct CInput : CInputIf
 {
-    virtual void init(void *sequenceOfEvents_);
+    virtual void init(void* sequenceOfEvents_);
 
     virtual int getCurrentEvent();
 
@@ -19,10 +19,10 @@ struct CInput : CInputIf
     int currentEvent{0};
 };
 
-void CInput::init(void *sequenceOfEvents_)
+void CInput::init(void* sequenceOfEvents_)
 {
-    sequenceOfEvents = std::unique_ptr<std::vector<int>>(
-        (std::vector<int> *)sequenceOfEvents_);
+    sequenceOfEvents =
+        std::unique_ptr<std::vector<int>>((std::vector<int>*)sequenceOfEvents_);
     setCurrentEvent();
 }
 
@@ -52,7 +52,7 @@ void CInput::setCurrentEvent()
 
     currentEvent = (*sequenceOfEvents)[indexOfCurrentEvent];
 }
-CInputIf *createNewCInput()
+CInputIf* createNewCInput()
 {
     return new CInput;
 };

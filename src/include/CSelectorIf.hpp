@@ -3,10 +3,10 @@
 
 struct CSelectorIf
 {
-    static CSelectorIf *createNew(void **selectorInitConfigVoidPtr);
+    static CSelectorIf* createNew(void** selectorInitConfigVoidPtr);
     virtual ~CSelectorIf() = 0;
 
-    virtual void *at(int event) = 0;
+    virtual void* at(int event) = 0;
 };
 
 #endif
