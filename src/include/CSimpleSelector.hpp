@@ -3,6 +3,6 @@
 
 #include "CSelectorIf.hpp"
 
-CSelectorIf* createNewCSimpleSelector();
+CSelectorIf *createNewCSimpleSelector();
 
 #endif

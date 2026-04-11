@@ -3,6 +3,6 @@
 
 #include "CSelectorIf.hpp"
 
-CSelectorIf* createNewCSelector(void* selectorCoreVoidPtr);
+CSelectorIf *createNewCSelector(void *selectorCoreVoidPtr);
 
 #endif

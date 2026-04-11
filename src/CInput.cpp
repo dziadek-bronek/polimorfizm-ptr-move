@@ -1,50 +1,58 @@
 #include "include/CInputIf.hpp"
 
-#include <cstdio>
 #include "include/throw.hpp"
+#include <cstdio>
 
-struct CInput : CInputIf {
-  virtual void init(void* sequenceOfEvents_);
+struct CInput : CInputIf
+{
+    virtual void init(void *sequenceOfEvents_);
 
-  virtual int getCurrentEvent();
+    virtual int getCurrentEvent();
 
-  virtual int nextCurrentEvent();
+    virtual int nextCurrentEvent();
 
-  virtual void setCurrentEvent();
+    virtual void setCurrentEvent();
 
- private:
-  int indexOfCurrentEvent{0};
-  std::unique_ptr<std::vector<int>> sequenceOfEvents;
-  int currentEvent{0};
+  private:
+    int indexOfCurrentEvent{0};
+    std::unique_ptr<std::vector<int>> sequenceOfEvents;
+    int currentEvent{0};
 };
 
-void CInput::init(void* sequenceOfEvents_) {
-  sequenceOfEvents =
-      std::unique_ptr<std::vector<int>>((std::vector<int>*)sequenceOfEvents_);
-  setCurrentEvent();
+void CInput::init(void *sequenceOfEvents_)
+{
+    sequenceOfEvents = std::unique_ptr<std::vector<int>>(
+        (std::vector<int> *)sequenceOfEvents_);
+    setCurrentEvent();
 }
 
-int CInput::getCurrentEvent() {
-  return currentEvent;
+int CInput::getCurrentEvent()
+{
+    return currentEvent;
 }
 
-int CInput::nextCurrentEvent() {
-  ++indexOfCurrentEvent;
-  setCurrentEvent();
-  return currentEvent;
+int CInput::nextCurrentEvent()
+{
+    ++indexOfCurrentEvent;
+    setCurrentEvent();
+    return currentEvent;
 }
 
-void CInput::setCurrentEvent() {
-  if (indexOfCurrentEvent < 0) {
-    THROW2("Exit", " on error: invalid index of event");
-  }
+void CInput::setCurrentEvent()
+{
+    if (indexOfCurrentEvent < 0)
+    {
+        THROW2("Exit", " on error: invalid index of event");
+    }
 
-  if (sequenceOfEvents->size() <= indexOfCurrentEvent) {
-    THROW2("Clean exit", " (no more events)");
-  }
+    if (sequenceOfEvents->size() <= indexOfCurrentEvent)
+    {
+        THROW2("Clean exit", " (no more events)");
+    }
 
-  currentEvent = (*sequenceOfEvents)[indexOfCurrentEvent];
+    currentEvent = (*sequenceOfEvents)[indexOfCurrentEvent];
 }
-CInputIf* createNewCInput() {
-  return new CInput;
+CInputIf *createNewCInput()
+{
+    return new CInput;
 };
