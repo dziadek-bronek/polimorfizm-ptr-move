@@ -88,7 +88,7 @@ struct CConfigurator : CSelectorConfiguratorIf
           selectorCoreMap(nullptr)
     {
     }
-    virtual void* initialize()
+    virtual void* initializeSelector()
     {
         selectorCoreMap = new MapOfUptrChCrIf;
 
@@ -131,7 +131,7 @@ struct CSimpleConfigurator : CSelectorConfiguratorIf
         : selectorCoreSimpleCreator(nullptr)
     {
     }
-    virtual void* initialize()
+    virtual void* initializeSelector()
     {
         struct CChildCreatorSimple : CChildCreatorIf
         {
