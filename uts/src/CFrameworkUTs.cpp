@@ -5,6 +5,7 @@
 
 #include "../../src/include/CInputIf.hpp"
 #include "../../src/include/CSelectorConfiguratorIf.hpp"
+#include "../../src/include/CSelectorIf.hpp"
 
 struct CChecker
 {
@@ -33,6 +34,14 @@ struct CCheckerMock : CChecker
 CCheckerMock* checkerMockPtr;
 int* checkerIntPtr;
 
+struct CSelectorMock : CSelectorIf {
+
+    virtual ~CSelectorMock(){}
+
+    virtual void* at(int event) {return nullptr;}
+
+};
+
 struct CSimpleConfigurator : CSelectorConfiguratorIf
 {
     CSimpleConfigurator()
@@ -45,7 +54,7 @@ struct CSimpleConfigurator : CSelectorConfiguratorIf
     }
     virtual void* initializeSelector()
     {
-        return nullptr;
+	    return new CSelectorMock();
     }
 };
 
@@ -61,7 +70,7 @@ struct CConfigurator : CSelectorConfiguratorIf
     }
     virtual void* initializeSelector()
     {
-        return nullptr;
+	    return new CSelectorMock();
     }
 };
 
@@ -95,7 +104,7 @@ struct CInput : CInputIf
     }
 };
 
-TEST(CFrameworkUTSabc, CreateCSimpleConfigurator)
+TEST(CFrameworkUTs, CreateCSimpleConfigurator)
 {
     int checkerInt = 0;
     checkerIntPtr = &checkerInt;
@@ -112,10 +121,11 @@ TEST(CFrameworkUTSabc, CreateCSimpleConfigurator)
     }
     catch (...)
     {
+	    ASSERT_TRUE(false);
     }
 }
 
-TEST(CFrameworkUTSabc, CreateCConfigurator)
+TEST(CFrameworkUTs, CreateCConfigurator)
 {
     int checkerInt = 0;
     checkerIntPtr = &checkerInt;
@@ -134,5 +144,6 @@ TEST(CFrameworkUTSabc, CreateCConfigurator)
     }
     catch (...)
     {
+	    ASSERT_TRUE(false);
     }
 }

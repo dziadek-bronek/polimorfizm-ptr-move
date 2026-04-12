@@ -2,6 +2,7 @@
 #include "include/CSelector.hpp"
 #include "include/CSimpleSelector.hpp"
 
+#if 0
 CSelectorIf* CSelectorIf::createNew(void** selectorCoreVoidPtrVoidPtr)
 {
     return nullptr;
@@ -12,6 +13,7 @@ CSelectorIf* CSelectorIf::createNew(void** selectorCoreVoidPtrVoidPtr)
 
     return createNewCSelector(selectorCoreVoidPtrVoidPtr);
 }
+#endif
 
 CSelectorIf::~CSelectorIf()
 {
