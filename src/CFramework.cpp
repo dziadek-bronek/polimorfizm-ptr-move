@@ -19,7 +19,7 @@ struct CFramework : CFrameworkIf
         : selector(nullptr)
     {
         configurator =
-            CSelectorConfiguratorIf::createNew(selectorInitConfigVoidPtr);
+            std::unique_ptr<CSelectorConfiguratorIf>(CSelectorConfiguratorIf::createNew(selectorInitConfigVoidPtr));
 
         if (nullptr == configurator)
         {
@@ -27,7 +27,7 @@ struct CFramework : CFrameworkIf
                                  "CFramework::CFramework())!");
         }
 
-        selector = (CSelectorIf*)configurator->initializeSelector();
+        selector = std::unique_ptr<CSelectorIf>((CSelectorIf*)configurator->initializeSelector());
 
         if (nullptr == selector)
         {
@@ -39,8 +39,6 @@ struct CFramework : CFrameworkIf
     ~CFramework()
     {
         printf("CFramework destructor\n");
-        delete selector;
-        selector = nullptr;
     }
 
     virtual void configAction(int x, void* childCreatorUptrVoidPtr)
@@ -81,8 +79,8 @@ struct CFramework : CFrameworkIf
     }
 
   private:
-    CSelectorIf* selector;
-    CSelectorConfiguratorIf* configurator;
+    std::unique_ptr<CSelectorIf> selector;
+    std::unique_ptr<CSelectorConfiguratorIf> configurator;
 };
 
 CFrameworkIf* createNewCFramework(void* selectorInitConfigVoidPtr)
