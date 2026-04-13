@@ -1,18 +1,10 @@
 
 struct CChecker
 {
-    virtual void CSimpleConfiguratorConstructor()
-    {
-    }
-    virtual void CConfiguratorConstructor()
-    {
-    }
-    virtual void CSimpleConfiguratorDestructor()
-    {
-    }
-    virtual void CConfiguratorDestructor()
-    {
-    }
+    virtual void CSimpleConfiguratorConstructor() {}
+    virtual void CConfiguratorConstructor() {}
+    virtual void CSimpleConfiguratorDestructor() {}
+    virtual void CConfiguratorDestructor() {}
 };
 
 struct CCheckerMock : CChecker
@@ -26,14 +18,15 @@ struct CCheckerMock : CChecker
 CCheckerMock* checkerMockPtr;
 int* checkerIntPtr;
 
-TEST(CSelectorConfiguratorUTs, CConfiguratorInitializesSelector){
-	std::vector<int> initConfig{7, 3};
-	std::unique_ptr<CSelectorConfiguratorIf> configurator((CSelectorConfiguratorIf*)createNewCConfigurator(&initConfig));
-	std::unique_ptr<CChildSelectorIf> selector((CChildSelectorIf*)selector->initialize());
+TEST(CSelectorConfiguratorUTs, CConfiguratorInitializesSelector)
+{
+    std::vector<int> initConfig{7, 3};
+    std::unique_ptr<CSelectorConfiguratorIf> configurator(
+        (CSelectorConfiguratorIf*)createNewCConfigurator(&initConfig));
+    std::unique_ptr<CChildSelectorIf> selector(
+        (CChildSelectorIf*)selector->initialize());
 }
 
-TEST(CConfiguratorUTs, CreateConfigChild){
-}
+TEST(CConfiguratorUTs, CreateConfigChild) {}
 
-TEST(CConfiguratorUTs, CreateConfigChild){
-}
+TEST(CConfiguratorUTs, CreateConfigChild) {}

@@ -15,6 +15,4 @@ CSelectorIf* CSelectorIf::createNew(void** selectorCoreVoidPtrVoidPtr)
 }
 #endif
 
-CSelectorIf::~CSelectorIf()
-{
-}
+CSelectorIf::~CSelectorIf() {}

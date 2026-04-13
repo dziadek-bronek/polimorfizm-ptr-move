@@ -11,21 +11,11 @@
 
 struct CChecker
 {
-    virtual void childConstructor()
-    {
-    }
-    virtual void creatorConstructor()
-    {
-    }
-    virtual void childDestructor()
-    {
-    }
-    virtual void creatorDestructor()
-    {
-    }
-    virtual void action()
-    {
-    }
+    virtual void childConstructor() {}
+    virtual void creatorConstructor() {}
+    virtual void childDestructor() {}
+    virtual void creatorDestructor() {}
+    virtual void action() {}
 };
 
 struct CCheckerMock : CChecker
@@ -106,13 +96,13 @@ TEST(MemoryManagement, ChildCreatorDestructorInFrameworkZeroConfig)
 
         framework->mainLoop(&input);
     }
-    catch (const char* result){
-	    EXPECT_STREQ("Clean exit (event 'EXIT' on input)", result);
-
+    catch (const char* result)
+    {
+        EXPECT_STREQ("Clean exit (event 'EXIT' on input)", result);
     }
     catch (...)
     {
-	    ASSERT_TRUE(false);
+        ASSERT_TRUE(false);
     }
 }
 
@@ -158,12 +148,13 @@ TEST(MemoryManagement, ChildCreatorDestructorInFramework)
 
         framework->mainLoop(&input);
     }
-    catch (const char* result){
-	    EXPECT_STREQ("Clean exit (event 'EXIT' on input)", result);
+    catch (const char* result)
+    {
+        EXPECT_STREQ("Clean exit (event 'EXIT' on input)", result);
     }
     catch (...)
     {
-	    ASSERT_TRUE(false);
+        ASSERT_TRUE(false);
     }
 }
 
@@ -211,7 +202,7 @@ TEST(MemoryManagement, CustomChildInFrameworkConstructorActionDestructor)
     }
     catch (...)
     {
-	    ASSERT_TRUE(false);
+        ASSERT_TRUE(false);
     }
 }
 
@@ -273,7 +264,7 @@ TEST(MemoryManagement, ChildDestructorInFrameworkParametrizedAction)
     }
     catch (...)
     {
-	    ASSERT_TRUE(false);
+        ASSERT_TRUE(false);
     }
 }
 
@@ -320,12 +311,13 @@ TEST(MemoryManagement, ChildDestructorInFrameworkLoop)
         framework->mainLoop(&input);
     }
 
-    catch (const char* result){
-	    EXPECT_STREQ("Clean exit (event 'EXIT' on input)", result);
+    catch (const char* result)
+    {
+        EXPECT_STREQ("Clean exit (event 'EXIT' on input)", result);
     }
 
     catch (...)
     {
-	    ASSERT_TRUE(false);
+        ASSERT_TRUE(false);
     }
 }

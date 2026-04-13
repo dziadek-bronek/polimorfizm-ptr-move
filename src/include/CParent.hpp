@@ -14,23 +14,15 @@ struct CParent {
 
 struct CParent
 {
-    virtual ~CParent()
-    {
-    }
+    virtual ~CParent() {}
 
-    virtual void action()
-    {
-    }
+    virtual void action() {}
     virtual void* action(void* actionParameter)
     {
         return nullptr;
     }
-    virtual void constr()
-    {
-    }
-    virtual void destr()
-    {
-    }
+    virtual void constr() {}
+    virtual void destr() {}
 };
 
 CParent* createNewChild(int number);

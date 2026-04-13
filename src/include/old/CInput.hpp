@@ -6,9 +6,7 @@
 
 struct CInputIf
 {
-    virtual ~CInputIf()
-    {
-    }
+    virtual ~CInputIf() {}
 
     int indexOfCurrentEvent{0};
     std::unique_ptr<std::vector<int>> sequenceOfEvents;

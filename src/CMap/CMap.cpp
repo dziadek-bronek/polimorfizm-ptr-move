@@ -6,9 +6,7 @@
 
 struct CMapList : CMapIf
 {
-    ~CMapList()
-    {
-    }
+    ~CMapList() {}
 
     virtual void* at(int number)
     {
@@ -27,9 +25,7 @@ struct CMapList : CMapIf
         }
         return nullptr;
     }
-    virtual void push_back(void*)
-    {
-    }
+    virtual void push_back(void*) {}
 
     std::list<std::unique_ptr<CChildCreatorIf>> map;
 };

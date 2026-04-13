@@ -18,8 +18,8 @@ struct CFramework : CFrameworkIf
     CFramework(void* selectorInitConfigVoidPtr)
         : selector(nullptr)
     {
-        configurator =
-            std::unique_ptr<CSelectorConfiguratorIf>(CSelectorConfiguratorIf::createNew(selectorInitConfigVoidPtr));
+        configurator = std::unique_ptr<CSelectorConfiguratorIf>(
+            CSelectorConfiguratorIf::createNew(selectorInitConfigVoidPtr));
 
         if (nullptr == configurator)
         {
@@ -27,7 +27,8 @@ struct CFramework : CFrameworkIf
                                  "CFramework::CFramework())!");
         }
 
-        selector = std::unique_ptr<CSelectorIf>((CSelectorIf*)configurator->initializeSelector());
+        selector = std::unique_ptr<CSelectorIf>(
+            (CSelectorIf*)configurator->initializeSelector());
 
         if (nullptr == selector)
         {

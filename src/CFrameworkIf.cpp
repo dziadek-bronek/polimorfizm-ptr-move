@@ -18,6 +18,4 @@ CFrameworkIf* CFrameworkIf::createNew(void* selectorInitConfigVoidPtr)
     // expect static 'newCFramework'
     return createNewCFramework(selectorInitConfigVoidPtr);
 }
-CFrameworkIf::~CFrameworkIf()
-{
-}
+CFrameworkIf::~CFrameworkIf() {}

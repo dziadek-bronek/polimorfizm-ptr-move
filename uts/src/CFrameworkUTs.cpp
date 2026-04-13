@@ -25,24 +25,27 @@ struct CCheckerMock : CChecker
 
 CCheckerMock* checkerMockPtr;
 
-
 // CSelectorIf* createNewCSelectorMock();
 
-CSelectorIf::~CSelectorIf(){ }
+CSelectorIf::~CSelectorIf() {}
 
 // CSelectorIf* CSelectorIf::createNew() {return createNewCSelectorMock(); }
 
 struct CSelectorMock : CSelectorIf
 {
-    CSelectorMock(){
-	    checkerMockPtr->CSelectorMockConstructor();
+    CSelectorMock()
+    {
+        checkerMockPtr->CSelectorMockConstructor();
     }
-    virtual ~CSelectorMock(){
-	    checkerMockPtr->CSelectorMockDestructor();
+    virtual ~CSelectorMock()
+    {
+        checkerMockPtr->CSelectorMockDestructor();
     }
 
-    virtual void* at(int event) {return nullptr;}
-
+    virtual void* at(int event)
+    {
+        return nullptr;
+    }
 };
 // CSelectorIf* createNewCSelectorMock() { return new CSelectorMock; }
 
@@ -52,10 +55,12 @@ CSelectorMock* selectorMockPtr;
 
 CSelectorConfiguratorIf* createNewCSelectorConfiguratorMock();
 
-CSelectorConfiguratorIf::~CSelectorConfiguratorIf(){}
+CSelectorConfiguratorIf::~CSelectorConfiguratorIf() {}
 
-CSelectorConfiguratorIf* CSelectorConfiguratorIf::createNew(void* initConfigVoidPtr){
-	return createNewCSelectorConfiguratorMock();
+CSelectorConfiguratorIf* CSelectorConfiguratorIf::createNew(
+    void* initConfigVoidPtr)
+{
+    return createNewCSelectorConfiguratorMock();
 }
 
 struct CSelectorConfiguratorMock : CSelectorConfiguratorIf
@@ -71,21 +76,19 @@ struct CSelectorConfiguratorMock : CSelectorConfiguratorIf
     }
     virtual void* initializeSelector()
     {
-	    return new CSelectorMock;
+        return new CSelectorMock;
     }
 };
-	CSelectorConfiguratorIf* createNewCSelectorConfiguratorMock() {
-	return new CSelectorConfiguratorMock;
-	}
-
+CSelectorConfiguratorIf* createNewCSelectorConfiguratorMock()
+{
+    return new CSelectorConfiguratorMock;
+}
 
 CSelectorConfiguratorMock* selectorConfiguratorMockPtr;
 
 struct CInput : CInputIf
 {
-    virtual void init(void* sequenceOfEvents_)
-    {
-    }
+    virtual void init(void* sequenceOfEvents_) {}
     virtual int getCurrentEvent()
     {
         return 0;
@@ -94,9 +97,7 @@ struct CInput : CInputIf
     {
         return 0;
     }
-    virtual void setCurrentEvent()
-    {
-    }
+    virtual void setCurrentEvent() {}
 };
 
 TEST(CFrameworkUTs, CreateCSimpleConfigurator)
@@ -113,11 +114,10 @@ TEST(CFrameworkUTs, CreateCSimpleConfigurator)
             CFrameworkIf::createNew(nullptr));
         EXPECT_CALL(checkerMock, CSelectorMockDestructor());
         EXPECT_CALL(checkerMock, CSelectorConfiguratorMockDestructor());
-
     }
     catch (...)
     {
-	    ASSERT_TRUE(false);
+        ASSERT_TRUE(false);
     }
 }
 

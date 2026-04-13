@@ -13,18 +13,10 @@
 
 struct CChecker
 {
-    virtual void CSCMockConstructor()
-    {
-    }
-    virtual void CSCMockDestructor()
-    {
-    }
-    virtual void CChildMockConstructor()
-    {
-    }
-    virtual void CChildMockDestructor()
-    {
-    }
+    virtual void CSCMockConstructor() {}
+    virtual void CSCMockDestructor() {}
+    virtual void CChildMockConstructor() {}
+    virtual void CChildMockDestructor() {}
 };
 
 struct CCheckerMock : CChecker
@@ -120,7 +112,7 @@ TEST(AdvancedSelectorConfigurator,
     }
     catch (...)
     {
-	    ASSERT_TRUE(false);
+        ASSERT_TRUE(false);
     }
 }
 
@@ -183,7 +175,7 @@ TEST(AdvancedSelectorConfigurator,
     }
     catch (...)
     {
-	    ASSERT_TRUE(false);
+        ASSERT_TRUE(false);
     }
 }
 

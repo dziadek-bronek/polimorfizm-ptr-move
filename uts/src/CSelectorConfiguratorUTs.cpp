@@ -1,8 +1,8 @@
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
-#include "../../src/include/CSelectorConfiguratorIf.hpp"
 #include "../../src/include/CSelectorConfigurator.hpp"
+#include "../../src/include/CSelectorConfiguratorIf.hpp"
 
 #include "../../src/include/CSelectorIf.hpp"
 
@@ -26,43 +26,52 @@ CCheckerMock* checkerMockPtr;
 
 // CSelectorIf* createNewCSelectorMock();
 
-CSelectorIf::~CSelectorIf(){ }
+CSelectorIf::~CSelectorIf() {}
 
 // CSelectorIf* CSelectorIf::createNew() {return createNewCSelectorMock(); }
 
 struct CSelectorMock : CSelectorIf
 {
-    CSelectorMock(){
-	    checkerMockPtr->CSelectorMockConstructor();
+    CSelectorMock()
+    {
+        checkerMockPtr->CSelectorMockConstructor();
     }
-    virtual ~CSelectorMock(){
-	    checkerMockPtr->CSelectorMockDestructor();
+    virtual ~CSelectorMock()
+    {
+        checkerMockPtr->CSelectorMockDestructor();
     }
 
-    virtual void* at(int event) {return nullptr;}
-
+    virtual void* at(int event)
+    {
+        return nullptr;
+    }
 };
 
 CSelectorMock* selectorMockPtr;
 
-TEST(CSelectorConfiguratorUTs, CConfiguratorInitializesSelector){
+TEST(CSelectorConfiguratorUTs, CConfiguratorInitializesSelector)
+{
 
-	try {
-    CCheckerMock checkerMock;
-    checkerMockPtr = &checkerMock;
+    try
+    {
+        CCheckerMock checkerMock;
+        checkerMockPtr = &checkerMock;
 
-
-	std::vector<int> initConfig{7, 3};
-	std::unique_ptr<CSelectorConfiguratorIf> configurator((CSelectorConfiguratorIf*)createNewCSelectorConfigurator(&initConfig));
+        std::vector<int> initConfig{7, 3};
+        std::unique_ptr<CSelectorConfiguratorIf> configurator(
+            (CSelectorConfiguratorIf*)createNewCSelectorConfigurator(
+                &initConfig));
 
         EXPECT_CALL(checkerMock, CSelectorMockConstructor());
 
-	std::unique_ptr<CSelectorIf> selector((CSelectorIf*)configurator->initializeSelector());
+        std::unique_ptr<CSelectorIf> selector(
+            (CSelectorIf*)configurator->initializeSelector());
 
         EXPECT_CALL(checkerMock, CSelectorMockDestructor());
-} catch (...)
+    }
+    catch (...)
     {
-	    ASSERT_TRUE(false);
+        ASSERT_TRUE(false);
     }
 }
 #if 0
