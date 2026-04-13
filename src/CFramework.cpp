@@ -41,9 +41,9 @@ struct CFramework : CFrameworkIf
         printf("CFramework destructor\n");
     }
 
-    virtual void configAction(int x, void* childCreatorUptrVoidPtr)
+    virtual void configAdd(void* childCreatorUPtrVoidPtr)
     {
-        std::unique_ptr<CParent> configChild((CParent*)selector->at(x));
+        std::unique_ptr<CParent> configChild((CParent*)selector->at(222));
 
         if (nullptr == configChild)
         {
@@ -52,7 +52,7 @@ struct CFramework : CFrameworkIf
             return;
         }
 
-        configChild->action(childCreatorUptrVoidPtr);
+        configChild->action(childCreatorUPtrVoidPtr);
     }
 
     virtual void mainLoop(void* inputVoidPtr)

@@ -98,7 +98,7 @@ TEST(AdvancedSelectorConfigurator,
         {
             std::unique_ptr<CChildCreatorIf> mockChildCreator(
                 new CChildCreator<CChildMock>(11));
-            framework->configAction(222, &mockChildCreator);
+            framework->configAdd(&mockChildCreator);
         }
 
         constexpr int INIT_VALUE_RANDOM_EXAMPLE = 29;
@@ -120,6 +120,7 @@ TEST(AdvancedSelectorConfigurator,
     }
     catch (...)
     {
+	    ASSERT_TRUE(false);
     }
 }
 
@@ -162,7 +163,7 @@ TEST(AdvancedSelectorConfigurator,
         {
             std::unique_ptr<CChildCreatorIf> mockChildCreator(
                 new CChildCreator<CChildMock>(73));
-            framework->configAction(222, &mockChildCreator);
+            framework->configAdd(&mockChildCreator);
         }
 
         constexpr int INIT_VALUE_RANDOM_EXAMPLE = 29;
@@ -182,6 +183,7 @@ TEST(AdvancedSelectorConfigurator,
     }
     catch (...)
     {
+	    ASSERT_TRUE(false);
     }
 }
 
@@ -210,6 +212,7 @@ int type{1};
 
 
   } catch (...) {
+	    ASSERT_TRUE(false);
   }
 }
 #endif

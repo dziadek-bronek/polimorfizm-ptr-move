@@ -96,7 +96,7 @@ TEST(MemoryManagement, ChildCreatorDestructorInFrameworkZeroConfig)
 
             std::unique_ptr<CChildCreatorIf> newCreator(new CChildCreatorX(8));
 
-            framework->configAction(222, &newCreator);
+            framework->configAdd(&newCreator);
 
             EXPECT_CALL(checker, creatorDestructor());
         }
@@ -106,8 +106,13 @@ TEST(MemoryManagement, ChildCreatorDestructorInFrameworkZeroConfig)
 
         framework->mainLoop(&input);
     }
+    catch (const char* result){
+	    EXPECT_STREQ("Clean exit (event 'EXIT' on input)", result);
+
+    }
     catch (...)
     {
+	    ASSERT_TRUE(false);
     }
 }
 
@@ -141,7 +146,7 @@ TEST(MemoryManagement, ChildCreatorDestructorInFramework)
 
             std::unique_ptr<CChildCreatorIf> newCreator(new CChildCreatorX(8));
 
-            framework->configAction(222, &newCreator);
+            framework->configAdd(&newCreator);
 
             EXPECT_CALL(checker, creatorDestructor()).Times(0);
         }
@@ -153,8 +158,12 @@ TEST(MemoryManagement, ChildCreatorDestructorInFramework)
 
         framework->mainLoop(&input);
     }
+    catch (const char* result){
+	    EXPECT_STREQ("Clean exit (event 'EXIT' on input)", result);
+    }
     catch (...)
     {
+	    ASSERT_TRUE(false);
     }
 }
 
@@ -189,19 +198,20 @@ TEST(MemoryManagement, CustomChildInFrameworkConstructorActionDestructor)
 
         std::unique_ptr<CChildCreatorIf> newCreator(
             new CChildCreator<CChild>(8));
-        framework->configAction(222, &newCreator);
+        framework->configAdd(&newCreator);
 
         EXPECT_CALL(checker, childConstructor());
         EXPECT_CALL(checker, action());
 
-        std::unique_ptr<CParent> x(
+        std::unique_ptr<CParent> childEvent8(
             (CParent*)framework->getChildBasedOnNumber(8));
-        x->action();
+        childEvent8->action();
 
         EXPECT_CALL(checker, childDestructor());
     }
     catch (...)
     {
+	    ASSERT_TRUE(false);
     }
 }
 
@@ -242,7 +252,7 @@ TEST(MemoryManagement, ChildDestructorInFrameworkParametrizedAction)
 
         std::unique_ptr<CChildCreatorIf> newCreator(
             new CChildCreator<CChild>(8));
-        framework->configAction(222, &newCreator);
+        framework->configAdd(&newCreator);
 
         constexpr int INIT_VALUE_RANDOM_EXAMPLE = 29;
         int actionParameter(INIT_VALUE_RANDOM_EXAMPLE);
@@ -263,6 +273,7 @@ TEST(MemoryManagement, ChildDestructorInFrameworkParametrizedAction)
     }
     catch (...)
     {
+	    ASSERT_TRUE(false);
     }
 }
 
@@ -297,7 +308,7 @@ TEST(MemoryManagement, ChildDestructorInFrameworkLoop)
 
         std::unique_ptr<CChildCreatorIf> newCreator(
             new CChildCreator<CChild>(8));
-        framework->configAction(222, &newCreator);
+        framework->configAdd(&newCreator);
 
         std::unique_ptr<CInputIf> input(CInputIf::createNew());
         input->init(new std::vector<int>{8, 0, 7});
@@ -308,7 +319,13 @@ TEST(MemoryManagement, ChildDestructorInFrameworkLoop)
 
         framework->mainLoop(&input);
     }
+
+    catch (const char* result){
+	    EXPECT_STREQ("Clean exit (event 'EXIT' on input)", result);
+    }
+
     catch (...)
     {
+	    ASSERT_TRUE(false);
     }
 }

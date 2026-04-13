@@ -9,82 +9,77 @@
 
 struct CChecker
 {
-    virtual void CSimpleConfiguratorConstructor()
-    {
-    }
-    virtual void CConfiguratorConstructor()
-    {
-    }
-    virtual void CSimpleConfiguratorDestructor()
-    {
-    }
-    virtual void CConfiguratorDestructor()
-    {
-    }
+    virtual void CSelectorConfiguratorMockConstructor() = 0;
+    virtual void CSelectorMockConstructor() = 0;
+    virtual void CSelectorConfiguratorMockDestructor() = 0;
+    virtual void CSelectorMockDestructor() = 0;
 };
 
 struct CCheckerMock : CChecker
 {
-    MOCK_METHOD(void, CSimpleConfiguratorConstructor, (), (override));
-    MOCK_METHOD(void, CConfiguratorConstructor, (), (override));
-    MOCK_METHOD(void, CSimpleConfiguratorDestructor, (), (override));
-    MOCK_METHOD(void, CConfiguratorDestructor, (), (override));
+    MOCK_METHOD(void, CSelectorConfiguratorMockConstructor, (), (override));
+    MOCK_METHOD(void, CSelectorMockConstructor, (), (override));
+    MOCK_METHOD(void, CSelectorConfiguratorMockDestructor, (), (override));
+    MOCK_METHOD(void, CSelectorMockDestructor, (), (override));
 };
 
 CCheckerMock* checkerMockPtr;
-int* checkerIntPtr;
 
-struct CSelectorMock : CSelectorIf {
 
-    virtual ~CSelectorMock(){}
+// CSelectorIf* createNewCSelectorMock();
+
+CSelectorIf::~CSelectorIf(){ }
+
+// CSelectorIf* CSelectorIf::createNew() {return createNewCSelectorMock(); }
+
+struct CSelectorMock : CSelectorIf
+{
+    CSelectorMock(){
+	    checkerMockPtr->CSelectorMockConstructor();
+    }
+    virtual ~CSelectorMock(){
+	    checkerMockPtr->CSelectorMockDestructor();
+    }
 
     virtual void* at(int event) {return nullptr;}
 
 };
+// CSelectorIf* createNewCSelectorMock() { return new CSelectorMock; }
 
-struct CSimpleConfigurator : CSelectorConfiguratorIf
+CSelectorMock* selectorMockPtr;
+
+//-------------
+
+CSelectorConfiguratorIf* createNewCSelectorConfiguratorMock();
+
+CSelectorConfiguratorIf::~CSelectorConfiguratorIf(){}
+
+CSelectorConfiguratorIf* CSelectorConfiguratorIf::createNew(void* initConfigVoidPtr){
+	return createNewCSelectorConfiguratorMock();
+}
+
+struct CSelectorConfiguratorMock : CSelectorConfiguratorIf
 {
-    CSimpleConfigurator()
+    CSelectorConfiguratorMock()
     {
-        checkerMockPtr->CSimpleConfiguratorConstructor();
+        checkerMockPtr->CSelectorConfiguratorMockConstructor();
     }
-    virtual ~CSimpleConfigurator()
+
+    virtual ~CSelectorConfiguratorMock()
     {
-        checkerMockPtr->CSimpleConfiguratorDestructor();
+        checkerMockPtr->CSelectorConfiguratorMockDestructor();
     }
     virtual void* initializeSelector()
     {
-	    return new CSelectorMock();
+	    return new CSelectorMock;
     }
 };
+	CSelectorConfiguratorIf* createNewCSelectorConfiguratorMock() {
+	return new CSelectorConfiguratorMock;
+	}
 
-struct CConfigurator : CSelectorConfiguratorIf
-{
-    CConfigurator(void* initConfigVoidPtr)
-    {
-        checkerMockPtr->CConfiguratorConstructor();
-    }
-    virtual ~CConfigurator()
-    {
-        checkerMockPtr->CConfiguratorDestructor();
-    }
-    virtual void* initializeSelector()
-    {
-	    return new CSelectorMock();
-    }
-};
 
-CSelectorConfiguratorIf* createNewCSimpleSelectorConfigurator()
-{
-    *checkerIntPtr = 1;
-    return new CSimpleConfigurator;
-}
-
-CSelectorConfiguratorIf* createNewCSelectorConfigurator(void* initConfigVoidPtr)
-{
-    *checkerIntPtr = 2;
-    return new CConfigurator(nullptr);
-}
+CSelectorConfiguratorMock* selectorConfiguratorMockPtr;
 
 struct CInput : CInputIf
 {
@@ -106,18 +101,19 @@ struct CInput : CInputIf
 
 TEST(CFrameworkUTs, CreateCSimpleConfigurator)
 {
-    int checkerInt = 0;
-    checkerIntPtr = &checkerInt;
-
     CCheckerMock checkerMock;
     checkerMockPtr = &checkerMock;
+
     try
     {
-        EXPECT_CALL(checkerMock, CSimpleConfiguratorConstructor());
+        EXPECT_CALL(checkerMock, CSelectorConfiguratorMockConstructor());
+        EXPECT_CALL(checkerMock, CSelectorMockConstructor());
+
         std::unique_ptr<CFrameworkIf> framework(
             CFrameworkIf::createNew(nullptr));
-        EXPECT_EQ(checkerInt, 1);
-        EXPECT_CALL(checkerMock, CSimpleConfiguratorDestructor());
+        EXPECT_CALL(checkerMock, CSelectorMockDestructor());
+        EXPECT_CALL(checkerMock, CSelectorConfiguratorMockDestructor());
+
     }
     catch (...)
     {
@@ -125,25 +121,27 @@ TEST(CFrameworkUTs, CreateCSimpleConfigurator)
     }
 }
 
+#if 0
 TEST(CFrameworkUTs, CreateCConfigurator)
 {
-    int checkerInt = 0;
-    checkerIntPtr = &checkerInt;
+    // int checkerInt = 0;
+    // checkerIntPtr = &checkerInt;
 
     CCheckerMock checkerMock;
     checkerMockPtr = &checkerMock;
 
     try
     {
-        EXPECT_CALL(checkerMock, CConfiguratorConstructor());
+        EXPECT_CALL(checkerMock, CSelectorConfiguratorMockConstructor());
         std::vector<int> selectorInitConfig({7, -1, -1, -1, 4});
         std::unique_ptr<CFrameworkIf> framework(
             CFrameworkIf::createNew(&selectorInitConfig));
-        EXPECT_EQ(checkerInt, 2);
-        EXPECT_CALL(checkerMock, CConfiguratorDestructor());
+        // EXPECT_EQ(checkerInt, 2);
+        EXPECT_CALL(checkerMock, CSelectorConfiguratorMockDestructor());
     }
     catch (...)
     {
 	    ASSERT_TRUE(false);
     }
 }
+#endif

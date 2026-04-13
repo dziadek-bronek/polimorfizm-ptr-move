@@ -3,7 +3,7 @@
 
 struct CSelectorIf
 {
-    static CSelectorIf* createNew(void** selectorInitConfigVoidPtr);
+    // static CSelectorIf* createNew(...);
     virtual ~CSelectorIf() = 0;
 
     virtual void* at(int event) = 0;

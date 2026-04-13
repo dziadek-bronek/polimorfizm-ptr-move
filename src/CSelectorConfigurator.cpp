@@ -95,8 +95,9 @@ struct CConfigurator : CSelectorConfiguratorIf
         selectorCoreMap->push_back(
             UptrChCrIf(new CChildCreatorConfig(222, selectorCoreMap)));
 
-	// if(nullptr == initConfig)
-	// return createNewCSelector(selectorCoreMap);
+	if(nullptr == initConfig){
+	return createNewCSelector(selectorCoreMap);
+	}
 
         int vSize = initConfig->size();
 

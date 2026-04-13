@@ -55,11 +55,11 @@ int main()
            object of class CDevChild is created.
         */
         {
-            std::unique_ptr<CChildCreatorIf> newCreator(
+            std::unique_ptr<CChildCreatorIf> newChildCreator(
                 new CChildCreator<CDevChild>(8));
 
             /* Add creator to framework */
-            framework->configAction(222, &newCreator);
+            framework->configAdd(&newChildCreator);
         }
 
         /* Mock of input - vector represents input sequence */
