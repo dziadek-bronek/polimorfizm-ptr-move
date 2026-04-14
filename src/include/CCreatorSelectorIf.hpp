@@ -1,5 +1,5 @@
-#ifndef CSELECTORIF_HPP
-#define CSELECTORIF_HPP
+#ifndef CCREATORSELECTORIF_HPP
+#define CCREATORSELECTORIF_HPP
 
 struct CSelectorIf
 {

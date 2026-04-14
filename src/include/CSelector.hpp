@@ -1,7 +1,7 @@
 #ifndef CSELECTOR_HPP
 #define CSELECTOR_HPP
 
-#include "CSelectorIf.hpp"
+#include "CCreatorSelectorIf.hpp"
 
 CSelectorIf* createNewCSelector(void* mapVoidPtr);
 

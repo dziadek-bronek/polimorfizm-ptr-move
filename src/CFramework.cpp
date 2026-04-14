@@ -1,17 +1,18 @@
-#include "include/CFramework.hpp"
+#include "include/throw.hpp"
+#include <cstdio>
+#include <memory>
 
 #include "include/CParent.hpp"
-#include "include/CSelectorIf.hpp"
+
+#include "include/CCreatorSelectorIf.hpp"
 
 #include "include/CSelectorConfiguratorIf.hpp"
 
 #include "include/throw.hpp"
 
 #include "include/CInputIf.hpp"
-#include "include/throw.hpp"
 
-#include <cstdio>
-#include <memory>
+#include "include/CFramework.hpp"
 
 struct CFramework : CFrameworkIf
 {
@@ -80,8 +81,8 @@ struct CFramework : CFrameworkIf
     }
 
   private:
-    std::unique_ptr<CSelectorIf> selector;
     std::unique_ptr<CSelectorConfiguratorIf> configurator;
+    std::unique_ptr<CSelectorIf> selector;
 };
 
 CFrameworkIf* createNewCFramework(void* selectorInitConfigVoidPtr)

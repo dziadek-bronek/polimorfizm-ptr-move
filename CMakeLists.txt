@@ -22,12 +22,15 @@ target_sources(mylib
 #		src/CMap.cpp
 #		src/CMapIf.cpp
 
-		src/CSelectorConfigurator.cpp
-		src/CSelectorConfiguratorIf.cpp
-
 		src/CSimpleSelector.cpp
 		src/CSelector.cpp
-		src/CSelectorIf.cpp
+		src/CCreatorSelectorIf.cpp
+
+		#[[
+		src/CSelectorConfigurator.cpp
+		]]
+
+		src/CSelectorConfiguratorIf.cpp
 
 		src/CInput.cpp
 		src/CInputIf.cpp
@@ -46,7 +49,6 @@ target_sources(mylib
 			src/include/CParent.hpp
 			src/include/child-creators.hpp
 )
-
 add_executable(polimorfizm-ptr-move)
 target_sources(polimorfizm-ptr-move
 	PRIVATE

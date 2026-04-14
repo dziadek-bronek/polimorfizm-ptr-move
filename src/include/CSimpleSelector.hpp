@@ -1,7 +1,7 @@
 #ifndef CSIMPLESELECTOR_HPP
 #define CSIMPLESELECTOR_HPP
 
-#include "CSelectorIf.hpp"
+#include "CCreatorSelectorIf.hpp"
 
 CSelectorIf* createNewCSimpleSelector(void* singleCreatorVoidPtr);
 

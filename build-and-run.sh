@@ -6,3 +6,7 @@ cd /home/dtstgseete/cprogs/github/polimorfizm-ptr-move/build
 cmake .. &&  cmake --build . && { echo; echo; echo; ./polimorfizm-ptr-move; }
 # for the command 'cmake --build .' alternative is command: 'make'
 
+
+
+
+# g++ -shared -o /home/dtstgseete/CSelectorConfigurator.cpp.so  /home/dtstgseete/cprogs/github/polimorfizm-ptr-move/build/CMakeFiles/mylib.dir/src/CSelectorConfigurator.cpp.o

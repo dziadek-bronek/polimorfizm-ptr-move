@@ -5,7 +5,6 @@
 
 CSelectorConfiguratorIf* createNewCSimpleSelectorConfigurator();
 
-CSelectorConfiguratorIf* createNewCSelectorConfigurator(
-    void* initConfigVoidPtr);
+CSelectorConfiguratorIf* createNewCSelectorConfigurator();
 
 #endif

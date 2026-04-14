@@ -1,6 +1,5 @@
 /* To define and add an action provided by a developer. */
 #include "include/CParent.hpp"
-#include "include/CSelectorConfigurator.hpp"
 #include "include/child-creators.hpp"
 
 #include "CInput.cpp"

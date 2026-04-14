@@ -1,6 +1,5 @@
-#include "include/CSelectorIf.hpp"
-#include "include/CSelector.hpp"
 #include "include/CSimpleSelector.hpp"
+#include "include/CSelector.hpp"
 
 #if 0
 CSelectorIf* CSelectorIf::createNew(void** selectorCoreVoidPtrVoidPtr)

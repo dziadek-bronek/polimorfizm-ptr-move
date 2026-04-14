@@ -7,6 +7,7 @@ struct CSelectorConfiguratorIf
 
     virtual ~CSelectorConfiguratorIf() = 0;
 
+    virtual void init(void* initConfigVoidPtr) = 0;
     virtual void* initializeSelector() = 0;
 };
 

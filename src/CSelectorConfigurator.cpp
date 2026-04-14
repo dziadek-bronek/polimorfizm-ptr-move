@@ -1,16 +1,19 @@
-#include "include/CSelectorConfigurator.hpp"
-#include "include/CChildren.hpp"
-#include "include/CConfigChild.hpp"
-#include "include/child-creators.hpp"
-#include "include/throw.hpp"
 #include <cstdio>
 #include <list>
 #include <memory>
+#include <vector>
+
+#include "include/throw.hpp"
+
+#include "include/CChildren.hpp"
+#include "include/CConfigChild.hpp"
+
+#include "include/child-creators.hpp"
 
 #include "include/CSelector.hpp"
-#include "include/CSelectorIf.hpp"
 #include "include/CSimpleSelector.hpp"
-#include <vector>
+
+#include "include/CSelectorConfiguratorIf.hpp"
 
 using UptrChCrIf = std::unique_ptr<CChildCreatorIf>;
 using MapOfUptrChCrIf = std::list<UptrChCrIf>;
@@ -83,17 +86,24 @@ struct CChildCreatorConfig : CChildCreatorIf
 
 struct CConfigurator : CSelectorConfiguratorIf
 {
-    CConfigurator(void* initConfigVoidPtr)
-        : initConfig((std::vector<int>*)initConfigVoidPtr),
-          selectorCoreMap(nullptr)
+    CConfigurator()
+        : selectorCoreMap(nullptr)
     {
+    }
+    virtual ~CConfigurator() {}
+
+    virtual void init(void* initConfigVoidPtr)
+    {
+        initConfig = (std::vector<int>*)initConfigVoidPtr;
     }
     virtual void* initializeSelector()
     {
         selectorCoreMap = new MapOfUptrChCrIf;
 
-        selectorCoreMap->push_back(
-            UptrChCrIf(new CChildCreatorConfig(222, selectorCoreMap)));
+        {
+            selectorCoreMap->push_back(
+                UptrChCrIf(new CChildCreatorConfig(222, selectorCoreMap)));
+        }
 
         if (nullptr == initConfig)
         {
@@ -136,6 +146,11 @@ struct CSimpleConfigurator : CSelectorConfiguratorIf
         : selectorCoreSimpleCreator(nullptr)
     {
     }
+
+    virtual ~CSimpleConfigurator() {}
+
+    virtual void init(void*) {}
+
     virtual void* initializeSelector()
     {
         struct CChildCreatorSimple : CChildCreatorIf
@@ -177,7 +192,25 @@ CSelectorConfiguratorIf* createNewCSimpleSelectorConfigurator()
     return new CSimpleConfigurator;
 }
 
-CSelectorConfiguratorIf* createNewCSelectorConfigurator(void* initConfigVoidPtr)
+CSelectorConfiguratorIf* createNewCSelectorConfigurator()
 {
-    return new CConfigurator(initConfigVoidPtr);
+
+    return new CConfigurator;
+}
+
+extern "C" CSelectorConfiguratorIf*
+createNewCSimpleSelectorConfiguratorExternC()
+{
+    return new CSimpleConfigurator;
+}
+
+extern "C" CSelectorConfiguratorIf* createNewCSelectorConfiguratorExternC()
+{
+    return new CConfigurator();
+}
+
+extern "C" void deleteCSelectorConfiguratorExternC(
+    CSelectorConfiguratorIf* configuratorPtr)
+{
+    delete configuratorPtr;
 }
