@@ -1,8 +1,8 @@
 #include "include/CSelectorConfiguratorIf.hpp"
 #include <cstdio>
 
-#include <dlfcn.h>
 #include "include/CDlGlobalHandle.hpp"
+#include <dlfcn.h>
 extern CDlGlobalHandle dlCSelectorConfiguratorGlobalHandle;
 
 CSelectorConfiguratorIf::~CSelectorConfiguratorIf() {}
@@ -66,8 +66,8 @@ struct CSelectorConfiguratorWrapper : CSelectorConfiguratorIf
                "DESTRUCTING\n");
         plugin = nullptr;
 
-	// destruction of resources delegated
-	dlCSelectorConfiguratorGlobalHandle.set(dlHandle);
+        // destruction of resources delegated
+        dlCSelectorConfiguratorGlobalHandle.set(dlHandle);
         dlHandle = nullptr;
     }
 
@@ -97,16 +97,14 @@ CSelectorConfiguratorIf* CSelectorConfiguratorIf::createNew(
     if (nullptr == initConfigVoidPtr)
     {
 
-            // "/home/dtstgseete/CSelectorConfigurator.cpp.so",
         configuratorWrapper = new CSelectorConfiguratorWrapper(
-            "selectorConfigurator.so",
+            "./libselectorConfigurator.so",
             "createNewCSimpleSelectorConfiguratorExternC",
             "deleteCSelectorConfiguratorExternC");
     }
     else
     {
 
-            // "/home/dtstgseete/CSelectorConfigurator.cpp.so",
         configuratorWrapper = new CSelectorConfiguratorWrapper(
             "./libselectorConfigurator.so",
             "createNewCSelectorConfiguratorExternC",

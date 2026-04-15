@@ -18,10 +18,17 @@
 using UptrChCrIf = std::unique_ptr<CChildCreatorIf>;
 using MapOfUptrChCrIf = std::list<UptrChCrIf>;
 
-    CSelectorConfiguratorIf* CSelectorConfiguratorIf::createNew(void* initConfigVoidPtr){return nullptr;} 
-
-    CSelectorConfiguratorIf::~CSelectorConfiguratorIf() {}
-
+#if 1
+// TODO fugure out what is about base clas implementation
+// REQUIRED!!! not required when linked with higher level, but what about
+// standalone module?
+CSelectorConfiguratorIf* CSelectorConfiguratorIf::createNew(
+    void* initConfigVoidPtr)
+{
+    return nullptr;
+}
+CSelectorConfiguratorIf::~CSelectorConfiguratorIf() {}
+#endif
 
 struct CChildCreatorExit : CChildCreatorIf
 {

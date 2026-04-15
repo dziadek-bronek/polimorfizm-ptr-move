@@ -19,18 +19,14 @@ add_library(selectorConfigurator SHARED
 
 		src/CConfigChild.cpp
 
-#		src/CMap.cpp
-#		src/CMapIf.cpp
+#[[
+		src/CMap.cpp
+		src/CMapIf.cpp
+]]
 
 		src/CSimpleSelector.cpp
 		src/CSelector.cpp
 		src/CCreatorSelectorIf.cpp
-
-
-
-
-
-
 )
 
 

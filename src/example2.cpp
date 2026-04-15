@@ -3,9 +3,9 @@
 #include "include/child-creators.hpp"
 
 #include "include/CInput.hpp"
-#include <dlfcn.h>
-#include "include/CDlGlobalHandle.hpp"
 
+#include "include/CDlGlobalHandle.hpp"
+#include <dlfcn.h>
 CDlGlobalHandle dlCSelectorConfiguratorGlobalHandle;
 
 /* New action defined by a developer, to be added (registered) to framework
