@@ -1,7 +1,7 @@
 #ifndef CSELECTORCONFIGURATOR_HPP
 #define CSELECTORCONFIGURATOR_HPP
 
-#include "CSelectorConfiguratorIf.hpp"
+#include "../CSelectorConfiguratorIf.hpp"
 
 CSelectorConfiguratorIf* createNewCSimpleSelectorConfigurator();
 

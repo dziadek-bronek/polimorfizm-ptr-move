@@ -1,7 +1,9 @@
 #include "include/CSelectorConfiguratorIf.hpp"
 #include <cstdio>
+
 #include <dlfcn.h>
-// #include "include/old/CSelectorConfigurator.hpp"
+#include "include/CDlGlobalHandle.hpp"
+extern CDlGlobalHandle dlCSelectorConfiguratorGlobalHandle;
 
 CSelectorConfiguratorIf::~CSelectorConfiguratorIf() {}
 
@@ -19,15 +21,15 @@ struct CSelectorConfiguratorWrapper : CSelectorConfiguratorIf
           deletePlugin(nullptr)
     {
 
-        dlHandle = dlopen(dlFileName, RTLD_LAZY);
+        dlHandle = dlopen(dlFileName, RTLD_NOW | RTLD_GLOBAL);
 
         if (nullptr == dlHandle)
         {
-            printf("                           createNewPlugin is nullptr in "
+            printf("                           dlHandle is nullptr in "
                    "wraper constructor\n");
             return;
         }
-        // printf("                           GOT dlHandle!!!\n");
+        printf("                           GOT dlHandle!!!\n");
         createNewPlugin = (CreateNewPlugin)dlsym(dlHandle, constructorName);
 
         if (nullptr == createNewPlugin)
@@ -36,7 +38,7 @@ struct CSelectorConfiguratorWrapper : CSelectorConfiguratorIf
                    "wraper constructor\n");
             return;
         }
-        // printf("                           GOT CreateNewPlugin()!!!\n");
+        printf("                           GOT CreateNewPlugin()!!!\n");
 
         deletePlugin = (DeletePlugin)dlsym(dlHandle, destructorName);
 
@@ -46,7 +48,7 @@ struct CSelectorConfiguratorWrapper : CSelectorConfiguratorIf
                    "wraper constructor\n");
             return;
         }
-        // printf("                           GOT deletePlugin()!!!\n");
+        printf("                           GOT deletePlugin()!!!\n");
 
         plugin = createNewPlugin();
         if (nullptr == plugin)
@@ -63,7 +65,9 @@ struct CSelectorConfiguratorWrapper : CSelectorConfiguratorIf
         printf("                         ~CSelectorConfiguratorWrapper() "
                "DESTRUCTING\n");
         plugin = nullptr;
-        // dlclose(dlHandle);
+
+	// destruction of resources delegated
+	dlCSelectorConfiguratorGlobalHandle.set(dlHandle);
         dlHandle = nullptr;
     }
 
@@ -85,6 +89,7 @@ struct CSelectorConfiguratorWrapper : CSelectorConfiguratorIf
     CSelectorConfiguratorIf* plugin;
 };
 
+// #include "include/old/CSelectorConfigurator.hpp"
 CSelectorConfiguratorIf* CSelectorConfiguratorIf::createNew(
     void* initConfigVoidPtr)
 {
@@ -92,16 +97,18 @@ CSelectorConfiguratorIf* CSelectorConfiguratorIf::createNew(
     if (nullptr == initConfigVoidPtr)
     {
 
+            // "/home/dtstgseete/CSelectorConfigurator.cpp.so",
         configuratorWrapper = new CSelectorConfiguratorWrapper(
-            "/home/dtstgseete/CSelectorConfigurator.cpp.so",
+            "selectorConfigurator.so",
             "createNewCSimpleSelectorConfiguratorExternC",
             "deleteCSelectorConfiguratorExternC");
     }
     else
     {
 
+            // "/home/dtstgseete/CSelectorConfigurator.cpp.so",
         configuratorWrapper = new CSelectorConfiguratorWrapper(
-            "/home/dtstgseete/CSelectorConfigurator.cpp.so",
+            "./libselectorConfigurator.so",
             "createNewCSelectorConfiguratorExternC",
             "deleteCSelectorConfiguratorExternC");
     }
@@ -112,18 +119,18 @@ CSelectorConfiguratorIf* CSelectorConfiguratorIf::createNew(
         return configuratorWrapper;
     }
 
-    CSelectorConfiguratorIf* x = nullptr;
 #if 0
-    if (nullptr == initConfigVoidPtr)
+    if (nullptr != initConfigVoidPtr)
     {
         return createNewCSimpleSelectorConfigurator();
     }
 
-    CSelectorConfiguratorIf* x = createNewCSelectorConfigurator();
-    if (nullptr == x) {
+    CSelectorConfiguratorIf* x = nullptr;
+    x = createNewCSelectorConfigurator();
+    if (nullptr != x) {
+    	x->init(initConfigVoidPtr);
 	    return nullptr;
     }
-    x->init(initConfigVoidPtr);
 #endif
-    return x;
+    return nullptr;
 }

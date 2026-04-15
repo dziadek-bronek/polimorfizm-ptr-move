@@ -1,3 +1,7 @@
+Testy jednostkowe ktore znajda blad
+wyciagniecie dlHandle na zewnatrz wartosc przechowywana w zmiennej globalnej - i usuwanie jej na koncu w sekcji catch albo po niej
+
+
 write UT-s for class only dedicated each test needs only file <CClassName>.o from original sources.
 
 

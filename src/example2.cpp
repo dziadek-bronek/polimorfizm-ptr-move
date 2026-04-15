@@ -2,7 +2,11 @@
 #include "include/CParent.hpp"
 #include "include/child-creators.hpp"
 
-#include "CInput.cpp"
+#include "include/CInput.hpp"
+#include <dlfcn.h>
+#include "include/CDlGlobalHandle.hpp"
+
+CDlGlobalHandle dlCSelectorConfiguratorGlobalHandle;
 
 /* New action defined by a developer, to be added (registered) to framework
    (example/demonstration).

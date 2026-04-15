@@ -17,6 +17,12 @@
 
 using UptrChCrIf = std::unique_ptr<CChildCreatorIf>;
 using MapOfUptrChCrIf = std::list<UptrChCrIf>;
+
+    CSelectorConfiguratorIf* CSelectorConfiguratorIf::createNew(void* initConfigVoidPtr){return nullptr;} 
+
+    CSelectorConfiguratorIf::~CSelectorConfiguratorIf() {}
+
+
 struct CChildCreatorExit : CChildCreatorIf
 {
     CChildCreatorExit(int id_)
