@@ -1,3 +1,6 @@
+najpierw unit testy!!!
+
+
 CAdderChildCreatore - zmodyfikowanie tak, by jako Creator byl dostosowany do 
 
 

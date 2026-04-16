@@ -29,6 +29,11 @@ add_library(selectorConfigurator SHARED
 		src/CCreatorSelectorIf.cpp
 )
 
+target_compile_definitions( selectorConfigurator
+	PRIVATE
+		CSELECTORCONFIGURATORIF_IMPLEMENTATION
+)
+
 
 add_library(mylib)
 target_sources(mylib

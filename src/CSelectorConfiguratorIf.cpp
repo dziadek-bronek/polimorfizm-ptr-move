@@ -6,8 +6,6 @@
 #include <dlfcn.h>
 extern CDlGlobalHandle dlCSelectorConfiguratorGlobalHandle;
 
-CSelectorConfiguratorIf::~CSelectorConfiguratorIf() {}
-
 using CreateNewPlugin = CSelectorConfiguratorIf* (*)();
 using DeletePlugin = void (*)(CSelectorConfiguratorIf*);
 
@@ -60,7 +58,6 @@ struct CSelectorConfiguratorWrapper : CSelectorConfiguratorIf
 CSelectorConfiguratorIf* CSelectorConfiguratorIf::createNew(
     void* initConfigVoidPtr)
 {
-
     do
     {
         struct CDlHandle
@@ -108,7 +105,7 @@ CSelectorConfiguratorIf* CSelectorConfiguratorIf::createNew(
             printf("                           createNewPlugin is nullptr\n");
             break;
         }
-        printf("                           GOT CreateNewPlugin()!!!\n");
+        printf("                           GOT CreateNewPlugin!!!\n");
 
         DeletePlugin deletePlugin = (DeletePlugin)dlsym(
             dlHandle.ptr, "deleteCSelectorConfiguratorExternC");
@@ -118,7 +115,7 @@ CSelectorConfiguratorIf* CSelectorConfiguratorIf::createNew(
             printf("                           deletePlugin is nullptr\n");
             break;
         }
-        printf("                           GOT deletePlugin()!!!\n");
+        printf("                           GOT deletePlugin!!!\n");
 
         std::unique_ptr<CSelectorConfiguratorWrapper> configuratorWrapper(
             new CSelectorConfiguratorWrapper(dlHandle.ptr, deletePlugin,

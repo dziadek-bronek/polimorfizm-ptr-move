@@ -18,18 +18,6 @@
 using UptrChCrIf = std::unique_ptr<CChildCreatorIf>;
 using MapOfUptrChCrIf = std::list<UptrChCrIf>;
 
-#if 1
-// TODO fugure out what is about base clas implementation
-// REQUIRED!!! not required when linked with higher level, but what about
-// standalone module?
-CSelectorConfiguratorIf* CSelectorConfiguratorIf::createNew(
-    void* initConfigVoidPtr)
-{
-    return nullptr;
-}
-CSelectorConfiguratorIf::~CSelectorConfiguratorIf() {}
-#endif
-
 struct CChildCreatorExit : CChildCreatorIf
 {
     CChildCreatorExit(int id_)
@@ -72,6 +60,84 @@ static CChildCreatorIf* createCreatorForChildWithNumber(int childClass,
     }
     throw;
 }
+
+#if 1
+// shared object api caller
+
+using CreateNewSoChild = CParent* (*)();
+using DeleteSoChild = void (*)(CParent*);
+
+struct CSoChildWrapper : CParent
+{
+    CSoChildWrapper(CParent* soChild_, DeleteSoChild deleteSoChild_)
+        : soChild(soChild_),
+          deleteSoChild(deleteSoChild_)
+    {
+    }
+    ~CSoChildWrapper()
+    {
+        deleteSoChild(soChild);
+    }
+
+    virtual void init(void* initParameterVoidPtr)
+    {
+        soChild->init(initParameterVoidPtr);
+    }
+    virtual void action()
+    {
+        soChild->action();
+    }
+    virtual void* action(void* actionParameterVoidPtr)
+    {
+        return soChild->action(actionParameterVoidPtr);
+    }
+
+    CParent* soChild;
+    DeleteSoChild deleteSoChild;
+};
+
+struct CSoChildCreator : CChildCreatorIf
+{
+    CSoChildCreator(int id_, void* initParameterVoidPtr_)
+        : id(id_),
+          initParameterVoidPtr(initParameterVoidPtr_)
+    {
+    }
+    virtual ~CSoChildCreator()
+    {
+        // push dlHandle do global destrocyer
+        // ...
+    }
+
+    virtual void* createNewChildIfIsNumber(int id_)
+    {
+        if (id_ == id)
+        {
+            printf("CChildCreator on event %i is creating new CConfigChild\n",
+                   id);
+
+            CParent* x(new CSoChildWrapper(createNewSoChild(), deleteSoChild));
+            x->init(initParameterVoidPtr);
+            return x;
+        }
+        return nullptr;
+    }
+
+  private:
+    int id;
+    void* initParameterVoidPtr;
+    void* dlHandle;
+    CreateNewSoChild createNewSoChild;
+    DeleteSoChild deleteSoChild;
+};
+
+CSoChildCreator* producer(const char* fileName, const char* constructor,
+                          const char* destructor)
+{
+
+    return new CSoChildCreator(222, nullptr /*seletorCoreMap*/);
+};
+#endif
 
 struct CChildCreatorConfig : CChildCreatorIf
 {

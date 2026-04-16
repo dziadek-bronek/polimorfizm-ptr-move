@@ -16,8 +16,9 @@ struct CParent
 {
     virtual ~CParent() {}
 
+    virtual void init(void* initParameterVoidPtr) {}
     virtual void action() {}
-    virtual void* action(void* actionParameter)
+    virtual void* action(void* actionParameterVoidPtr)
     {
         return nullptr;
     }
