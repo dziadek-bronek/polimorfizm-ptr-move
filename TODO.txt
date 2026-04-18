@@ -1,3 +1,6 @@
+cleaning dlHandle powstale po wczytaniu  soChild->CConfigChild
+
+
 najpierw unit testy!!!
 
 

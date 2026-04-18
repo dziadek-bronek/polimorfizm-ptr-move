@@ -19,10 +19,17 @@ void* CConfigChild::action(void* childCreatorUptrVoidPtr)
     return nullptr;
 }
 
-extern "C" CParent* createNewCConfigChildExternC() {
-	return new CConfigChild();
+CConfigChild::~CConfigChild()
+    {
+	    printf("CConfigChild destructing\n"); fflush(NULL);
+    }
+
+extern "C" CParent* createNewCConfigChildExternC()
+{
+    return new CConfigChild();
 }
 
-extern "C" void deleteCConfigChildExternC(CParent* configChildPtr) {
-	delete configChildPtr;
+extern "C" void deleteCConfigChildExternC(CParent* configChildPtr)
+{
+    delete configChildPtr;
 }

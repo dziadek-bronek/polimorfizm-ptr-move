@@ -75,11 +75,10 @@ CSelectorConfiguratorIf* CSelectorConfiguratorIf::createNew(
                 }
             }
             void* ptr;
-            CSelectorConfiguratorIf* plugin;
         };
 
         CDlHandle dlHandle(
-            dlopen("./libselectorConfigurator.so", RTLD_NOW | RTLD_GLOBAL));
+            dlopen("./libCSelectorConfigurator.so", RTLD_NOW | RTLD_GLOBAL));
 
         if (nullptr == dlHandle.ptr)
         {
@@ -88,7 +87,7 @@ CSelectorConfiguratorIf* CSelectorConfiguratorIf::createNew(
         }
         printf("                           GOT dlHandle!!!\n");
 
-        CreateNewPlugin createNewPlugin(nullptr);
+        CreateNewPlugin createNewPlugin = nullptr;
         if (nullptr == initConfigVoidPtr)
         {
             createNewPlugin = (CreateNewPlugin)dlsym(
@@ -107,7 +106,8 @@ CSelectorConfiguratorIf* CSelectorConfiguratorIf::createNew(
         }
         printf("                           GOT CreateNewPlugin!!!\n");
 
-        DeletePlugin deletePlugin = (DeletePlugin)dlsym(
+        DeletePlugin deletePlugin = nullptr;
+        deletePlugin = (DeletePlugin)dlsym(
             dlHandle.ptr, "deleteCSelectorConfiguratorExternC");
 
         if (nullptr == deletePlugin)

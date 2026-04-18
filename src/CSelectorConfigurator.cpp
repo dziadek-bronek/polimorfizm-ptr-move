@@ -15,6 +15,8 @@
 
 #include "include/CSelectorConfiguratorIf.hpp"
 
+#include <dlfcn.h>
+
 using UptrChCrIf = std::unique_ptr<CChildCreatorIf>;
 using MapOfUptrChCrIf = std::list<UptrChCrIf>;
 
@@ -61,19 +63,8 @@ static CChildCreatorIf* createCreatorForChildWithNumber(int childClass,
     throw;
 }
 
-#if 1
-// shared object api caller
-
 using CreateNewSoChild = CParent* (*)();
 using DeleteSoChild = void (*)(CParent*);
-
-CParent* createNewSoChildMock() {
-            return new CConfigChild();
-}
-
-void deleteSoChildMock(CParent* soChild) {
-            delete soChild;
-}
 
 struct CSoChildWrapper : CParent
 {
@@ -106,13 +97,14 @@ struct CSoChildWrapper : CParent
 
 struct CSoChildCreator : CChildCreatorIf
 {
-    CSoChildCreator(int id_, void* initParameterVoidPtr_,
-		    void* dlHandle_, CreateNewSoChild createNewSoChild_, DeleteSoChild deleteSoChild_)
+    CSoChildCreator(int id_, void* initParameterVoidPtr_, void* dlHandle_,
+                    CreateNewSoChild createNewSoChild_,
+                    DeleteSoChild deleteSoChild_)
         : id(id_),
           initParameterVoidPtr(initParameterVoidPtr_),
-	  dlHandle(dlHandle_),
-	  createNewSoChild(createNewSoChild_),
-	  deleteSoChild(deleteSoChild_)
+          dlHandle(dlHandle_),
+          createNewSoChild(createNewSoChild_),
+          deleteSoChild(deleteSoChild_)
     {
     }
     virtual ~CSoChildCreator()
@@ -143,42 +135,85 @@ struct CSoChildCreator : CChildCreatorIf
     DeleteSoChild deleteSoChild;
 };
 
-CSoChildCreator* soCreatorsProducer(const char* fileName, const char* constructor,
-                          const char* destructor, int id, void* selectorCoreMapVoidPtr)
+CChildCreatorIf* soCreatorsProducer(const char* fileName,
+                                    const char* constructorName,
+                                    const char* destructorName, int id,
+                                    void* selectorCoreMapVoidPtr)
 {
-
-	void* dlHandle = nullptr;
-	CreateNewSoChild createNewSoChild;
-	DeleteSoChild deleteSoChild;
-    return new CSoChildCreator(id, selectorCoreMapVoidPtr,
-		    dlHandle, createNewSoChildMock, deleteSoChild
-		    );
-};
-#endif
-
-struct CChildCreatorConfig : CChildCreatorIf
-{
-    CChildCreatorConfig(int number, void* mapVoidPtr)
-        : id(number),
-          mapPtr((MapOfUptrChCrIf*)mapVoidPtr)
+    struct CDlHandle
     {
-    }
-
-    virtual void* createNewChildIfIsNumber(int id_)
-    {
-        if (id_ == id)
+        CDlHandle(void* ptr_)
+            : ptr(ptr_)
         {
-            printf("CChildCreator on event %i is creating new CConfigChild\n",
-                   id);
-            return new CConfigChild(mapPtr);
         }
-        return nullptr;
-    }
+        ~CDlHandle()
+        {
+            if (nullptr != ptr)
+            {
+                dlclose(ptr);
+                ptr = nullptr;
+            }
+        }
+        void* ptr;
+    };
 
-  private:
-    int id;
-    MapOfUptrChCrIf* mapPtr;
-};
+    CDlHandle dlHandle(nullptr);
+
+    do
+    {
+        dlHandle.ptr = dlopen(fileName, RTLD_NOW | RTLD_GLOBAL);
+        if (nullptr == dlHandle.ptr)
+        {
+            printf("                           dlHandle.ptr is nullptr "
+                   "soCreatorsProducer()\n");
+            fflush(NULL);
+            break;
+        }
+        printf("                           GOT dlHandle "
+               "soCreatorsProducer()!!!\n");
+        fflush(NULL);
+
+        CreateNewSoChild createNewSoChild = nullptr;
+        createNewSoChild =
+            (CreateNewSoChild)dlsym(dlHandle.ptr, constructorName);
+        if (nullptr == createNewSoChild)
+        {
+            printf("                           createNewSoChild is nullptr "
+                   "soCreatorsProducer()\n");
+            fflush(NULL);
+            break;
+        }
+        printf("                           GOT createNewSoChild "
+               "soCreatorsProducer()!!!\n");
+        fflush(NULL);
+
+        DeleteSoChild deleteSoChild = nullptr;
+
+        deleteSoChild = (DeleteSoChild)dlsym(dlHandle.ptr, destructorName);
+        if (nullptr == deleteSoChild)
+        {
+            printf("                           deleteSoChild if nullptr "
+                   "soCreatorsProducer()\n");
+            fflush(NULL);
+            break;
+        }
+        printf("                           GOT deleteSoChild "
+               "soCreatorsProducer()!!!\n");
+        fflush(NULL);
+
+        CChildCreatorIf* x(nullptr);
+        x = new CSoChildCreator(id, selectorCoreMapVoidPtr, dlHandle.ptr,
+                                createNewSoChild, deleteSoChild);
+        if (nullptr != x)
+        {
+            dlHandle.ptr = nullptr;
+            return x;
+        }
+
+    } while (0);
+
+    return nullptr;
+}
 
 struct CConfigurator : CSelectorConfiguratorIf
 {
@@ -196,16 +231,16 @@ struct CConfigurator : CSelectorConfiguratorIf
     {
         selectorCoreMap = new MapOfUptrChCrIf;
 
-#if 1
         {
-            selectorCoreMap->push_back(
-                UptrChCrIf(
-			
-			soCreatorsProducer("fileName", "constructorExternC", "destructorExternC", 222, selectorCoreMap)
+            selectorCoreMap->push_back(UptrChCrIf(
 
-			));
+                soCreatorsProducer(
+                    "./libCConfigChild.so", "createNewCConfigChildExternC",
+                    "deleteCConfigChildExternC", 222, selectorCoreMap)
+
+                    ));
         }
-#else
+#if 0
         {
             selectorCoreMap->push_back(
                 UptrChCrIf(new CChildCreatorConfig(222, selectorCoreMap)));

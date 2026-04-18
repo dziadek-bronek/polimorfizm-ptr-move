@@ -23,7 +23,7 @@ struct CDevChild : CParent
     }
     virtual void action() override
     {
-        printf("behavior specific for CDevChild  --------------\n");
+        printf("behavior specific for CDevChild\n");
     }
     virtual void constr() override
     {

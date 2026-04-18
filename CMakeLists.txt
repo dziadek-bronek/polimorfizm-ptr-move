@@ -12,22 +12,24 @@ cmake_minimum_required(VERSION 3.5)
 
 project(polimorfizm-ptr-move-proj)
 
+# ------------------------
 
-add_library(configChild SHARED
+add_library(CConfigChild SHARED
 	src/CConfigChild.cpp
 )
 
-target_compile_definitions( configChild
+
+target_compile_definitions( CConfigChild
 	PRIVATE
 	CCONFIGCHILD_IMPLEMENTATION
 )
 
-add_library(selectorConfigurator SHARED
+# ------------------------
+
+add_library(CSelectorConfigurator SHARED
 		src/CSelectorConfigurator.cpp
 
 		src/CChildren.cpp
-
-		src/CConfigChild.cpp
 
 #[[
 		src/CMap.cpp
@@ -39,10 +41,12 @@ add_library(selectorConfigurator SHARED
 		src/CCreatorSelectorIf.cpp
 )
 
-target_compile_definitions( selectorConfigurator
+target_compile_definitions( CSelectorConfigurator
 	PRIVATE
 		CSELECTORCONFIGURATORIF_IMPLEMENTATION
 )
+
+# ------------------------
 
 
 add_library(mylib)
@@ -50,6 +54,7 @@ target_sources(mylib
 	PRIVATE
 
 		src/CDlGlobalHandle.cpp
+
 		src/CSelectorConfiguratorIf.cpp
 
 		src/CInput.cpp
@@ -69,6 +74,7 @@ target_sources(mylib
 			src/include/CParent.hpp
 			src/include/child-creators.hpp
 )
+
 add_executable(polimorfizm-ptr-move)
 target_sources(polimorfizm-ptr-move
 	PRIVATE
