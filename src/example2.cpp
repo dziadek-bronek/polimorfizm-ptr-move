@@ -2,7 +2,11 @@
 #include "include/CParent.hpp"
 #include "include/child-creators.hpp"
 
-#include "CInput.cpp"
+#include "include/CInput.hpp"
+
+#include "include/CDlGlobalHandle.hpp"
+#include <dlfcn.h>
+CDlGlobalHandle dlCSelectorConfiguratorGlobalHandle;
 
 /* New action defined by a developer, to be added (registered) to framework
    (example/demonstration).
@@ -19,7 +23,7 @@ struct CDevChild : CParent
     }
     virtual void action() override
     {
-        printf("behavior specific for CDevChild  --------------\n");
+        printf("behavior specific for CDevChild\n");
     }
     virtual void constr() override
     {

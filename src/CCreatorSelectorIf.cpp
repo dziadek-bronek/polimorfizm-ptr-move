@@ -1,16 +1,19 @@
-#include "include/CSimpleSelector.hpp"
 #include "include/CSelector.hpp"
+#include "include/CSimpleSelector.hpp"
 
 #if 0
-CSelectorIf* CSelectorIf::createNew(void** selectorCoreVoidPtrVoidPtr)
+CSelectorIf* CSelectorIf::createNew(void* selectorCoreVoidPtr)
 {
     return nullptr;
-    if (nullptr == *selectorCoreVoidPtrVoidPtr)
+
+    // here static cast and based on this return correspondig selector
+
+    if (nullptr == selectorCoreVoidPtr)
     {
-        return createNewCSimpleSelector(selectorCoreVoidPtrVoidPtr);
+        return createNewCSimpleSelector(selectorCoreVoidPtr);
     }
 
-    return createNewCSelector(selectorCoreVoidPtrVoidPtr);
+    return createNewCSelector(selectorCoreVoidPtr);
 }
 #endif
 

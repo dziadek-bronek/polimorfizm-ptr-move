@@ -1,6 +1,10 @@
 #include "include/CInputIf.hpp"
 #include "include/CParent.hpp"
 
+#include "include/CDlGlobalHandle.hpp"
+#include <dlfcn.h>
+CDlGlobalHandle dlCSelectorConfiguratorGlobalHandle;
+
 int main()
 {
     try

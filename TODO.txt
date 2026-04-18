@@ -1,3 +1,30 @@
+cleaning dlHandle powstale po wczytaniu  soChild->CConfigChild
+
+
+najpierw unit testy!!!
+
+
+CAdderChildCreatore - zmodyfikowanie tak, by jako Creator byl dostosowany do 
+
+
+UML - nauka - dokumentacja mojego frameworka
+
+zmiany nazw
+
+Dokumentacja readme.md
+
+
+
+Jest: tworzenie selectora w configuratorze i zwracanie selectora
+Zamiast tego: configurator zwraca selectorCoreVoidPtr a w CFramework wywolanie CChildSelector::createNew(selectorCoreVoidPtr) ktory tworzy odpowiedni selector: najpierw rozpoznaje jakiego typu jest selectorCoreVoidPtr rozpoznaje przy pomocy dynamic cast)
+inna opcja: configurator zwraca dwuelementowa strukture (typ i wartosc selectorCoreVoidPtr) z typem - niech to bedzie strukctura z dwoma polami, a CChildSelector::createNew tworzy 
+
+
+
+Testy jednostkowe ktore znajda blad
+wyciagniecie dlHandle na zewnatrz wartosc przechowywana w zmiennej globalnej - i usuwanie jej na koncu w sekcji catch albo po niej
+
+
 write UT-s for class only dedicated each test needs only file <CClassName>.o from original sources.
 
 
