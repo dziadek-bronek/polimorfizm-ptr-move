@@ -14,7 +14,15 @@ void* CConfigChild::action(void* childCreatorUptrVoidPtr)
 
     printf("configChild is adding creator\n");
 
-    ((MapOfUptrChCrIf*)mapPtr)->push_back(std::move(*(creator)));
+    ((MapOfUptrChCrIf*)mapVoidPtr)->push_back(std::move(*(creator)));
 
     return nullptr;
+}
+
+extern "C" CParent* createNewCConfigChildExternC() {
+	return new CConfigChild();
+}
+
+extern "C" void deleteCConfigChildExternC(CParent* configChildPtr) {
+	delete configChildPtr;
 }

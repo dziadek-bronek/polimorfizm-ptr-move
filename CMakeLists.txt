@@ -12,6 +12,16 @@ cmake_minimum_required(VERSION 3.5)
 
 project(polimorfizm-ptr-move-proj)
 
+
+add_library(configChild SHARED
+	src/CConfigChild.cpp
+)
+
+target_compile_definitions( configChild
+	PRIVATE
+	CCONFIGCHILD_IMPLEMENTATION
+)
+
 add_library(selectorConfigurator SHARED
 		src/CSelectorConfigurator.cpp
 

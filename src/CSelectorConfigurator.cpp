@@ -67,6 +67,14 @@ static CChildCreatorIf* createCreatorForChildWithNumber(int childClass,
 using CreateNewSoChild = CParent* (*)();
 using DeleteSoChild = void (*)(CParent*);
 
+CParent* createNewSoChildMock() {
+            return new CConfigChild();
+}
+
+void deleteSoChildMock(CParent* soChild) {
+            delete soChild;
+}
+
 struct CSoChildWrapper : CParent
 {
     CSoChildWrapper(CParent* soChild_, DeleteSoChild deleteSoChild_)
@@ -98,9 +106,13 @@ struct CSoChildWrapper : CParent
 
 struct CSoChildCreator : CChildCreatorIf
 {
-    CSoChildCreator(int id_, void* initParameterVoidPtr_)
+    CSoChildCreator(int id_, void* initParameterVoidPtr_,
+		    void* dlHandle_, CreateNewSoChild createNewSoChild_, DeleteSoChild deleteSoChild_)
         : id(id_),
-          initParameterVoidPtr(initParameterVoidPtr_)
+          initParameterVoidPtr(initParameterVoidPtr_),
+	  dlHandle(dlHandle_),
+	  createNewSoChild(createNewSoChild_),
+	  deleteSoChild(deleteSoChild_)
     {
     }
     virtual ~CSoChildCreator()
@@ -131,11 +143,16 @@ struct CSoChildCreator : CChildCreatorIf
     DeleteSoChild deleteSoChild;
 };
 
-CSoChildCreator* producer(const char* fileName, const char* constructor,
-                          const char* destructor)
+CSoChildCreator* soCreatorsProducer(const char* fileName, const char* constructor,
+                          const char* destructor, int id, void* selectorCoreMapVoidPtr)
 {
 
-    return new CSoChildCreator(222, nullptr /*seletorCoreMap*/);
+	void* dlHandle = nullptr;
+	CreateNewSoChild createNewSoChild;
+	DeleteSoChild deleteSoChild;
+    return new CSoChildCreator(id, selectorCoreMapVoidPtr,
+		    dlHandle, createNewSoChildMock, deleteSoChild
+		    );
 };
 #endif
 
@@ -179,10 +196,21 @@ struct CConfigurator : CSelectorConfiguratorIf
     {
         selectorCoreMap = new MapOfUptrChCrIf;
 
+#if 1
+        {
+            selectorCoreMap->push_back(
+                UptrChCrIf(
+			
+			soCreatorsProducer("fileName", "constructorExternC", "destructorExternC", 222, selectorCoreMap)
+
+			));
+        }
+#else
         {
             selectorCoreMap->push_back(
                 UptrChCrIf(new CChildCreatorConfig(222, selectorCoreMap)));
         }
+#endif
 
         if (nullptr == initConfig)
         {
