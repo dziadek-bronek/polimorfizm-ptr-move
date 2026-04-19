@@ -8,21 +8,22 @@
 using UptrChCrIf = std::unique_ptr<CChildCreatorIf>;
 using MapOfUptrChCrIf = std::list<UptrChCrIf>;
 
-void* CConfigChild::action(void* childCreatorUptrVoidPtr)
+void* CConfigChild::action(void* childCreatorVoidPtr)
 {
-    UptrChCrIf* creator = (UptrChCrIf*)childCreatorUptrVoidPtr;
+    UptrChCrIf creator((CChildCreatorIf*)childCreatorVoidPtr);
 
     printf("configChild is adding creator\n");
 
-    ((MapOfUptrChCrIf*)mapVoidPtr)->push_back(std::move(*(creator)));
+    ((MapOfUptrChCrIf*)mapVoidPtr)->push_back(std::move(creator));
 
     return nullptr;
 }
 
 CConfigChild::~CConfigChild()
-    {
-	    printf("CConfigChild destructing\n"); fflush(NULL);
-    }
+{
+    printf("CConfigChild destructing\n");
+    fflush(NULL);
+}
 
 extern "C" CParent* createNewCConfigChildExternC()
 {

@@ -6,7 +6,6 @@
 #include "include/throw.hpp"
 
 #include "include/CChildren.hpp"
-#include "include/CConfigChild.hpp"
 
 #include "include/child-creators.hpp"
 
@@ -97,11 +96,11 @@ struct CSoChildWrapper : CParent
 
 struct CSoChildCreator : CChildCreatorIf
 {
-    CSoChildCreator(int id_, void* initParameterVoidPtr_, void* dlHandle_,
-                    CreateNewSoChild createNewSoChild_,
+    CSoChildCreator(int id_, void* soChildInitParameterVoidPtr_,
+                    void* dlHandle_, CreateNewSoChild createNewSoChild_,
                     DeleteSoChild deleteSoChild_)
         : id(id_),
-          initParameterVoidPtr(initParameterVoidPtr_),
+          soChildInitParameterVoidPtr(soChildInitParameterVoidPtr_),
           dlHandle(dlHandle_),
           createNewSoChild(createNewSoChild_),
           deleteSoChild(deleteSoChild_)
@@ -121,7 +120,7 @@ struct CSoChildCreator : CChildCreatorIf
                    id);
 
             CParent* x(new CSoChildWrapper(createNewSoChild(), deleteSoChild));
-            x->init(initParameterVoidPtr);
+            x->init(soChildInitParameterVoidPtr);
             return x;
         }
         return nullptr;
@@ -129,7 +128,7 @@ struct CSoChildCreator : CChildCreatorIf
 
   private:
     int id;
-    void* initParameterVoidPtr;
+    void* soChildInitParameterVoidPtr;
     void* dlHandle;
     CreateNewSoChild createNewSoChild;
     DeleteSoChild deleteSoChild;
@@ -138,7 +137,7 @@ struct CSoChildCreator : CChildCreatorIf
 CChildCreatorIf* soCreatorsProducer(const char* fileName,
                                     const char* constructorName,
                                     const char* destructorName, int id,
-                                    void* selectorCoreMapVoidPtr)
+                                    void* soChildInitParameterVoidPtr)
 {
     struct CDlHandle
     {
@@ -202,7 +201,7 @@ CChildCreatorIf* soCreatorsProducer(const char* fileName,
         fflush(NULL);
 
         CChildCreatorIf* x(nullptr);
-        x = new CSoChildCreator(id, selectorCoreMapVoidPtr, dlHandle.ptr,
+        x = new CSoChildCreator(id, soChildInitParameterVoidPtr, dlHandle.ptr,
                                 createNewSoChild, deleteSoChild);
         if (nullptr != x)
         {
@@ -214,6 +213,42 @@ CChildCreatorIf* soCreatorsProducer(const char* fileName,
 
     return nullptr;
 }
+
+struct CSoCreatorsProducerChild : CParent
+{
+    CSoCreatorsProducerChild(void* soChildInitParameterVoidPtr_)
+        : soChildInitParameterVoidPtr(soChildInitParameterVoidPtr_)
+    {
+    }
+    void* action(void* actionParameterVoidPtr)
+    {
+
+        struct CActionParams
+        {
+            const char* fileName;
+            const char* constructorName;
+            const char* destructorName;
+            int id;
+        };
+        CActionParams* soChild = (CActionParams*)actionParameterVoidPtr;
+
+        return soCreatorsProducer(soChild->fileName, soChild->constructorName,
+                                  soChild->destructorName, soChild->id,
+                                  soChildInitParameterVoidPtr);
+    }
+
+    void* soChildInitParameterVoidPtr;
+};
+
+struct CSoCreatorsProducerChildCreator : CChildCreator<CSoCreatorsProducerChild>
+{
+    CSoCreatorsProducerChildCreator(int id_, void* selectorCoreMapVoidPtr_)
+        : id(id_),
+          selectorCoreMapVoidPtr(selectorCoreMapVoidPtr_)
+    {
+    }
+    virtual ~CSoCreatorsProducerChildCreator() {}
+};
 
 struct CConfigurator : CSelectorConfiguratorIf
 {
@@ -232,20 +267,18 @@ struct CConfigurator : CSelectorConfiguratorIf
         selectorCoreMap = new MapOfUptrChCrIf;
 
         {
-            selectorCoreMap->push_back(UptrChCrIf(
-
-                soCreatorsProducer(
-                    "./libCConfigChild.so", "createNewCConfigChildExternC",
-                    "deleteCConfigChildExternC", 222, selectorCoreMap)
-
-                    ));
-        }
-#if 0
-        {
             selectorCoreMap->push_back(
-                UptrChCrIf(new CChildCreatorConfig(222, selectorCoreMap)));
+                UptrChCrIf(new CChildCretor<CSoCreatorsProducerChild>(221)));
+
+            {
+
+                CSoCreatorsProducerChild soCreatorsProducer;
+                selectorCoreMap->push_back(
+                    UptrChCrIf(soCreatorsProducer->action(
+                        "./libCConfigChild.so", "createNewCConfigChildExternC",
+                        "deleteCConfigChildExternC", 222, selectorCoreMap)));
+            }
         }
-#endif
 
         if (nullptr == initConfig)
         {

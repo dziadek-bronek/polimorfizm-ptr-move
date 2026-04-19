@@ -58,12 +58,15 @@ int main()
            object of class CDevChild is created.
         */
         {
-            std::unique_ptr<CChildCreatorIf> newChildCreator(
-                new CChildCreator<CDevChild>(8));
 
             /* Add creator to framework */
-            framework->configAdd(&newChildCreator);
+            delete (CChildCreatorIf*)framework->configAdd(
+                new CChildCreator<CDevChild>(8));
         }
+
+        delete (CChildCreatorIf*)framework->configAdd(
+            "./libCDemoSoChild.so", "createNewCDemoSoChildExternC",
+            "deleteCDemoSoChildExternC", 13);
 
         /* Mock of input - vector represents input sequence */
         std::unique_ptr<CInputIf> input(CInputIf::createNew());

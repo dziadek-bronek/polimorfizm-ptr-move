@@ -6,8 +6,8 @@
 struct CConfigChild : CParent
 {
     CConfigChild() = default;
-    CConfigChild(void* mapVoidPtr_)
-        : mapVoidPtr(mapVoidPtr_)
+    CConfigChild(void* constructorParameterVoidPtr)
+        : mapVoidPtr(constructorParameterVoidPtr)
     {
     }
     virtual ~CConfigChild();
@@ -16,7 +16,7 @@ struct CConfigChild : CParent
     {
         mapVoidPtr = initParameterVoidPtr;
     }
-    virtual void* action(void* actionParameterVoidPtr) override;
+    virtual void* action(void* childCreatorVoidPtr) override;
     void* mapVoidPtr;
 };
 

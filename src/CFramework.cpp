@@ -42,7 +42,31 @@ struct CFramework : CFrameworkIf
         printf("CFramework destructor\n");
     }
 
-    virtual void configAdd(void* childCreatorUPtrVoidPtr)
+    virtual void* configAdd(const char* fileName, const char* constructorName,
+                            const char* destructorName, int id)
+    {
+        std::unique_ptr<CParent> configChild((CParent*)selector->at(221));
+
+        if (nullptr == configChild)
+        {
+            printf("------------------ PRODUCER NOT DEFINED!!!\n");
+            return nullptr;
+        }
+
+        struct CActionParams
+        {
+            const char* fileName;
+            const char* constructorName;
+            const char* destructorName;
+            int id;
+        } actionParams{.fileName = fileName,
+                       .constructorName = constructorName,
+                       .destructorName = destructorName};
+
+        return configAdd(configChild->action(&actionParams));
+    }
+
+    virtual void* configAdd(void* childCreatorVoidPtr)
     {
         std::unique_ptr<CParent> configChild((CParent*)selector->at(222));
 
@@ -50,10 +74,10 @@ struct CFramework : CFrameworkIf
         {
             printf(
                 "No action allowed in current configuration of selection!!!\n");
-            return;
+            return childCreatorVoidPtr;
         }
 
-        configChild->action(childCreatorUPtrVoidPtr);
+        return configChild->action(childCreatorVoidPtr);
     }
 
     virtual void mainLoop(void* inputVoidPtr)
