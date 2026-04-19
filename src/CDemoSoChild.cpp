@@ -1,3 +1,9 @@
+#include "include/CConfigChild.hpp"
+#include <list>
+#include <memory>
+
+#include "include/child-creators.hpp"
+#include <cstdio>
 
 struct CDemoSoChild : CParent
 {
@@ -13,10 +19,7 @@ struct CDemoSoChild : CParent
         printf("child CDemoSoChild destructor\n");
     }
 
-    virtual void init(void* initParameterVoidPtr)
-    {
-        mapVoidPtr = initParameterVoidPtr;
-    }
+    virtual void init(void* initParameterVoidPtr) {}
 
     virtual void action()
     {
@@ -28,3 +31,12 @@ struct CDemoSoChild : CParent
         return nullptr;
     }
 };
+
+extern "C" CParent* createNewCDemoSoChildExternC()
+{
+    return new CDemoSoChild;
+}
+extern "C" void deleteCDemoSoChildExternC(CParent* demoSoChild)
+{
+    delete demoSoChild;
+}

@@ -35,6 +35,7 @@ struct CDevChild : CParent
     }
 };
 
+#define DELETE_IF_FAILURE(_x_) (delete ((CChildCreatorIf*)(_x_)))
 int main()
 {
     try
@@ -57,20 +58,18 @@ int main()
            creator to framework (next line). The result is: on input 8 the
            object of class CDevChild is created.
         */
-        {
 
-            /* Add creator to framework */
-            delete (CChildCreatorIf*)framework->configAdd(
-                new CChildCreator<CDevChild>(8));
-        }
+        /* Add creator to framework */
+        DELETE_IF_FAILURE(
+            framework->configAdd(new CChildCreator<CDevChild>(8)));
 
-        delete (CChildCreatorIf*)framework->configAdd(
+        DELETE_IF_FAILURE(framework->configAdd(
             "./libCDemoSoChild.so", "createNewCDemoSoChildExternC",
-            "deleteCDemoSoChildExternC", 13);
+            "deleteCDemoSoChildExternC", 13));
 
         /* Mock of input - vector represents input sequence */
         std::unique_ptr<CInputIf> input(CInputIf::createNew());
-        input->init(new std::vector<int>{2, 4, 3, 8, 0, 7});
+        input->init(new std::vector<int>{2, 4, 3, 8, 0, 12, 13, 14, 7});
 
         framework->mainLoop(&input);
     }

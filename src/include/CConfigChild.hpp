@@ -5,11 +5,12 @@
 
 struct CConfigChild : CParent
 {
-    CConfigChild() = default;
+#if 0
     CConfigChild(void* constructorParameterVoidPtr)
         : mapVoidPtr(constructorParameterVoidPtr)
     {
     }
+#endif
     virtual ~CConfigChild();
 
     virtual void init(void* initParameterVoidPtr)

@@ -14,6 +14,22 @@ project(polimorfizm-ptr-move-proj)
 
 # ------------------------
 
+add_library(CDemoSoChild SHARED
+	src/CDemoSoChild.cpp
+)
+
+
+target_compile_definitions( CDemoSoChild
+	PRIVATE
+	CDEMOSOCHILD_IMPLEMENTATION
+)
+
+
+
+
+
+# ------------------------
+
 add_library(CConfigChild SHARED
 	src/CConfigChild.cpp
 )

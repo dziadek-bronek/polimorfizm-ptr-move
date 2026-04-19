@@ -59,11 +59,21 @@ struct CFramework : CFrameworkIf
             const char* constructorName;
             const char* destructorName;
             int id;
-        } actionParams{.fileName = fileName,
-                       .constructorName = constructorName,
-                       .destructorName = destructorName};
+            void* initParameterVoidPtr;
+        } soChildOrigin{.fileName = fileName,
+                        .constructorName = constructorName,
+                        .destructorName = destructorName,
+                        .id = id,
+                        .initParameterVoidPtr = nullptr};
 
-        return configAdd(configChild->action(&actionParams));
+        void* x = configChild->action(&soChildOrigin);
+        if (nullptr == x)
+        {
+            printf("HOUSTON WEVE GOTTA PROBLEM\n");
+            return nullptr;
+        }
+
+        return configAdd(x);
     }
 
     virtual void* configAdd(void* childCreatorVoidPtr)

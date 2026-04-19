@@ -1,4 +1,5 @@
 cleaning dlHandle powstale po wczytaniu  soChild->CConfigChild
+add static_cast and dynamic cast
 
 
 najpierw unit testy!!!
