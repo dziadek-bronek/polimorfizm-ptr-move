@@ -1,4 +1,4 @@
-#include "CConfigChild.hpp"
+#include "CConfigSoChild.hpp"
 #include "../include/child-creators.hpp"
 #include <cstdio>
 #include <list>
@@ -7,7 +7,7 @@
 using UptrChCrIf = std::unique_ptr<CChildCreatorIf>;
 using MapOfUptrChCrIf = std::list<UptrChCrIf>;
 
-void* CConfigChild::action(void* childCreatorVoidPtr)
+void* CConfigSoChild::action(void* childCreatorVoidPtr)
 {
     UptrChCrIf creator((CChildCreatorIf*)childCreatorVoidPtr);
 
@@ -18,18 +18,18 @@ void* CConfigChild::action(void* childCreatorVoidPtr)
     return nullptr;
 }
 
-CConfigChild::~CConfigChild()
+CConfigSoChild::~CConfigSoChild()
 {
-    printf("CConfigChild destructing\n");
+    printf("CConfigSoChild destructing\n");
     fflush(NULL);
 }
 
-extern "C" CParent* createNewCConfigChildExternC()
+extern "C" CParent* createNewCConfigSoChildExternC()
 {
-    return new CConfigChild();
+    return new CConfigSoChild();
 }
 
-extern "C" void deleteCConfigChildExternC(CParent* configChildPtr)
+extern "C" void deleteCConfigSoChildExternC(CParent* configChildPtr)
 {
     delete configChildPtr;
 }

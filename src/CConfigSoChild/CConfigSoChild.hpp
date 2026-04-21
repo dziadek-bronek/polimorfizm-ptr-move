@@ -3,9 +3,9 @@
 
 #include "../include/CParent.hpp"
 
-struct CConfigChild : CParent
+struct CConfigSoChild : CParent
 {
-    virtual ~CConfigChild();
+    virtual ~CConfigSoChild();
 
     virtual void init(void* initParameterVoidPtr)
     {

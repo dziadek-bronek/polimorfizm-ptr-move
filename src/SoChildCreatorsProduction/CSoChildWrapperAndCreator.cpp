@@ -1,4 +1,6 @@
-
+#include <cstdio>
+#include "../include/child-creators.hpp"
+#include "../include/CParent.hpp"
 
 
 /*******************************************/
@@ -80,7 +82,7 @@ struct CSoChildCreator : CChildCreatorIf
 };
 
 
-void* createNewCSoChildCreator(int id, void* soChildInitParameterVoidPtr, void* dlHandle, CreateNewSoChild createNewSoChild, DeleteSoChild deleteSoChild);
+void* createNewCSoChildCreator(int id, void* soChildInitParameterVoidPtr, void* dlHandle, CreateNewSoChild createNewSoChild, DeleteSoChild deleteSoChild)
 {
-	return CSoChildCreator(id, soChildInitParameterVoidPtr, dlHandle, createNewSoChild, deleteSoChild);
+	return new CSoChildCreator(id, soChildInitParameterVoidPtr, dlHandle, createNewSoChild, deleteSoChild);
 }

@@ -16,17 +16,9 @@ project(polimorfizm-ptr-move-proj)
 
 # ------------------------
 
-add_library(CSoChildWrapper SHARED
-	src/CSoChildCreatorsProduction/CSoChildWrapper.cpp
-)
-
-
-# ------------------------
-
 add_library(CDemoSoChild SHARED
 	src/CDemoSoChild/CDemoSoChild.cpp
 )
-
 
 target_compile_definitions( CDemoSoChild
 	PRIVATE
@@ -35,19 +27,23 @@ target_compile_definitions( CDemoSoChild
 
 # ------------------------
 
-add_library(CConfigChild SHARED
-	src/CConfigChild/CConfigChild.cpp
+add_library(CConfigSoChild SHARED
+	src/CConfigSoChild/CConfigSoChild.cpp
+
 )
 
-target_compile_definitions( CConfigChild
+target_compile_definitions( CConfigSoChild
 	PRIVATE
-	CCONFIGCHILD_IMPLEMENTATION
+	CCONFIGSOCHILD_IMPLEMENTATION
 )
 
 # ------------------------
 
 add_library(CSelectorConfigurator SHARED
 		src/CSelectorConfigurator.cpp
+
+		src/SoChildCreatorsProduction/CSoChildWrapperAndCreator.cpp
+		src/SoChildCreatorsProduction/CSoChildCreatorsProducerChild.cpp
 
 		src/CChildren/CChildren.cpp
 

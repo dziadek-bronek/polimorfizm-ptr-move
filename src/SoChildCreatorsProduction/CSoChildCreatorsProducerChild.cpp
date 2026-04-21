@@ -1,8 +1,12 @@
+#include <dlfcn.h>
+#include <cstdio>
+#include "../include/child-creators.hpp"
 #include "createNewCSoChildCeator.hpp"
+#include "../include/CParent.hpp"
 
-struct CSoCreatorsProducerChild : CParent
+struct CSoChildCreatorsProducerChild : CParent
 {
-    CSoCreatorsProducerChild()
+    CSoChildCreatorsProducerChild()
         : dlHandle(nullptr)
     {
     }
@@ -72,7 +76,7 @@ struct CSoCreatorsProducerChild : CParent
                                 dlHandle.ptr, createNewSoChild, deleteSoChild);
 	*/
 
-        x = createNewCSoChildCreator(soChildCreatorData->id, soChildCreatorData->initParameterVoidPtr,
+        x = createNewCSoChildCreator(soChild->id, soChild->initParameterVoidPtr,
                                 dlHandle.ptr, createNewSoChild, deleteSoChild);
         if (nullptr == x)
         {
@@ -98,5 +102,9 @@ struct CSoCreatorsProducerChild : CParent
         void* ptr;
     } dlHandle;
 
-    CActionParams* soChildCreatorData;
+    CActionParams* soChild;
 };
+
+void* createNewCreatorOfCSoChildCreatorsProducerChild() {
+			return new CChildCreator<CSoChildCreatorsProducerChild>(221);
+}
