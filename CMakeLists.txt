@@ -12,10 +12,19 @@ cmake_minimum_required(VERSION 3.5)
 
 project(polimorfizm-ptr-move-proj)
 
+
+
+# ------------------------
+
+add_library(CSoChildWrapper SHARED
+	src/CSoChildCreatorsProduction/CSoChildWrapper.cpp
+)
+
+
 # ------------------------
 
 add_library(CDemoSoChild SHARED
-	src/CDemoSoChild.cpp
+	src/CDemoSoChild/CDemoSoChild.cpp
 )
 
 
@@ -24,16 +33,11 @@ target_compile_definitions( CDemoSoChild
 	CDEMOSOCHILD_IMPLEMENTATION
 )
 
-
-
-
-
 # ------------------------
 
 add_library(CConfigChild SHARED
 	src/CConfigChild/CConfigChild.cpp
 )
-
 
 target_compile_definitions( CConfigChild
 	PRIVATE
