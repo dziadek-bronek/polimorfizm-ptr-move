@@ -1,8 +1,8 @@
-#include <dlfcn.h>
-#include <cstdio>
+#include "../include/CParent.hpp"
 #include "../include/child-creators.hpp"
 #include "createNewCSoChildCeator.hpp"
-#include "../include/CParent.hpp"
+#include <cstdio>
+#include <dlfcn.h>
 
 struct CSoChildCreatorsProducerChild : CParent
 {
@@ -71,13 +71,15 @@ struct CSoChildCreatorsProducerChild : CParent
         fflush(NULL);
 
         void* x(nullptr);
-	/*
-        x = new CSoChildCreator(soChild->id, soChild->initParameterVoidPtr,
-                                dlHandle.ptr, createNewSoChild, deleteSoChild);
-	*/
+        /*
+            x = new CSoChildCreator(soChild->id, soChild->initParameterVoidPtr,
+                                    dlHandle.ptr, createNewSoChild,
+           deleteSoChild);
+        */
 
         x = createNewCSoChildCreator(soChild->id, soChild->initParameterVoidPtr,
-                                dlHandle.ptr, createNewSoChild, deleteSoChild);
+                                     dlHandle.ptr, createNewSoChild,
+                                     deleteSoChild);
         if (nullptr == x)
         {
             return nullptr;
@@ -105,6 +107,7 @@ struct CSoChildCreatorsProducerChild : CParent
     CActionParams* soChild;
 };
 
-void* createNewCreatorOfCSoChildCreatorsProducerChild() {
-			return new CChildCreator<CSoChildCreatorsProducerChild>(221);
+void* createNewCreatorOfCSoChildCreatorsProducerChild()
+{
+    return new CChildCreator<CSoChildCreatorsProducerChild>(221);
 }

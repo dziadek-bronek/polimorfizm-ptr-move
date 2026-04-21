@@ -85,8 +85,10 @@ struct CConfigurator : CSelectorConfiguratorIf
         selectorCoreMap = new MapOfUptrChCrIf;
 
         {
-		UptrChCrIf x((CChildCreatorIf*)createNewCreatorOfCSoChildCreatorsProducerChild());
-	    std::unique_ptr<CParent>  y((CParent*) (x->createNewChildIfIsNumber(221)));
+            UptrChCrIf x((CChildCreatorIf*)
+                             createNewCreatorOfCSoChildCreatorsProducerChild());
+            std::unique_ptr<CParent> y(
+                (CParent*)(x->createNewChildIfIsNumber(221)));
 
             selectorCoreMap->push_back(std::move(x));
             {
@@ -104,8 +106,8 @@ struct CConfigurator : CSelectorConfiguratorIf
                     .id = 222,
                     .coreMapVoidPtr = selectorCoreMap};
 
-                selectorCoreMap->push_back(
-                    UptrChCrIf((CChildCreatorIf*)( y ->action( &adderSoChildData))));
+                selectorCoreMap->push_back(UptrChCrIf(
+                    (CChildCreatorIf*)(y->action(&adderSoChildData))));
             }
         }
 
