@@ -45,7 +45,7 @@ target_compile_definitions( CConfigChild
 add_library(CSelectorConfigurator SHARED
 		src/CSelectorConfigurator.cpp
 
-		src/CChildren.cpp
+		src/CChildren/CChildren.cpp
 
 #[[
 		src/CMap.cpp

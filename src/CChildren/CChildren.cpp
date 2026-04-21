@@ -1,4 +1,4 @@
-#include "include/CChildren.hpp"
+#include "CChildren.hpp"
 #include <cstdio>
 
 void CChild1::constr()

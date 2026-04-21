@@ -1,7 +1,7 @@
 #ifndef CHILDREN_HPP
 #define CHILDREN_HPP
 
-#include "CParent.hpp"
+#include "../include/CParent.hpp"
 
 struct CChild1 : CParent
 {

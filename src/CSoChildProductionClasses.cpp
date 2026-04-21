@@ -79,7 +79,10 @@ struct CSoChildCreator : CChildCreatorIf
 
 struct CSoCreatorsProducerChild : CParent
 {
-	CSoCreatorsProducerChild(): dlHandle(nullptr) {}
+    CSoCreatorsProducerChild()
+        : dlHandle(nullptr)
+    {
+    }
     struct CActionParams
     {
         const char* fileName;
@@ -169,5 +172,3 @@ struct CSoCreatorsProducerChild : CParent
 
     CActionParams* soChild;
 };
-
-

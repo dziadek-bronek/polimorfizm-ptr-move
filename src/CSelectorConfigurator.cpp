@@ -5,7 +5,7 @@
 
 #include "include/throw.hpp"
 
-#include "include/CChildren.hpp"
+#include "CChildren/CChildren.hpp"
 
 #include "include/child-creators.hpp"
 
