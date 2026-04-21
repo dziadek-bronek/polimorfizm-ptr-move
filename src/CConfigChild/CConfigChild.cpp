@@ -1,9 +1,8 @@
-#include "include/CConfigChild.hpp"
+#include "CConfigChild.hpp"
+#include "../include/child-creators.hpp"
+#include <cstdio>
 #include <list>
 #include <memory>
-
-#include "include/child-creators.hpp"
-#include <cstdio>
 
 using UptrChCrIf = std::unique_ptr<CChildCreatorIf>;
 using MapOfUptrChCrIf = std::list<UptrChCrIf>;

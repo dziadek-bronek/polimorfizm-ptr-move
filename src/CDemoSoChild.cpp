@@ -1,9 +1,9 @@
-#include "include/CConfigChild.hpp"
+#include "include/CParent.hpp"
+#include <cstdio>
 #include <list>
 #include <memory>
 
 #include "include/child-creators.hpp"
-#include <cstdio>
 
 struct CDemoSoChild : CParent
 {

@@ -31,7 +31,7 @@ target_compile_definitions( CDemoSoChild
 # ------------------------
 
 add_library(CConfigChild SHARED
-	src/CConfigChild.cpp
+	src/CConfigChild/CConfigChild.cpp
 )
 
 
