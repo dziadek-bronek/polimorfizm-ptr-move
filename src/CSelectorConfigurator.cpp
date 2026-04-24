@@ -85,12 +85,30 @@ struct CConfigurator : CSelectorConfiguratorIf
         selectorCoreMap = new MapOfUptrChCrIf;
 
         {
-            UptrChCrIf x((CChildCreatorIf*)
-                             createNewCreatorOfCSoChildCreatorsProducerChild());
-            std::unique_ptr<CParent> y(
-                (CParent*)(x->createNewChildIfIsNumber(221)));
+            /*
+            SoChildCreatorsProducer is of class CChild, which creates Creators
+            creating object defined by a certian .so files a creator which
+            produces such a soChildCreatorsProducer is created and added to list
+                this is for unification of access to soChildCreatorsProducer
 
-            selectorCoreMap->push_back(std::move(x));
+
+                we use this creator x to generate y before pushing; pushing
+            destroys x, thus we can not is soChildCreatorsProducer and we hold
+            it for a while
+                */
+
+            std::unique_ptr<CParent> y;
+
+            {
+                UptrChCrIf x(
+                    (CChildCreatorIf*)
+                        createNewCreatorOfCSoChildCreatorsProducerChild());
+                y = std::unique_ptr<CParent>(
+                    (CParent*)(x->createNewChildIfIsNumber(221)));
+
+                selectorCoreMap->push_back(std::move(x));
+            }
+
             {
                 struct CActionParams
                 {
