@@ -97,35 +97,35 @@ struct CConfigurator : CSelectorConfiguratorIf
             it for a while
                 */
 
-            std::unique_ptr<CParent> y;
+            std::unique_ptr<CParent> soChildCreatorsProducerChild;
 
             {
-                UptrChCrIf x(
+                UptrChCrIf creatorOfSoChildCreatorsProducer(
                     (CChildCreatorIf*)
                         createNewCreatorOfCSoChildCreatorsProducerChild());
-                y = std::unique_ptr<CParent>(
-                    (CParent*)(x->createNewChildIfIsNumber(221)));
+                soChildCreatorsProducerChild = std::unique_ptr<CParent>(
+                    (CParent*)(creatorOfSoChildCreatorsProducer
+                                   ->createNewChildIfIsNumber(221)));
 
-                selectorCoreMap->push_back(std::move(x));
+                selectorCoreMap->push_back(
+                    std::move(creatorOfSoChildCreatorsProducer));
             }
 
             {
-                struct CActionParams
+                struct CAdderActionParams
                 {
                     const char* fileName;
                     const char* constructorName;
                     const char* destructorName;
                     int id;
-                    void* coreMapVoidPtr;
+                    void* initParameterVoidPtr;
                 } adderSoChildData{
-                    .fileName = "./libCConfigSoChild.so",
-                    .constructorName = "createNewCConfigSoChildExternC",
-                    .destructorName = "deleteCConfigSoChildExternC",
-                    .id = 222,
-                    .coreMapVoidPtr = selectorCoreMap};
+                    "./libCConfigSoChild.so", "createNewCConfigSoChildExternC",
+                    "deleteCConfigSoChildExternC", 222, selectorCoreMap};
 
                 selectorCoreMap->push_back(UptrChCrIf(
-                    (CChildCreatorIf*)(y->action(&adderSoChildData))));
+                    (CChildCreatorIf*)(soChildCreatorsProducerChild->action(
+                        &adderSoChildData))));
             }
         }
 
