@@ -17,4 +17,3 @@ CSelectorIf* CSelectorIf::createNew(void* selectorCoreVoidPtr)
 }
 #endif
 
-CSelectorIf::~CSelectorIf() {}

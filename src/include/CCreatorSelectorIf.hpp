@@ -4,7 +4,7 @@
 struct CSelectorIf
 {
     // static CSelectorIf* createNew(...);
-    virtual ~CSelectorIf() = 0;
+    virtual ~CSelectorIf() = default;
 
     virtual void* at(int event) = 0;
 };

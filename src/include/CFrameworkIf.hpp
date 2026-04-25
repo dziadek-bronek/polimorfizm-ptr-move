@@ -3,7 +3,7 @@
 
 struct CFrameworkIf
 {
-    virtual ~CFrameworkIf() {}
+    virtual ~CFrameworkIf() = default;
 
     virtual void* getChildBasedOnNumber(int n) = 0;
 

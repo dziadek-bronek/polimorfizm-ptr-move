@@ -54,7 +54,6 @@ add_library(CSelectorConfigurator SHARED
 
 		src/CSimpleSelector.cpp
 		src/CSelector.cpp
-		src/CCreatorSelectorIf.cpp
 )
 
 target_compile_definitions( CSelectorConfigurator

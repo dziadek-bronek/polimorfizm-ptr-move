@@ -64,17 +64,9 @@ static CChildCreatorIf* createCreatorForChildWithNumber(int childClass,
     throw;
 }
 
-// #include "SoChildCreatorsProcuction/CSoChildCreatorsProducerChild.cpp"
-
-/*******************************************/
-
 struct CConfigurator : CSelectorConfiguratorIf
 {
-    CConfigurator()
-        : selectorCoreMap(nullptr)
-    {
-    }
-    virtual ~CConfigurator() {}
+    virtual ~CConfigurator() = default;
 
     virtual void init(void* initConfigVoidPtr)
     {
@@ -171,7 +163,7 @@ struct CSimpleConfigurator : CSelectorConfiguratorIf
     {
     }
 
-    virtual ~CSimpleConfigurator() {}
+    virtual ~CSimpleConfigurator() = default;
 
     virtual void init(void*) {}
 
