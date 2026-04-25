@@ -53,27 +53,23 @@ struct CFramework : CFrameworkIf
             return nullptr;
         }
 
-        struct CActionParams
+        struct
         {
             const char* fileName;
             const char* constructorName;
             const char* destructorName;
             int id;
             void* initParameterVoidPtr;
-        } soChildOrigin{.fileName = fileName,
-                        .constructorName = constructorName,
-                        .destructorName = destructorName,
-                        .id = id,
-                        .initParameterVoidPtr = nullptr};
+        } soChildOrigin{fileName, constructorName, destructorName, id, nullptr};
 
-        void* x = configChild->action(&soChildOrigin);
-        if (nullptr == x)
+        void* soChildCreator = configChild->action(&soChildOrigin);
+        if (nullptr == soChildCreator)
         {
             printf("HOUSTON WEVE GOTTA PROBLEM\n");
             return nullptr;
         }
 
-        return configAdd(x);
+        return configAdd(soChildCreator);
     }
 
     virtual void* configAdd(void* childCreatorVoidPtr)
@@ -97,13 +93,12 @@ struct CFramework : CFrameworkIf
         for (int event = input->getCurrentEvent();;
              event = input->nextCurrentEvent() /* input++*/)
         {
-            void* x = selector->at(event);
-            if (x == nullptr)
+            std::unique_ptr<CParent> child((CParent*)(selector->at(event)));
+            if (child == nullptr)
             {
                 printf("-------- UNKNOWN EVENT %i.\n", event);
                 continue;
             }
-            std::unique_ptr<CParent> child((CParent*)x);
             child->action();
         }
     }

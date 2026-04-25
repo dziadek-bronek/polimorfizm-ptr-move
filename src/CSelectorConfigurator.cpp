@@ -112,7 +112,7 @@ struct CConfigurator : CSelectorConfiguratorIf
             }
 
             {
-                struct CAdderActionParams
+                struct
                 {
                     const char* fileName;
                     const char* constructorName;
