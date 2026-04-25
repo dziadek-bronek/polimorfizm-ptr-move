@@ -49,7 +49,7 @@ int main()
 
         /* Set framework with configuration. */
         std::unique_ptr<CFrameworkIf> framework(
-            CFrameworkIf::createNew(&selectorInitConfig));
+            createNewCFramework(&selectorInitConfig));
 
         /* Example action is defined by developer in class CDevChild
            Here we add it to framework. Technically: a 'creator' is

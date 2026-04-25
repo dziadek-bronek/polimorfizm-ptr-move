@@ -3,8 +3,7 @@
 
 struct CFrameworkIf
 {
-    static CFrameworkIf* createNew(void* selectorInitConfigVoidPtr);
-    virtual ~CFrameworkIf() = 0;
+    virtual ~CFrameworkIf() {}
 
     virtual void* getChildBasedOnNumber(int n) = 0;
 

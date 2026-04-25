@@ -53,6 +53,7 @@ developer on his own)
 
 */
 
+#include "include/CFramework.hpp"
 #include "include/CFrameworkIf.hpp"
 #include "include/CInputIf.hpp"
 

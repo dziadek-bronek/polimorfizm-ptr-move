@@ -9,13 +9,3 @@ CFrameworkIf* newCFrameworkIfSO(void* selectorInitConfigVoidPtr)
 
     return frameworkIfObjectPtr;
 }
-
-CFrameworkIf* CFrameworkIf::createNew(void* selectorInitConfigVoidPtr)
-{
-    // not implemented:
-    // return newCFrameworkIfSharedObject();
-
-    // expect static 'newCFramework'
-    return createNewCFramework(selectorInitConfigVoidPtr);
-}
-CFrameworkIf::~CFrameworkIf() {}

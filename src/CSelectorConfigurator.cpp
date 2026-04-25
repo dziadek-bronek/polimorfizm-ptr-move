@@ -97,13 +97,13 @@ struct CConfigurator : CSelectorConfiguratorIf
             it for a while
                 */
 
-            std::unique_ptr<CParent> soChildCreatorsProducerChild;
+            std::unique_ptr<CParent> soChildCreatorsProducer;
 
             {
                 UptrChCrIf creatorOfSoChildCreatorsProducer(
                     (CChildCreatorIf*)
                         createNewCreatorOfCSoChildCreatorsProducerChild());
-                soChildCreatorsProducerChild = std::unique_ptr<CParent>(
+                soChildCreatorsProducer = std::unique_ptr<CParent>(
                     (CParent*)(creatorOfSoChildCreatorsProducer
                                    ->createNewChildIfIsNumber(221)));
 
@@ -124,7 +124,7 @@ struct CConfigurator : CSelectorConfiguratorIf
                     "deleteCConfigSoChildExternC", 222, selectorCoreMap};
 
                 selectorCoreMap->push_back(UptrChCrIf(
-                    (CChildCreatorIf*)(soChildCreatorsProducerChild->action(
+                    (CChildCreatorIf*)(soChildCreatorsProducer->action(
                         &adderSoChildData))));
             }
         }

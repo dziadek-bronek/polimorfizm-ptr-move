@@ -77,7 +77,6 @@ target_sources(mylib
 		src/CInputIf.cpp
 
 		src/CFramework.cpp
-		src/CFrameworkIf.cpp
 
 	PUBLIC
 		FILE_SET mylibHeaders
@@ -95,7 +94,6 @@ add_executable(polimorfizm-ptr-move)
 target_sources(polimorfizm-ptr-move
 	PRIVATE
 		src/main.cpp
-
 )
 
 target_link_libraries(polimorfizm-ptr-move
