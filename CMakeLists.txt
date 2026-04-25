@@ -39,13 +39,25 @@ target_compile_definitions( CConfigSoChild
 
 # ------------------------
 
+
+
+add_library(CChildren SHARED
+	src/CChildren/CChildren.cpp
+
+)
+
+target_compile_definitions( CChildren
+	PRIVATE
+	CCHILDREN_IMPLEMENTATION
+)
+
+# ------------------------
+
 add_library(CSelectorConfigurator SHARED
 		src/CSelectorConfigurator.cpp
 
 		src/SoChildCreatorsProduction/CSoChildWrapperAndCreator.cpp
 		src/SoChildCreatorsProduction/CSoChildCreatorsProducerChild.cpp
-
-		src/CChildren/CChildren.cpp
 
 #[[
 		src/CMap.cpp
@@ -59,6 +71,10 @@ add_library(CSelectorConfigurator SHARED
 target_compile_definitions( CSelectorConfigurator
 	PRIVATE
 		CSELECTORCONFIGURATORIF_IMPLEMENTATION
+)
+
+target_link_libraries(CSelectorConfigurator PUBLIC
+	CChildren
 )
 
 # ------------------------

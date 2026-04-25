@@ -16,4 +16,3 @@ CSelectorIf* CSelectorIf::createNew(void* selectorCoreVoidPtr)
     return createNewCSelector(selectorCoreVoidPtr);
 }
 #endif
-

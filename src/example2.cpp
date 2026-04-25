@@ -15,24 +15,21 @@ struct CDevChild : CParent
 {
     CDevChild()
     {
-        constr();
+        printf("child CDevChild constructor\n");
     }
     virtual ~CDevChild() override
     {
-        destr();
+        printf("child CDevChild destructor\n");
     }
     virtual void action() override
     {
         printf("behavior specific for CDevChild\n");
     }
-    virtual void constr() override
-    {
-        printf("child CDevChild constructor\n");
-    }
-    virtual void destr() override
-    {
-        printf("child CDevChild destructor\n");
-    }
+    virtual void* action(void* actionParameterVoidPtr)
+{
+    printf("behavior specific for child CDevChild\n");
+    return nullptr;
+}
 };
 
 #define DELETE_IF_FAILURE(_x_) (delete ((CChildCreatorIf*)(_x_)))
