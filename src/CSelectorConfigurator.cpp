@@ -142,10 +142,7 @@ struct CConfigurator : CSelectorConfiguratorIf
 
 struct CSimpleConfigurator : CSelectorConfiguratorIf
 {
-    CSimpleConfigurator()
-        : selectorCoreSimpleCreator(nullptr)
-    {
-    }
+    CSimpleConfigurator() {}
 
     virtual ~CSimpleConfigurator() = default;
 
@@ -155,9 +152,6 @@ struct CSimpleConfigurator : CSelectorConfiguratorIf
     {
         return createNewCSimpleSelector();
     }
-
-  private:
-    CChildCreatorIf* selectorCoreSimpleCreator;
 };
 
 CSelectorConfiguratorIf* createNewCSimpleSelectorConfigurator()
