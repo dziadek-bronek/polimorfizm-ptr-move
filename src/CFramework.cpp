@@ -6,20 +6,22 @@
 
 #include "include/CCreatorSelectorIf.hpp"
 
-#include "include/CSelectorConfiguratorIf.hpp"
+#include "CSelectorConfigurator/CSelectorConfiguratorIf.hpp"
 
 #include "include/throw.hpp"
 
 #include "include/CInputIf.hpp"
 
 #include "include/CFramework.hpp"
+#include "include/CSoConfiguratorProducer.hpp"
 
 struct CFramework : CFrameworkIf
 {
     CFramework(void* selectorInitConfigVoidPtr)
     {
         configurator = std::unique_ptr<CSelectorConfiguratorIf>(
-            CSelectorConfiguratorIf::createNew(selectorInitConfigVoidPtr));
+            (CSelectorConfiguratorIf*)(produceNewCSoConfigurator(
+                selectorInitConfigVoidPtr)));
 
         if (nullptr == configurator)
         {

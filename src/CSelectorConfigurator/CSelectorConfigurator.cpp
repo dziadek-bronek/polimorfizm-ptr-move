@@ -3,19 +3,19 @@
 #include <memory>
 #include <vector>
 
-#include "include/throw.hpp"
+#include "../include/throw.hpp"
 
-#include "CChildren/CChildren.hpp"
-#include "include/CParent.hpp"
+#include "../CChildren/CChildren.hpp"
+#include "../include/CParent.hpp"
 
-#include "include/child-creators.hpp"
+#include "../include/child-creators.hpp"
 
-#include "include/CSelector.hpp"
-#include "include/CSimpleSelector.hpp"
+#include "../include/CSelector.hpp"
+#include "../include/CSimpleSelector.hpp"
 
-#include "include/CSelectorConfiguratorIf.hpp"
+#include "CSelectorConfiguratorIf.hpp"
 
-#include "SoChildCreatorsProduction/CSoChildCreatorsProducerChild.hpp"
+#include "../SoChildCreatorsProduction/CSoChildCreatorsProducerChild.hpp"
 
 #include <dlfcn.h>
 
@@ -154,12 +154,12 @@ struct CSimpleConfigurator : CSelectorConfiguratorIf
     }
 };
 
-CSelectorConfiguratorIf* createNewCSimpleSelectorConfigurator()
+void* createNewCSimpleSelectorConfigurator()
 {
     return new CSimpleConfigurator;
 }
 
-CSelectorConfiguratorIf* createNewCSelectorConfigurator()
+void* createNewCSelectorConfigurator()
 {
 
     return new CConfigurator;

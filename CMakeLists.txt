@@ -54,7 +54,7 @@ target_compile_definitions( CChildren
 # ------------------------
 
 add_library(CSelectorConfigurator SHARED
-		src/CSelectorConfigurator.cpp
+	src/CSelectorConfigurator/CSelectorConfigurator.cpp
 
 		src/SoChildCreatorsProduction/CSoChildWrapperAndCreator.cpp
 		src/SoChildCreatorsProduction/CSoChildCreatorsProducerChild.cpp
@@ -86,7 +86,7 @@ target_sources(mylib
 
 		src/CDlGlobalHandle.cpp
 
-		src/CSelectorConfiguratorIf.cpp
+		src/CSoConfiguratorProducer.cpp
 
 		src/CInput.cpp
 		src/CInputIf.cpp

@@ -3,10 +3,6 @@
 
 struct CSelectorConfiguratorIf
 {
-#ifndef CSELECTORCONFIGURATORIF_IMPLEMENTATION
-    static CSelectorConfiguratorIf* createNew(void* initConfigVoidPtr);
-#endif
-
     virtual ~CSelectorConfiguratorIf() = default;
 
     virtual void init(void* initConfigVoidPtr) = 0;

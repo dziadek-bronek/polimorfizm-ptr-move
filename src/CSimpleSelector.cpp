@@ -1,6 +1,6 @@
 #include "include/CSimpleSelector.hpp"
 #include "CChildren/CChildren.hpp"
-#include "include/CSelectorConfiguratorIf.hpp"
+#include "CSelectorConfigurator/CSelectorConfiguratorIf.hpp"
 #include "include/throw.hpp"
 #include <cstdio>
 

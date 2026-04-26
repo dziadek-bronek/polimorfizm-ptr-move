@@ -1,0 +1,2 @@
+
+void* produceNewCSoConfigurator(void* initConfigVoidPtr);
