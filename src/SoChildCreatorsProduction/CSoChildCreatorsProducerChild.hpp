@@ -1,1 +1,1 @@
-void* createNewCreatorOfCSoChildCreatorsProducerChild();
+void* createNewCSoChildCreatorsProducerChildCreator();

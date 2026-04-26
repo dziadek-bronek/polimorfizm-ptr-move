@@ -1,4 +1,0 @@
-/*
-void* createNewCSelectorConfigurator();
-void* createNewCSimpleSelectorConfigurator();
-*/

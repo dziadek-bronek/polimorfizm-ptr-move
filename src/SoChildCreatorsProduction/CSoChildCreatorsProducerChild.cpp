@@ -116,7 +116,7 @@ struct CSoChildCreatorsProducerChild : CParent
     CActionParams* soChild;
 };
 
-void* createNewCreatorOfCSoChildCreatorsProducerChild()
+void* createNewCSoChildCreatorsProducerChildCreator()
 {
     return new CChildCreator<CSoChildCreatorsProducerChild>(221);
 }

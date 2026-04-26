@@ -78,7 +78,7 @@ struct CConfigurator : CSelectorConfiguratorIf
             {
                 UptrChCrIf creatorOfSoChildCreatorsProducer(
                     (CChildCreatorIf*)
-                        createNewCreatorOfCSoChildCreatorsProducerChild());
+                        createNewCSoChildCreatorsProducerChildCreator());
                 soChildCreatorsProducer = std::unique_ptr<CParent>(
                     (CParent*)(creatorOfSoChildCreatorsProducer
                                    ->createNewChildIfIsNumber(221)));
