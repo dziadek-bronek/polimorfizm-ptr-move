@@ -1,8 +1,20 @@
-#include "CConfigSoChild.hpp"
+#include "../include/CParent.hpp"
 #include "../include/child-creators.hpp"
 #include <cstdio>
 #include <list>
 #include <memory>
+
+struct CConfigSoChild : CParent
+{
+    virtual ~CConfigSoChild();
+
+    virtual void init(void* initParameterVoidPtr)
+    {
+        mapVoidPtr = initParameterVoidPtr;
+    }
+    virtual void* action(void* childCreatorVoidPtr) override;
+    void* mapVoidPtr;
+};
 
 using UptrChCrIf = std::unique_ptr<CChildCreatorIf>;
 using MapOfUptrChCrIf = std::list<UptrChCrIf>;

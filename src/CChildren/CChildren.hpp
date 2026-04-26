@@ -6,6 +6,6 @@ void* createNewCChild2();
 void* createNewCChild3();
 void* createNewCChild4();
 
-void* createCreatorForChildWithNumber(int childClass, int id);
+void* createChildCreatorWithId(int childClass, int creatorId);
 
 #endif

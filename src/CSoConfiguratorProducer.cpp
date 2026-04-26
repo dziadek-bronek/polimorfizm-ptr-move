@@ -6,30 +6,31 @@
 #include <dlfcn.h>
 extern CDlGlobalHandle dlCSelectorConfiguratorGlobalHandle;
 
-using CreateNewSoConfigurator = CSelectorConfiguratorIf* (*)();
-using DeleteSoConfigurator = void (*)(CSelectorConfiguratorIf*);
+using PluginBaseClass = CSelectorConfiguratorIf;
 
-struct CSoConfiguratorWrapper : CSelectorConfiguratorIf
+using CreateNewPlugin = void* (*)();
+using DeletePlugin = void (*)(void*);
+
+struct CSoConfiguratorWrapper : PluginBaseClass
 {
 
-    CSoConfiguratorWrapper(CSelectorConfiguratorIf* soConfigurator_,
-                           DeleteSoConfigurator deleteSoConfigurator_,
+    CSoConfiguratorWrapper(void* plugin_, DeletePlugin deletePlugin_,
                            void* dlHandle_)
-        : soConfigurator(soConfigurator_),
-          deleteSoConfigurator(deleteSoConfigurator_),
+        : plugin((PluginBaseClass*)plugin_),
+          deletePlugin(deletePlugin_),
           dlHandle(dlHandle_)
     {
     }
 
     ~CSoConfiguratorWrapper()
     {
-        if (nullptr != soConfigurator)
+        if (nullptr != plugin)
         {
-            deleteSoConfigurator(soConfigurator);
-            soConfigurator == nullptr;
+            deletePlugin(plugin);
+            plugin == nullptr;
         }
         printf("\t~CSoConfiguratorWrapper(); DESTRUCTING\n");
-        soConfigurator = nullptr;
+        plugin = nullptr;
 
         // destruction of resources delegated
         dlCSelectorConfiguratorGlobalHandle.set(dlHandle);
@@ -38,24 +39,24 @@ struct CSoConfiguratorWrapper : CSelectorConfiguratorIf
 
     virtual void init(void* initConfigVoidPtr)
     {
-        soConfigurator->init(initConfigVoidPtr);
+        plugin->init(initConfigVoidPtr);
     }
 
     virtual void* initializeSelector()
     {
-        return soConfigurator->initializeSelector();
+        return plugin->initializeSelector();
     }
 
     // private:
-    CSelectorConfiguratorIf* (*createNewConfigurator)();
-    void (*deleteSoConfigurator)(CSelectorConfiguratorIf*);
+    DeletePlugin deletePlugin;
 
     void* dlHandle;
-    CSelectorConfiguratorIf* soConfigurator;
+    PluginBaseClass* plugin;
 };
 
-CSelectorConfiguratorIf* produceNewCSoConfigurator(void* initConfigVoidPtr)
+void* produceNewCSoConfigurator(void* initConfigVoidPtr)
 {
+    constexpr const char* pluginName = "soConfigurator";
     do
     {
         struct CDlHandle
@@ -85,53 +86,52 @@ CSelectorConfiguratorIf* produceNewCSoConfigurator(void* initConfigVoidPtr)
         }
         printf("\tsoConfigurator: GOT dlHandle!!!\n");
 
-        CreateNewSoConfigurator createNewConfigurator = nullptr;
+        CreateNewPlugin createNewPlugin = nullptr;
         if (nullptr == initConfigVoidPtr)
         {
-            createNewConfigurator = (CreateNewSoConfigurator)dlsym(
+            createNewPlugin = (CreateNewPlugin)dlsym(
                 dlHandle.ptr, "createNewCSimpleSelectorConfiguratorExternC");
         }
         else
         {
-            createNewConfigurator = (CreateNewSoConfigurator)dlsym(
+            createNewPlugin = (CreateNewPlugin)dlsym(
                 dlHandle.ptr, "createNewCSelectorConfiguratorExternC");
         }
 
-        if (nullptr == createNewConfigurator)
+        if (nullptr == createNewPlugin)
         {
-            printf("\t\tsoConfigurator: createNewConfigurator is nullptr\n");
+            printf("\t\tsoConfigurator: createNewPlugin is nullptr\n");
             break;
         }
-        printf("\tGOT createNewConfigurator!!!\n");
+        printf("\tsoConfigurator: GOT createNewPlugin!!!\n");
 
-        DeleteSoConfigurator deleteSoConfigurator = nullptr;
-        deleteSoConfigurator = (DeleteSoConfigurator)dlsym(
+        DeletePlugin deletePlugin = nullptr;
+        deletePlugin = (DeletePlugin)dlsym(
             dlHandle.ptr, "deleteCSelectorConfiguratorExternC");
 
-        if (nullptr == deleteSoConfigurator)
+        if (nullptr == deletePlugin)
         {
-            printf(
-                "                           deleteSoConfigurator is nullptr\n");
+            printf("\t\tsoConfigurator: deletePlugin is nullptr\n");
             break;
         }
-        printf("                           GOT deleteSoConfigurator!!!\n");
+        printf("\tsoConfigurator: deletePlugin!!!\n");
 
         std::unique_ptr<CSoConfiguratorWrapper> soConfiguratorWrapper(
-            new CSoConfiguratorWrapper(createNewConfigurator(),
-                                       deleteSoConfigurator, dlHandle.ptr));
+            new CSoConfiguratorWrapper(createNewPlugin(), deletePlugin,
+                                       dlHandle.ptr));
 
         if (nullptr != soConfiguratorWrapper)
         {
             dlHandle.ptr = nullptr;
 
-            if (nullptr == soConfiguratorWrapper->soConfigurator)
+            if (nullptr == soConfiguratorWrapper->plugin)
             {
-                printf("                           soConfigurator is nullptr "
+                printf("\t\tsoConfigurator: soConfigurator is nullptr "
                        "in wraper\n");
                 break;
             }
 
-            printf("                           GOT PLUGIN!!!\n");
+            printf("\tsoConfigurator: GOT soConfigurator!!!\n");
 
             soConfiguratorWrapper->init(initConfigVoidPtr);
             return soConfiguratorWrapper.release();

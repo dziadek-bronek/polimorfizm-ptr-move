@@ -155,18 +155,18 @@ static void* createNewCChild4Creator(int id)
     return new CChildCreator<CChild4>(id);
 }
 
-void* createCreatorForChildWithNumber(int childClass, int id)
+void* createChildCreatorWithId(int childClass, int creatorId)
 {
     switch (childClass)
     {
     case 1:
-        return createNewCChild1Creator(id);
+        return createNewCChild1Creator(creatorId);
     case 2:
-        return createNewCChild2Creator(id);
+        return createNewCChild2Creator(creatorId);
     case 3:
-        return createNewCChild3Creator(id);
+        return createNewCChild3Creator(creatorId);
     case 4:
-        return createNewCChild4Creator(id);
+        return createNewCChild4Creator(creatorId);
     }
     throw;
 }

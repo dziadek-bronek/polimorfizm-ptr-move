@@ -123,13 +123,13 @@ struct CConfigurator : CSelectorConfiguratorIf
 
         for (int i = 1; i < vSize; ++i)
         {
-            int event = initConfig->at(i);
-            if (event < 0)
+            int creatorId = initConfig->at(i);
+            if (creatorId < 0)
             {
                 continue;
             }
             selectorCoreMap->push_back(UptrChCrIf(
-                (CChildCreatorIf*)createCreatorForChildWithNumber(i, event)));
+                (CChildCreatorIf*)createChildCreatorWithId(i, creatorId)));
         }
 
         return createNewCSelector(selectorCoreMap);
@@ -165,19 +165,17 @@ void* createNewCSelectorConfigurator()
     return new CConfigurator;
 }
 
-extern "C" CSelectorConfiguratorIf*
-createNewCSimpleSelectorConfiguratorExternC()
+extern "C" void* createNewCSimpleSelectorConfiguratorExternC()
 {
     return new CSimpleConfigurator;
 }
 
-extern "C" CSelectorConfiguratorIf* createNewCSelectorConfiguratorExternC()
+extern "C" void* createNewCSelectorConfiguratorExternC()
 {
     return new CConfigurator();
 }
 
-extern "C" void deleteCSelectorConfiguratorExternC(
-    CSelectorConfiguratorIf* configuratorPtr)
+extern "C" void deleteCSelectorConfiguratorExternC(void* configuratorPtr)
 {
-    delete configuratorPtr;
+    delete (CSelectorConfiguratorIf*)configuratorPtr;
 }

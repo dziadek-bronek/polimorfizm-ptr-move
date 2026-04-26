@@ -1,1 +1,2 @@
-void* createNewCSimpleSelectorConfigurator() void* createNewCSelectorConfigurator();
+void* createNewCSelectorConfigurator();
+void* createNewCSimpleSelectorConfigurator();
