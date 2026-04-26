@@ -26,10 +26,10 @@ struct CDevChild : CParent
         printf("behavior specific for CDevChild\n");
     }
     virtual void* action(void* actionParameterVoidPtr)
-{
-    printf("behavior specific for child CDevChild\n");
-    return nullptr;
-}
+    {
+        printf("behavior specific for child CDevChild\n");
+        return nullptr;
+    }
 };
 
 #define DELETE_IF_FAILURE(_x_) (delete ((CChildCreatorIf*)(_x_)))

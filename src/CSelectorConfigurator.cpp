@@ -6,6 +6,7 @@
 #include "include/throw.hpp"
 
 #include "CChildren/CChildren.hpp"
+#include "include/CParent.hpp"
 
 #include "include/child-creators.hpp"
 
@@ -46,23 +47,6 @@ struct CChildCreatorExit : CChildCreatorIf
   private:
     int id;
 };
-
-static CChildCreatorIf* createCreatorForChildWithNumber(int childClass,
-                                                        int event)
-{
-    switch (childClass)
-    {
-    case 1:
-        return new CChildCreator<CChild1>(event);
-    case 2:
-        return new CChildCreator<CChild2>(event);
-    case 3:
-        return new CChildCreator<CChild3>(event);
-    case 4:
-        return new CChildCreator<CChild4>(event);
-    }
-    throw;
-}
 
 struct CConfigurator : CSelectorConfiguratorIf
 {
@@ -144,8 +128,8 @@ struct CConfigurator : CSelectorConfiguratorIf
             {
                 continue;
             }
-            selectorCoreMap->push_back(
-                UptrChCrIf(::createCreatorForChildWithNumber(i, event)));
+            selectorCoreMap->push_back(UptrChCrIf(
+                (CChildCreatorIf*)createCreatorForChildWithNumber(i, event)));
         }
 
         return createNewCSelector(selectorCoreMap);
@@ -169,34 +153,7 @@ struct CSimpleConfigurator : CSelectorConfiguratorIf
 
     virtual void* initializeSelector()
     {
-        struct CChildCreatorSimple : CChildCreatorIf
-        {
-            virtual ~CChildCreatorSimple()
-            {
-                printf("ChildCreatorSimpleSelection destructor\n");
-            }
-
-            virtual void* createNewChildIfIsNumber(int id_)
-            {
-                switch (id_)
-                {
-                case 0:
-                    THROW2("Clean exit", " (event 'EXIT' on input)");
-                case 1:
-                    return new CChild1;
-                case 2:
-                    return new CChild2;
-                case 3:
-                    return new CChild3;
-                case 4:
-                    return new CChild4;
-                }
-                return nullptr;
-            }
-        };
-
-        selectorCoreSimpleCreator = new CChildCreatorSimple;
-        return createNewCSimpleSelector(selectorCoreSimpleCreator);
+        return createNewCSimpleSelector();
     }
 
   private:

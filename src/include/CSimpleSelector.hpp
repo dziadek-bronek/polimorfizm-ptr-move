@@ -3,6 +3,6 @@
 
 #include "CCreatorSelectorIf.hpp"
 
-CSelectorIf* createNewCSimpleSelector(void* singleCreatorVoidPtr);
+CSelectorIf* createNewCSimpleSelector();
 
 #endif
