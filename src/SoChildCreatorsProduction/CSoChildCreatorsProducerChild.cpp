@@ -9,6 +9,12 @@ struct CSoChildCreatorsProducerChild : CParent
     CSoChildCreatorsProducerChild()
         : dlHandle(nullptr)
     {
+        printf("constructor of CSoChildCreatorsProducerChild\n");
+    }
+
+    ~CSoChildCreatorsProducerChild()
+    {
+        printf("destructor of CSoChildCreatorsProducerChild\n");
     }
     struct CActionParams
     {
@@ -22,6 +28,9 @@ struct CSoChildCreatorsProducerChild : CParent
     void* action(void* actionParameterVoidPtr)
     {
         soChild = (CActionParams*)actionParameterVoidPtr;
+        printf("behavior specific for CSoChildCreatorsProducerChild: producing "
+               "CSoChildCreator of id=%i\n",
+               soChild->id);
 
         return produceSoCreator();
     }

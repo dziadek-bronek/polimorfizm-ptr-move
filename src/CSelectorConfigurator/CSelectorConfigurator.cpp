@@ -85,6 +85,9 @@ struct CConfigurator : CSelectorConfiguratorIf
 
                 selectorCoreMap->push_back(
                     std::move(creatorOfSoChildCreatorsProducer));
+                printf("CChildCreator id=221, for SoChildCreatorsProducer - "
+                       "added to selector\n");
+                fflush(NULL);
             }
 
             {
@@ -102,6 +105,8 @@ struct CConfigurator : CSelectorConfiguratorIf
                 selectorCoreMap->push_back(UptrChCrIf(
                     (CChildCreatorIf*)(soChildCreatorsProducer->action(
                         &adderSoChildData))));
+                printf("CSoChildCreator id=222 added to selector\n");
+                fflush(NULL);
             }
         }
 
@@ -130,6 +135,10 @@ struct CConfigurator : CSelectorConfiguratorIf
             }
             selectorCoreMap->push_back(UptrChCrIf(
                 (CChildCreatorIf*)createChildCreatorWithId(i, creatorId)));
+            printf(
+                "CChildCreator, id=%i added to selector based on init config\n",
+                creatorId);
+            fflush(NULL);
         }
 
         return createNewCSelector(selectorCoreMap);

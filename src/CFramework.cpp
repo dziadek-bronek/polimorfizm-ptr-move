@@ -67,7 +67,7 @@ struct CFramework : CFrameworkIf
         void* soChildCreator = configChild->action(&soChildOrigin);
         if (nullptr == soChildCreator)
         {
-            printf("HOUSTON WEVE GOTTA PROBLEM\n");
+            printf("HOUSTON WEV GOTTA PROBLEM\n");
             return nullptr;
         }
 
@@ -95,10 +95,11 @@ struct CFramework : CFrameworkIf
         for (int event = input->getCurrentEvent();;
              event = input->nextCurrentEvent() /* input++*/)
         {
+            printf("PROCESSING EVENT %i.\n", event);
             std::unique_ptr<CParent> child((CParent*)(selector->at(event)));
             if (child == nullptr)
             {
-                printf("-------- UNKNOWN EVENT %i.\n", event);
+                printf("-------- UNKNOWN EVENT (%i).\n", event);
                 continue;
             }
             child->action();

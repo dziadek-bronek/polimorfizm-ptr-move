@@ -47,11 +47,11 @@ struct CSoChildCreator : CChildCreatorIf
           createNewSoChild(createNewSoChild_),
           deleteSoChild(deleteSoChild_)
     {
-        printf("CSoChildCreator constructor for event %i \n", id);
+        printf("CSoChildCreator id=%i - constuctor\n", id);
     }
     virtual ~CSoChildCreator()
     {
-        printf("CSoChildCreator destructor for event %i \n", id);
+        printf("CSoChildCreator id=%i - destuctor\n", id);
         // TODO
         // push dlHandle do global destrocyer
         // ...
@@ -61,12 +61,12 @@ struct CSoChildCreator : CChildCreatorIf
     {
         if (id_ == id)
         {
-            printf("CChildCreator on event %i is creating new CConfigChild\n",
-                   id);
+            printf("CSoChildCreator id=%i is creating new soChild\n", id);
 
-            CParent* x(new CSoChildWrapper(createNewSoChild(), deleteSoChild));
-            x->init(soChildInitParameterVoidPtr);
-            return x;
+            CParent* soChildWrapper(
+                new CSoChildWrapper(createNewSoChild(), deleteSoChild));
+            soChildWrapper->init(soChildInitParameterVoidPtr);
+            return soChildWrapper;
         }
         return nullptr;
     }

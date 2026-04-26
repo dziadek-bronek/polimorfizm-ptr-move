@@ -24,13 +24,12 @@ struct CSoConfiguratorWrapper : PluginBaseClass
 
     ~CSoConfiguratorWrapper()
     {
+        printf("\t~CSoConfiguratorWrapper(); DESTRUCTING\n");
         if (nullptr != plugin)
         {
             deletePlugin(plugin);
             plugin == nullptr;
         }
-        printf("\t~CSoConfiguratorWrapper(); DESTRUCTING\n");
-        plugin = nullptr;
 
         // destruction of resources delegated
         dlCSelectorConfiguratorGlobalHandle.set(dlHandle);
@@ -114,7 +113,7 @@ void* produceNewCSoConfigurator(void* initConfigVoidPtr)
             printf("\t\tsoConfigurator: deletePlugin is nullptr\n");
             break;
         }
-        printf("\tsoConfigurator: deletePlugin!!!\n");
+        printf("\tsoConfigurator: GOT deletePlugin!!!\n");
 
         std::unique_ptr<CSoConfiguratorWrapper> soConfiguratorWrapper(
             new CSoConfiguratorWrapper(createNewPlugin(), deletePlugin,
@@ -131,7 +130,7 @@ void* produceNewCSoConfigurator(void* initConfigVoidPtr)
                 break;
             }
 
-            printf("\tsoConfigurator: GOT soConfigurator!!!\n");
+            printf("\tsoConfigurator: GOT PLUGIN!!!\n");
 
             soConfiguratorWrapper->init(initConfigVoidPtr);
             return soConfiguratorWrapper.release();

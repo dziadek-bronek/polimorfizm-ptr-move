@@ -23,7 +23,8 @@ void* CConfigSoChild::action(void* childCreatorVoidPtr)
 {
     UptrChCrIf creator((CChildCreatorIf*)childCreatorVoidPtr);
 
-    printf("configChild is adding creator\n");
+    printf("behavior specific for CConfigChild: adding ChildCreator to "
+           "selector\n");
 
     ((MapOfUptrChCrIf*)mapVoidPtr)->push_back(std::move(creator));
 
