@@ -1,7 +1,7 @@
 #include "include/CSelector.hpp"
 #include "include/child-creator.hpp"
 
-#include "CSelectorConfigurator/CSelectorConfiguratorIf.hpp"
+#include "include/CSelectorConfiguratorIf.hpp"
 
 #include "include/child-creator.hpp"
 

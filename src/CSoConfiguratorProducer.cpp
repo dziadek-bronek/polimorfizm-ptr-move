@@ -1,4 +1,4 @@
-#include "CSelectorConfigurator/CSelectorConfiguratorIf.hpp"
+#include "include/CSelectorConfiguratorIf.hpp"
 #include <cstdio>
 #include <memory>
 

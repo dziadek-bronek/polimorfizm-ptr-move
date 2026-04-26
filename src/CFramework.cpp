@@ -6,7 +6,7 @@
 
 #include "include/CCreatorSelectorIf.hpp"
 
-#include "CSelectorConfigurator/CSelectorConfiguratorIf.hpp"
+#include "include/CSelectorConfiguratorIf.hpp"
 
 #include "include/throw.hpp"
 

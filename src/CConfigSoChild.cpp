@@ -1,5 +1,5 @@
-#include "../include/CParent.hpp"
-#include "../include/child-creators.hpp"
+#include "include/CParent.hpp"
+#include "include/child-creators.hpp"
 #include <cstdio>
 #include <list>
 #include <memory>

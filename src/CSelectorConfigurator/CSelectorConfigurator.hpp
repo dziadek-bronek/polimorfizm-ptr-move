@@ -1,2 +1,4 @@
+/*
 void* createNewCSelectorConfigurator();
 void* createNewCSimpleSelectorConfigurator();
+*/

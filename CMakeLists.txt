@@ -17,7 +17,7 @@ project(polimorfizm-ptr-move-proj)
 # ------------------------
 
 add_library(CDemoSoChild SHARED
-	src/CDemoSoChild/CDemoSoChild.cpp
+	src/CDemoSoChild.cpp
 )
 
 target_compile_definitions( CDemoSoChild
@@ -28,7 +28,7 @@ target_compile_definitions( CDemoSoChild
 # ------------------------
 
 add_library(CConfigSoChild SHARED
-	src/CConfigSoChild/CConfigSoChild.cpp
+	src/CConfigSoChild.cpp
 
 )
 
@@ -54,7 +54,7 @@ target_compile_definitions( CChildren
 # ------------------------
 
 add_library(CSelectorConfigurator SHARED
-	src/CSelectorConfigurator/CSelectorConfigurator.cpp
+	src/CSelectorConfigurator.cpp
 
 		src/SoChildCreatorsProduction/CSoChildWrapperAndCreator.cpp
 		src/SoChildCreatorsProduction/CSoChildCreatorsProducerChild.cpp
