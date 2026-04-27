@@ -50,45 +50,45 @@ struct CSoChildCreatorsProducerChild : CParent
                "produceSoCreator()!!!\n");
         fflush(NULL);
 
-        CreateNewPlugin createNewPlugin = nullptr;
-        createNewPlugin =
-            (CreateNewPlugin)dlsym(dlHandle.ptr, soChild->constructorName);
-        if (nullptr == createNewPlugin)
+        FPluginCreator pluginCreator = nullptr;
+        pluginCreator =
+            (FPluginCreator)dlsym(dlHandle.ptr, soChild->constructorName);
+        if (nullptr == pluginCreator)
         {
-            printf("                           createNewPlugin is nullptr "
+            printf("                           pluginCreator is nullptr "
                    "produceSoCreator()\n");
             fflush(NULL);
             return nullptr;
         }
-        printf("                           GOT createNewPlugin "
+        printf("                           GOT pluginCreator "
                "produceSoCreator()!!!\n");
         fflush(NULL);
 
-        DeletePlugin deletePlugin = nullptr;
+        FPluginDestroyer pluginDestroyer = nullptr;
 
-        deletePlugin =
-            (DeletePlugin)dlsym(dlHandle.ptr, soChild->destructorName);
-        if (nullptr == deletePlugin)
+        pluginDestroyer =
+            (FPluginDestroyer)dlsym(dlHandle.ptr, soChild->destructorName);
+        if (nullptr == pluginDestroyer)
         {
-            printf("                           deletePlugin if nullptr "
+            printf("                           pluginDestroyer if nullptr "
                    "produceSoCreator()\n");
             fflush(NULL);
             return nullptr;
         }
-        printf("                           GOT deletePlugin "
+        printf("                           GOT pluginDestroyer "
                "produceSoCreator()!!!\n");
         fflush(NULL);
 
         void* x(nullptr);
         /*
             x = new CSoChildCreator(soChild->id, soChild->initParameterVoidPtr,
-                                    dlHandle.ptr, createNewPlugin,
-           deletePlugin);
+                                    dlHandle.ptr, pluginCreator,
+           pluginDestroyer);
         */
 
         x = createNewCSoChildCreator(soChild->id, soChild->initParameterVoidPtr,
-                                     dlHandle.ptr, createNewPlugin,
-                                     deletePlugin);
+                                     dlHandle.ptr, pluginCreator,
+                                     pluginDestroyer);
         if (nullptr == x)
         {
             return nullptr;

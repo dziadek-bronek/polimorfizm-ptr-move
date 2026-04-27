@@ -6,14 +6,14 @@
 
 struct CSoChildWrapper : CParent
 {
-    CSoChildWrapper(void* soChild_, DeletePlugin deletePlugin_)
+    CSoChildWrapper(void* soChild_, FPluginDestroyer pluginDestroyer_)
         : soChild((CParent*)soChild_),
-          deletePlugin(deletePlugin_)
+          pluginDestroyer(pluginDestroyer_)
     {
     }
     ~CSoChildWrapper()
     {
-        deletePlugin(soChild);
+        pluginDestroyer(soChild);
     }
 
     virtual void init(void* initParameterVoidPtr)
@@ -30,19 +30,19 @@ struct CSoChildWrapper : CParent
     }
 
     CParent* soChild;
-    DeletePlugin deletePlugin;
+    FPluginDestroyer pluginDestroyer;
 };
 
 struct CSoChildCreator : CChildCreatorIf
 {
     CSoChildCreator(int id_, void* soChildInitParameterVoidPtr_,
-                    void* dlHandle_, CreateNewPlugin createNewPlugin_,
-                    DeletePlugin deletePlugin_)
+                    void* dlHandle_, FPluginCreator pluginCreator_,
+                    FPluginDestroyer pluginDestroyer_)
         : id(id_),
           soChildInitParameterVoidPtr(soChildInitParameterVoidPtr_),
           dlHandle(dlHandle_),
-          createNewPlugin(createNewPlugin_),
-          deletePlugin(deletePlugin_)
+          pluginCreator(pluginCreator_),
+          pluginDestroyer(pluginDestroyer_)
     {
         printf("CSoChildCreator id=%i - constuctor\n", id);
     }
@@ -61,7 +61,7 @@ struct CSoChildCreator : CChildCreatorIf
             printf("CSoChildCreator id=%i is creating new soChild\n", id);
 
             CParent* soChildWrapper(
-                new CSoChildWrapper(createNewPlugin(), deletePlugin));
+                new CSoChildWrapper(pluginCreator(), pluginDestroyer));
             soChildWrapper->init(soChildInitParameterVoidPtr);
             return soChildWrapper;
         }
@@ -72,15 +72,14 @@ struct CSoChildCreator : CChildCreatorIf
     int id;
     void* soChildInitParameterVoidPtr;
     void* dlHandle;
-    CreateNewPlugin createNewPlugin;
-    DeletePlugin deletePlugin;
+    FPluginCreator pluginCreator;
+    FPluginDestroyer pluginDestroyer;
 };
 
 void* createNewCSoChildCreator(int id, void* soChildInitParameterVoidPtr,
-                               void* dlHandle,
-                               CreateNewPlugin createNewPlugin,
-                               DeletePlugin deletePlugin)
+                               void* dlHandle, FPluginCreator pluginCreator,
+                               FPluginDestroyer pluginDestroyer)
 {
     return new CSoChildCreator(id, soChildInitParameterVoidPtr, dlHandle,
-                               createNewPlugin, deletePlugin);
+                               pluginCreator, pluginDestroyer);
 }

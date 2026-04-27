@@ -1,9 +1,9 @@
 #ifndef CREATE_NEW_C_SO_CHILD_CREATOR_HPP
 #define CREATE_NEW_C_SO_CHILD_CREATOR_HPP
 
-using CreateNewPlugin = void* (*)();
-using DeletePlugin = void (*)(void*);
+using FPluginCreator = void* (*)();
+using FPluginDestroyer = void (*)(void*);
 
-void* createNewCSoChildCreator(int, void*, void*, CreateNewPlugin,
-                               DeletePlugin);
+void* createNewCSoChildCreator(int id, void* soChildInitParameterVoidPtr, void* dlHandle, FPluginCreator pluginCreator,
+                               FPluginDestroyer pluginDestroyer);
 #endif

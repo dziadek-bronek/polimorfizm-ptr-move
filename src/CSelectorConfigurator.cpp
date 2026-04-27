@@ -15,7 +15,7 @@
 
 #include "include/CSelectorConfiguratorIf.hpp"
 
-#include "SoChildCreatorsProduction/CSoChildCreatorsProducerChild.hpp"
+#include "SoChildCreatorsProduction/createNewCSoChildCreatorsProducerChildCreator.hpp"
 
 #include <dlfcn.h>
 
