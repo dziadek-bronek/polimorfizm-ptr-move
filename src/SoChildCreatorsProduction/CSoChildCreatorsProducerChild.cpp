@@ -6,8 +6,8 @@
 
 struct CSoChildCreatorsProducerChild : CParent
 {
+	using CParent::CParent;
     CSoChildCreatorsProducerChild()
-        : dlHandle(nullptr)
     {
         printf("constructor of CSoChildCreatorsProducerChild\n");
     }
@@ -80,11 +80,6 @@ struct CSoChildCreatorsProducerChild : CParent
         fflush(NULL);
 
         void* x(nullptr);
-        /*
-            x = new CSoChildCreator(soChild->id, soChild->initParameterVoidPtr,
-                                    dlHandle.ptr, pluginCreator,
-           pluginDestroyer);
-        */
 
         x = createNewCSoChildCreator(soChild->id, soChild->initParameterVoidPtr,
                                      dlHandle.ptr, pluginCreator,
@@ -98,10 +93,7 @@ struct CSoChildCreatorsProducerChild : CParent
     }
     struct CDlHandle
     {
-        CDlHandle(void* ptr_)
-            : ptr(ptr_)
-        {
-        }
+    CDlHandle(): ptr(nullptr){}
         ~CDlHandle()
         {
             if (nullptr != ptr)

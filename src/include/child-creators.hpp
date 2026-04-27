@@ -4,8 +4,12 @@
 
 template <typename CHILD> struct CChildCreator : CChildCreatorIf
 {
+    CChildCreator(int id_, void* initParametersVoidPtr_)
+	    : id(id_), initParametersVoidPtr(initParametersVoidPtr_)
+    {
+    }
     CChildCreator(int id_)
-        : id(id_)
+        : id(id_), initParametersVoidPtr(nullptr)
     {
         printf("CChildCreator id=%i, for %s - constructor\n", id,
                typeid(CHILD).name() + 1);
@@ -22,11 +26,16 @@ template <typename CHILD> struct CChildCreator : CChildCreatorIf
         {
             printf("CChildCreator id=%i is creating new %s\n", id,
                    typeid(CHILD).name() + 1);
-            return new CHILD;
+	    if(nullptr == initParametersVoidPtr) {
+		    return new CHILD();
+	    }
+
+            return new CHILD(initParametersVoidPtr);
         }
         return nullptr;
     }
 
   private:
     int id;
+    void* initParametersVoidPtr;
 };
