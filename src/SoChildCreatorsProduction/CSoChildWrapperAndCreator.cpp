@@ -6,19 +6,49 @@
 
 struct CSoChildWrapper : CParent
 {
-    CSoChildWrapper(void* soChild_, FPluginDestroyer pluginDestroyer_)
-        : soChild((CParent*)soChild_),
-          pluginDestroyer(pluginDestroyer_)
+    using CParent::CParent;
+    CSoChildWrapper(void* initParametersVoidPtr)
+
     {
+
+        struct CInitParams
+        {
+            void* soChildInitParameterVoidPtr;
+            void* dlHandle;
+            FPluginCreator pluginCreator;
+            FPluginDestroyer pluginDestroyer;
+        }* initParams = (CInitParams*)initParametersVoidPtr;
+
+        pluginCreator = initParams->pluginCreator;
+        pluginDestroyer = initParams->pluginDestroyer;
+
+        soChild = (CParent*)pluginCreator();
+
+        soChild->init(initParams->soChildInitParameterVoidPtr);
     }
+
     ~CSoChildWrapper()
     {
         pluginDestroyer(soChild);
     }
 
-    virtual void init(void* initParameterVoidPtr)
+    virtual void init(void* initParametersVoidPtr)
     {
-        soChild->init(initParameterVoidPtr);
+
+        struct CInitParams
+        {
+            void* soChildInitParameterVoidPtr;
+            void* dlHandle;
+            FPluginCreator pluginCreator;
+            FPluginDestroyer pluginDestroyer;
+        }* initParams = (CInitParams*)initParametersVoidPtr;
+
+        pluginCreator = initParams->pluginCreator;
+        pluginDestroyer = initParams->pluginDestroyer;
+
+        soChild = (CParent*)pluginCreator();
+
+        soChild->init(initParams->soChildInitParameterVoidPtr);
     }
     virtual void action()
     {
@@ -31,55 +61,32 @@ struct CSoChildWrapper : CParent
 
     CParent* soChild;
     FPluginDestroyer pluginDestroyer;
-};
-
-struct CSoChildCreator : CChildCreatorIf
-{
-    CSoChildCreator(int id_, void* soChildInitParameterVoidPtr_,
-                    void* dlHandle_, FPluginCreator pluginCreator_,
-                    FPluginDestroyer pluginDestroyer_)
-        : id(id_),
-          soChildInitParameterVoidPtr(soChildInitParameterVoidPtr_),
-          dlHandle(dlHandle_),
-          pluginCreator(pluginCreator_),
-          pluginDestroyer(pluginDestroyer_)
-    {
-        printf("CSoChildCreator id=%i - constuctor\n", id);
-    }
-    virtual ~CSoChildCreator()
-    {
-        printf("CSoChildCreator id=%i - destuctor\n", id);
-        // TODO
-        // push dlHandle do global destrocyer
-        // ...
-    }
-
-    virtual void* createNewChildIfIsNumber(int id_)
-    {
-        if (id_ == id)
-        {
-            printf("CSoChildCreator id=%i is creating new soChild\n", id);
-
-            CParent* soChildWrapper(
-                new CSoChildWrapper(pluginCreator(), pluginDestroyer));
-            soChildWrapper->init(soChildInitParameterVoidPtr);
-            return soChildWrapper;
-        }
-        return nullptr;
-    }
-
-  private:
-    int id;
-    void* soChildInitParameterVoidPtr;
-    void* dlHandle;
     FPluginCreator pluginCreator;
-    FPluginDestroyer pluginDestroyer;
 };
 
 void* createNewCSoChildCreator(int id, void* soChildInitParameterVoidPtr,
                                void* dlHandle, FPluginCreator pluginCreator,
                                FPluginDestroyer pluginDestroyer)
 {
-    return new CSoChildCreator(id, soChildInitParameterVoidPtr, dlHandle,
-                               pluginCreator, pluginDestroyer);
+
+    struct CInitParams
+    {
+        CInitParams(void* soChildInitParameterVoidPtr_, void* dlHandle_,
+                    FPluginCreator pluginCreator_,
+                    FPluginDestroyer pluginDestroyer_)
+            : soChildInitParameterVoidPtr(soChildInitParameterVoidPtr_),
+              dlHandle(dlHandle_),
+              pluginCreator(pluginCreator_),
+              pluginDestroyer(pluginDestroyer_)
+        {
+        }
+        void* soChildInitParameterVoidPtr;
+        void* dlHandle;
+        FPluginCreator pluginCreator;
+        FPluginDestroyer pluginDestroyer;
+    }* initParamsPtr = new CInitParams{soChildInitParameterVoidPtr, dlHandle,
+                                       pluginCreator, pluginDestroyer};
+    /* where it is to be destroyed */
+
+    return new CChildCreator<CSoChildWrapper>(id, initParamsPtr);
 }

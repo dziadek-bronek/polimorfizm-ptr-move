@@ -6,7 +6,7 @@
 
 struct CSoChildCreatorsProducerChild : CParent
 {
-	using CParent::CParent;
+    using CParent::CParent;
     CSoChildCreatorsProducerChild()
     {
         printf("constructor of CSoChildCreatorsProducerChild\n");
@@ -93,7 +93,10 @@ struct CSoChildCreatorsProducerChild : CParent
     }
     struct CDlHandle
     {
-    CDlHandle(): ptr(nullptr){}
+        CDlHandle()
+            : ptr(nullptr)
+        {
+        }
         ~CDlHandle()
         {
             if (nullptr != ptr)

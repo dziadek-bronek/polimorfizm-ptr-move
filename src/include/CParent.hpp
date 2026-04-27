@@ -14,8 +14,8 @@ struct CParent {
 
 struct CParent
 {
-	CParent() = default;
-	CParent(void* initParameterVoidPtr){}
+    CParent() = default;
+    CParent(void* initParameterVoidPtr) {}
     virtual ~CParent() = default;
 
     virtual void init(void* initParameterVoidPtr) {}

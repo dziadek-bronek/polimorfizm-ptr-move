@@ -13,7 +13,7 @@ CDlGlobalHandle dlCSelectorConfiguratorGlobalHandle;
 */
 struct CDevChild : CParent
 {
-	using CParent::CParent;
+    using CParent::CParent;
     CDevChild()
     {
         printf("child CDevChild constructor\n");

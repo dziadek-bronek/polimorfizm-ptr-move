@@ -5,7 +5,7 @@
 
 struct CChild1 : CParent
 {
-	using CParent::CParent;
+    using CParent::CParent;
     CChild1();
     virtual ~CChild1();
     virtual void action() override;
@@ -14,7 +14,7 @@ struct CChild1 : CParent
 
 struct CChild2 : CParent
 {
-	using CParent::CParent;
+    using CParent::CParent;
     CChild2();
     virtual ~CChild2();
     virtual void action() override;
@@ -23,7 +23,7 @@ struct CChild2 : CParent
 
 struct CChild3 : CParent
 {
-	using CParent::CParent;
+    using CParent::CParent;
     CChild3();
     virtual ~CChild3();
     virtual void action() override;
@@ -32,7 +32,7 @@ struct CChild3 : CParent
 
 struct CChild4 : CParent
 {
-	using CParent::CParent;
+    using CParent::CParent;
     CChild4();
     virtual ~CChild4();
     virtual void action() override;
