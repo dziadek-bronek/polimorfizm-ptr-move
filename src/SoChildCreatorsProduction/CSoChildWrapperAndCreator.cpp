@@ -2,21 +2,18 @@
 #include "../include/child-creators.hpp"
 #include <cstdio>
 
-/*******************************************/
-
-using CreateNewPlugin = CParent* (*)();
-using DeletePlugin = void (*)(CParent*);
+#include "createNewCSoChildCeator.hpp"
 
 struct CSoChildWrapper : CParent
 {
-    CSoChildWrapper(CParent* soChild_, DeletePlugin deleteSoChild_)
+    CSoChildWrapper(void* soChild_, DeletePlugin deletePlugin_)
         : soChild((CParent*)soChild_),
-          deleteSoChild(deleteSoChild_)
+          deletePlugin(deletePlugin_)
     {
     }
     ~CSoChildWrapper()
     {
-        deleteSoChild(soChild);
+        deletePlugin(soChild);
     }
 
     virtual void init(void* initParameterVoidPtr)
@@ -33,19 +30,19 @@ struct CSoChildWrapper : CParent
     }
 
     CParent* soChild;
-    DeletePlugin deleteSoChild;
+    DeletePlugin deletePlugin;
 };
 
 struct CSoChildCreator : CChildCreatorIf
 {
     CSoChildCreator(int id_, void* soChildInitParameterVoidPtr_,
-                    void* dlHandle_, CreateNewPlugin createNewSoChild_,
-                    DeletePlugin deleteSoChild_)
+                    void* dlHandle_, CreateNewPlugin createNewPlugin_,
+                    DeletePlugin deletePlugin_)
         : id(id_),
           soChildInitParameterVoidPtr(soChildInitParameterVoidPtr_),
           dlHandle(dlHandle_),
-          createNewSoChild(createNewSoChild_),
-          deleteSoChild(deleteSoChild_)
+          createNewPlugin(createNewPlugin_),
+          deletePlugin(deletePlugin_)
     {
         printf("CSoChildCreator id=%i - constuctor\n", id);
     }
@@ -64,7 +61,7 @@ struct CSoChildCreator : CChildCreatorIf
             printf("CSoChildCreator id=%i is creating new soChild\n", id);
 
             CParent* soChildWrapper(
-                new CSoChildWrapper(createNewSoChild(), deleteSoChild));
+                new CSoChildWrapper(createNewPlugin(), deletePlugin));
             soChildWrapper->init(soChildInitParameterVoidPtr);
             return soChildWrapper;
         }
@@ -75,15 +72,15 @@ struct CSoChildCreator : CChildCreatorIf
     int id;
     void* soChildInitParameterVoidPtr;
     void* dlHandle;
-    CreateNewPlugin createNewSoChild;
-    DeletePlugin deleteSoChild;
+    CreateNewPlugin createNewPlugin;
+    DeletePlugin deletePlugin;
 };
 
 void* createNewCSoChildCreator(int id, void* soChildInitParameterVoidPtr,
                                void* dlHandle,
-                               CreateNewPlugin createNewSoChild,
-                               DeletePlugin deleteSoChild)
+                               CreateNewPlugin createNewPlugin,
+                               DeletePlugin deletePlugin)
 {
     return new CSoChildCreator(id, soChildInitParameterVoidPtr, dlHandle,
-                               createNewSoChild, deleteSoChild);
+                               createNewPlugin, deletePlugin);
 }

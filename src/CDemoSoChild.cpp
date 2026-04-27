@@ -32,11 +32,11 @@ struct CDemoSoChild : CParent
     }
 };
 
-extern "C" CParent* createNewCDemoSoChildExternC()
+extern "C" void* createNewCDemoSoChildExternC()
 {
     return new CDemoSoChild;
 }
-extern "C" void deleteCDemoSoChildExternC(CParent* demoSoChild)
+extern "C" void deleteCDemoSoChildExternC(void* demoSoChild)
 {
-    delete demoSoChild;
+    delete (CParent*)demoSoChild;
 }

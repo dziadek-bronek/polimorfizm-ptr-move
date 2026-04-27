@@ -37,12 +37,12 @@ CConfigSoChild::~CConfigSoChild()
     fflush(NULL);
 }
 
-extern "C" CParent* createNewCConfigSoChildExternC()
+extern "C" void* createNewCConfigSoChildExternC()
 {
     return new CConfigSoChild();
 }
 
-extern "C" void deleteCConfigSoChildExternC(CParent* configChildPtr)
+extern "C" void deleteCConfigSoChildExternC(void* configChildPtr)
 {
-    delete configChildPtr;
+    delete (CParent*)configChildPtr;
 }
