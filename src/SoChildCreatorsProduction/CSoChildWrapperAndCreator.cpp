@@ -4,13 +4,13 @@
 
 /*******************************************/
 
-using CreateNewSoChild = CParent* (*)();
-using DeleteSoChild = void (*)(CParent*);
+using CreateNewPlugin = CParent* (*)();
+using DeletePlugin = void (*)(CParent*);
 
 struct CSoChildWrapper : CParent
 {
-    CSoChildWrapper(CParent* soChild_, DeleteSoChild deleteSoChild_)
-        : soChild(soChild_),
+    CSoChildWrapper(CParent* soChild_, DeletePlugin deleteSoChild_)
+        : soChild((CParent*)soChild_),
           deleteSoChild(deleteSoChild_)
     {
     }
@@ -33,14 +33,14 @@ struct CSoChildWrapper : CParent
     }
 
     CParent* soChild;
-    DeleteSoChild deleteSoChild;
+    DeletePlugin deleteSoChild;
 };
 
 struct CSoChildCreator : CChildCreatorIf
 {
     CSoChildCreator(int id_, void* soChildInitParameterVoidPtr_,
-                    void* dlHandle_, CreateNewSoChild createNewSoChild_,
-                    DeleteSoChild deleteSoChild_)
+                    void* dlHandle_, CreateNewPlugin createNewSoChild_,
+                    DeletePlugin deleteSoChild_)
         : id(id_),
           soChildInitParameterVoidPtr(soChildInitParameterVoidPtr_),
           dlHandle(dlHandle_),
@@ -75,14 +75,14 @@ struct CSoChildCreator : CChildCreatorIf
     int id;
     void* soChildInitParameterVoidPtr;
     void* dlHandle;
-    CreateNewSoChild createNewSoChild;
-    DeleteSoChild deleteSoChild;
+    CreateNewPlugin createNewSoChild;
+    DeletePlugin deleteSoChild;
 };
 
 void* createNewCSoChildCreator(int id, void* soChildInitParameterVoidPtr,
                                void* dlHandle,
-                               CreateNewSoChild createNewSoChild,
-                               DeleteSoChild deleteSoChild)
+                               CreateNewPlugin createNewSoChild,
+                               DeletePlugin deleteSoChild)
 {
     return new CSoChildCreator(id, soChildInitParameterVoidPtr, dlHandle,
                                createNewSoChild, deleteSoChild);

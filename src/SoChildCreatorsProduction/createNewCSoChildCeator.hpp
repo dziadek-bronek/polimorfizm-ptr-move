@@ -1,7 +1,6 @@
-#include "../include/CParent.hpp"
 
-using CreateNewSoChild = CParent* (*)();
-using DeleteSoChild = void (*)(CParent*);
+using CreateNewPlugin = CParent* (*)();
+using DeletePlugin = void (*)(CParent*);
 
-void* createNewCSoChildCreator(int, void*, void*, CreateNewSoChild,
-                               DeleteSoChild);
+void* createNewCSoChildCreator(int, void*, void*, CreateNewPlugin,
+                               DeletePlugin);
