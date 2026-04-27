@@ -4,6 +4,7 @@
 using FPluginCreator = void* (*)();
 using FPluginDestroyer = void (*)(void*);
 
-void* createNewCSoChildCreator(int id, void* soChildInitParameterVoidPtr, void* dlHandle, FPluginCreator pluginCreator,
+void* createNewCSoChildCreator(int id, void* soChildInitParameterVoidPtr,
+                               void* dlHandle, FPluginCreator pluginCreator,
                                FPluginDestroyer pluginDestroyer);
 #endif
