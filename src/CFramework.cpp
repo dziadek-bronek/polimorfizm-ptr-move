@@ -76,6 +76,7 @@ struct CFramework : CFrameworkIf
 
     virtual void* configAdd(void* childCreatorVoidPtr)
     {
+        printf("\t\t\t HOPSA HOPSA\n");
         std::unique_ptr<CParent> configChild((CParent*)selector->at(222));
 
         if (nullptr == configChild)

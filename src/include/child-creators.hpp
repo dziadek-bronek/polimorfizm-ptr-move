@@ -1,17 +1,20 @@
+#include "VOID.hpp"
 #include "child-creator.hpp"
 #include <cstdio>
+#include <memory>
 #include <typeinfo>
 
 template <typename CHILD> struct CChildCreator : CChildCreatorIf
 {
-    CChildCreator(int id_, void* initParametersVoidPtr_)
-        : id(id_),
-          initParametersVoidPtr(initParametersVoidPtr_)
+    CChildCreator(int id_, VOID* initParametersVoidPtr_)
+        : id(id_)
     {
+        printf("TTTTTTTTTTTTTTTTTTTTTTTT\n");
+        fflush(NULL);
+        initParametersUPtr = std::unique_ptr<VOID>(initParametersVoidPtr_);
     }
     CChildCreator(int id_)
-        : id(id_),
-          initParametersVoidPtr(nullptr)
+        : id(id_)
     {
         printf("CChildCreator id=%i, for %s - constructor\n", id,
                typeid(CHILD).name() + 1);
@@ -30,20 +33,19 @@ template <typename CHILD> struct CChildCreator : CChildCreatorIf
                    typeid(CHILD).name() + 1);
 
             CHILD* x(new CHILD());
-            x->init(initParametersVoidPtr);
+            if (nullptr != initParametersUPtr)
+            {
+                x->init(initParametersUPtr.get());
+                printf("\t\t\t\t\t\tTTTTTTTTTTTTTTTTTTTTTTTT\n");
+                fflush(NULL);
+            }
             return x;
-#if 0
-	    if(nullptr == initParametersVoidPtr) {
-		    return new CHILD();
-	    }
-
-            return new CHILD(initParametersVoidPtr);
-#endif
         }
         return nullptr;
     }
 
   private:
     int id;
-    void* initParametersVoidPtr;
+    // void* initParametersVoidPtr{nullptr};
+    std::unique_ptr<VOID> initParametersUPtr{nullptr};
 };

@@ -1,4 +1,5 @@
 #include "../include/CParent.hpp"
+#include "../include/VOID.hpp"
 #include "../include/child-creators.hpp"
 #include <cstdio>
 
@@ -7,10 +8,10 @@
 struct CSoChildWrapper : CParent
 {
     using CParent::CParent;
+#if 0
     CSoChildWrapper(void* initParametersVoidPtr)
 
     {
-
         struct CInitParams
         {
             void* soChildInitParameterVoidPtr;
@@ -26,6 +27,7 @@ struct CSoChildWrapper : CParent
 
         soChild->init(initParams->soChildInitParameterVoidPtr);
     }
+#endif
 
     ~CSoChildWrapper()
     {
@@ -35,7 +37,7 @@ struct CSoChildWrapper : CParent
     virtual void init(void* initParametersVoidPtr)
     {
 
-        struct CInitParams
+        struct CInitParams : VOID
         {
             void* soChildInitParameterVoidPtr;
             void* dlHandle;
@@ -69,7 +71,7 @@ void* createNewCSoChildCreator(int id, void* soChildInitParameterVoidPtr,
                                FPluginDestroyer pluginDestroyer)
 {
 
-    struct CInitParams
+    struct CInitParams : VOID
     {
         CInitParams(void* soChildInitParameterVoidPtr_, void* dlHandle_,
                     FPluginCreator pluginCreator_,
@@ -79,6 +81,11 @@ void* createNewCSoChildCreator(int id, void* soChildInitParameterVoidPtr,
               pluginCreator(pluginCreator_),
               pluginDestroyer(pluginDestroyer_)
         {
+            printf("\t\t\tINIT PARAMS CONSTRUCTOR\n");
+        }
+        virtual ~CInitParams()
+        {
+            printf("\t\t\tINIT PARAMS DESTRUCTOR\n");
         }
         void* soChildInitParameterVoidPtr;
         void* dlHandle;
