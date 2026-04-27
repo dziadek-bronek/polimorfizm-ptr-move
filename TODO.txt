@@ -1,3 +1,6 @@
+CData = przekazywanie danych miedzy funkcjami koniec z void* - musi byc destruktor, zeby zarzadzac pamiecia zwalniania jej bez koniecznosci wiedzy o zawartosci: std::any
+
+
 cleaning dlHandle powstale po wczytaniu  soChild->CConfigChild
 add static_cast and dynamic cast
 
