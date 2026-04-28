@@ -3,6 +3,10 @@
 #include <cstdio>
 #include <list>
 #include <memory>
+#include "include/VOID.hpp"
+
+using UptrChCrIf = std::unique_ptr<CChildCreatorIf>;
+using MapOfUptrChCrIf = std::list<UptrChCrIf>;
 
 struct CConfigSoChild : CParent
 {
@@ -10,14 +14,15 @@ struct CConfigSoChild : CParent
 
     virtual void init(void* initParameterVoidPtr)
     {
-        mapVoidPtr = initParameterVoidPtr;
+	    struct X : VOID{
+		    MapOfUptrChCrIf* selectorCoreMap;
+	    };
+        mapVoidPtr = ((X*)initParameterVoidPtr)->selectorCoreMap;
     }
     virtual void* action(void* childCreatorVoidPtr) override;
     void* mapVoidPtr;
 };
 
-using UptrChCrIf = std::unique_ptr<CChildCreatorIf>;
-using MapOfUptrChCrIf = std::list<UptrChCrIf>;
 
 void* CConfigSoChild::action(void* childCreatorVoidPtr)
 {

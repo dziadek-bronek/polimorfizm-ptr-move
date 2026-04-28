@@ -3,32 +3,33 @@
 #include "../include/child-creators.hpp"
 #include <cstdio>
 
-#include "createNewCSoChildCeator.hpp"
+#include "createNewCSoChildCreator.hpp"
+
+
+
+    struct CInitParams : VOID
+    {
+        CInitParams()
+        {
+            printf("\t\t\tINIT PARAMS CONSTRUCTOR\n");
+        }
+        virtual ~CInitParams()
+        {
+            printf("\t\t\tINIT PARAMS DESTRUCTOR\n");
+	    // take care of dlHandle
+	    // take care of  soChildInitParameterVoidUPtr
+        }
+	std::unique_ptr<VOID> soChildInitParameterVoidUPtr;
+        void* dlHandle;
+        FPluginCreator pluginCreator;
+        FPluginDestroyer pluginDestroyer;
+    };
+
+
 
 struct CSoChildWrapper : CParent
 {
     using CParent::CParent;
-#if 0
-    CSoChildWrapper(void* initParametersVoidPtr)
-
-    {
-        struct CInitParams
-        {
-            void* soChildInitParameterVoidPtr;
-            void* dlHandle;
-            FPluginCreator pluginCreator;
-            FPluginDestroyer pluginDestroyer;
-        }* initParams = (CInitParams*)initParametersVoidPtr;
-
-        pluginCreator = initParams->pluginCreator;
-        pluginDestroyer = initParams->pluginDestroyer;
-
-        soChild = (CParent*)pluginCreator();
-
-        soChild->init(initParams->soChildInitParameterVoidPtr);
-    }
-#endif
-
     ~CSoChildWrapper()
     {
         pluginDestroyer(soChild);
@@ -36,20 +37,14 @@ struct CSoChildWrapper : CParent
 
     virtual void init(void* initParametersVoidPtr)
     {
-        struct CInitParams : VOID
-        {
-            void* soChildInitParameterVoidPtr;
-            void* dlHandle;
-            FPluginCreator pluginCreator;
-            FPluginDestroyer pluginDestroyer;
-        }* initParams = (CInitParams*)initParametersVoidPtr;
+        CInitParams* initParams = (CInitParams*)initParametersVoidPtr;
 
         pluginCreator = initParams->pluginCreator;
         pluginDestroyer = initParams->pluginDestroyer;
 
         soChild = (CParent*)pluginCreator();
 
-        soChild->init(initParams->soChildInitParameterVoidPtr);
+        soChild->init((initParams->soChildInitParameterVoidUPtr).get());
     }
     virtual void action()
     {
@@ -65,30 +60,15 @@ struct CSoChildWrapper : CParent
     FPluginCreator pluginCreator;
 };
 
-void* createNewCSoChildCreator(int id, void* soChildInitParameterVoidPtr,
+void* createNewCSoChildCreator(int id, std::unique_ptr<VOID> soChildInitParameterVoidUPtr,
                                void* dlHandle, FPluginCreator pluginCreator,
                                FPluginDestroyer pluginDestroyer)
 {
+    std::unique_ptr<CInitParams> initParamsUPtr(new CInitParams);
+    initParamsUPtr->soChildInitParameterVoidUPtr = std::move(soChildInitParameterVoidUPtr);
+    initParamsUPtr->dlHandle = dlHandle;
+    initParamsUPtr->pluginCreator = pluginCreator;
+    initParamsUPtr->pluginDestroyer = pluginDestroyer;
 
-    struct CInitParams : VOID
-    {
-        CInitParams()
-        {
-            printf("\t\t\tINIT PARAMS CONSTRUCTOR\n");
-        }
-        virtual ~CInitParams()
-        {
-            printf("\t\t\tINIT PARAMS DESTRUCTOR\n");
-        }
-        void* soChildInitParameterVoidPtr;
-        void* dlHandle;
-        FPluginCreator pluginCreator;
-        FPluginDestroyer pluginDestroyer;
-    }* initParamsPtr = new CInitParams;
-    initParamsPtr->soChildInitParameterVoidPtr = soChildInitParameterVoidPtr;
-    initParamsPtr->dlHandle = dlHandle;
-    initParamsPtr->pluginCreator = pluginCreator;
-    initParamsPtr->pluginDestroyer = pluginDestroyer;
-
-    return new CChildCreator<CSoChildWrapper>(id, initParamsPtr);
+    return new CChildCreator<CSoChildWrapper>(id, std::move(initParamsUPtr));
 }

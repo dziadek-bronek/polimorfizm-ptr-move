@@ -1,7 +1,7 @@
 #include "../include/CParent.hpp"
 #include "../include/VOID.hpp"
 #include "../include/child-creators.hpp"
-#include "createNewCSoChildCeator.hpp"
+#include "createNewCSoChildCreator.hpp"
 #include <cstdio>
 #include <dlfcn.h>
 #include <list>
@@ -23,19 +23,19 @@ struct CSoChildCreatorsProducerChild : CParent
     struct CActionParams
     {
         const char* fileName;
-        const char* constructorName;
-        const char* destructorName;
+        const char* creatorName;
+        const char* destroyerName;
         int id;
-        void* initParameterVoidPtr;
+	std::unique_ptr<VOID> initParameterVoidUPtr;
     };
 
     virtual void init(void* initParametersVoidPtr) override
     {
-        struct InitParamsAgregator : VOID
+        struct X : VOID
         {
-            void* selectorCoreMapVoidPtr;
-        }* params = (InitParamsAgregator*)initParametersVoidPtr;
-        mapPtr = (MapOfUptrChCrIf*)(params->selectorCoreMapVoidPtr);
+            MapOfUptrChCrIf* selectorCoreMapVoidPtr;
+        };
+	mapPtr = ((X*)initParametersVoidPtr)->selectorCoreMapVoidPtr;
     }
 
     void* action(void* actionParameterVoidPtr)
@@ -65,7 +65,7 @@ struct CSoChildCreatorsProducerChild : CParent
 
         FPluginCreator pluginCreator = nullptr;
         pluginCreator =
-            (FPluginCreator)dlsym(dlHandle.ptr, soChild->constructorName);
+            (FPluginCreator)dlsym(dlHandle.ptr, soChild->creatorName);
         if (nullptr == pluginCreator)
         {
             printf("                           pluginCreator is nullptr "
@@ -80,7 +80,7 @@ struct CSoChildCreatorsProducerChild : CParent
         FPluginDestroyer pluginDestroyer = nullptr;
 
         pluginDestroyer =
-            (FPluginDestroyer)dlsym(dlHandle.ptr, soChild->destructorName);
+            (FPluginDestroyer)dlsym(dlHandle.ptr, soChild->destroyerName);
         if (nullptr == pluginDestroyer)
         {
             printf("                           pluginDestroyer if nullptr "
@@ -95,7 +95,7 @@ struct CSoChildCreatorsProducerChild : CParent
         CChildCreatorIf* x = nullptr;
 
         x = (CChildCreatorIf*)createNewCSoChildCreator(
-            soChild->id, soChild->initParameterVoidPtr, dlHandle.ptr,
+            soChild->id, std::move(soChild->initParameterVoidUPtr), dlHandle.ptr,
             pluginCreator, pluginDestroyer);
         if (nullptr == x)
         {
@@ -129,12 +129,7 @@ struct CSoChildCreatorsProducerChild : CParent
 };
 
 void* createNewCSoChildCreatorsProducerChildCreator(
-    void* selectorCoreMapVoidPtr)
+    std::unique_ptr<VOID> initParametersVoidUPtr)
 {
-    struct InitParamsAgregator : VOID
-    {
-        void* selectorCoreMapVoidPtr;
-    }* params = new InitParamsAgregator;
-    params->selectorCoreMapVoidPtr = selectorCoreMapVoidPtr;
-    return new CChildCreator<CSoChildCreatorsProducerChild>(221, params);
+    return new CChildCreator<CSoChildCreatorsProducerChild>(221, std::move(initParametersVoidUPtr));
 }

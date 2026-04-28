@@ -77,10 +77,18 @@ struct CConfigurator : CSelectorConfiguratorIf
             std::unique_ptr<CParent> soChildCreatorsProducer;
 
             {
+
+	    struct X : VOID{
+		    MapOfUptrChCrIf* selectorCoreMap;
+	    };
+	    std::unique_ptr<X> x(new X);
+	    x->selectorCoreMap = selectorCoreMap;
+
+
                 UptrChCrIf creatorOfSoChildCreatorsProducer(
                     (CChildCreatorIf*)
                         createNewCSoChildCreatorsProducerChildCreator(
-                            selectorCoreMap));
+                            std::move(x)));
                 soChildCreatorsProducer = std::unique_ptr<CParent>(
                     (CParent*)(creatorOfSoChildCreatorsProducer
                                    ->createNewChildIfIsNumber(221)));
@@ -93,16 +101,31 @@ struct CConfigurator : CSelectorConfiguratorIf
                 fflush(NULL);
             }
 
-            struct
+	    struct X : VOID{
+		    MapOfUptrChCrIf* selectorCoreMap;
+	    };
+	    std::unique_ptr<X> x(new X);
+	    x->selectorCoreMap = selectorCoreMap;
+
+            struct Y
             {
                 const char* fileName;
-                const char* constructorName;
-                const char* destructorName;
+                const char* creatorName;
+                const char* destroyerName;
                 int id;
-                void* initParameterVoidPtr;
-            } adderSoChildData{
+		std::unique_ptr<VOID> initParameterVoidUPtr;
+            };
+            Y adderSoChildData{
                 "./libCConfigSoChild.so", "createNewCConfigSoChildExternC",
-                "deleteCConfigSoChildExternC", 222, selectorCoreMap};
+                "deleteCConfigSoChildExternC", 222, std::move(x)};
+	    /*
+	    std::unique_ptr<Y> adderSoChildData(new Y);
+                adderSoChildData->fileName = "./libCConfigSoChild.so";
+		adderSoChildData->creatorName = "createNewCConfigSoChildExternC";
+		adderSoChildData->destroyerName = "deleteCConfigSoChildExternC";
+		adderSoChildData->id = 222;
+		adderSoChildData->initParameterVoidUPtr = std::move(x);
+		*/
 
             soChildCreatorsProducer->action(&adderSoChildData);
 

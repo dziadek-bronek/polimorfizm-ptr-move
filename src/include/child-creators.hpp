@@ -6,12 +6,12 @@
 
 template <typename CHILD> struct CChildCreator : CChildCreatorIf
 {
-    CChildCreator(int id_, VOID* initParametersVoidPtr_)
+    CChildCreator(int id_, std::unique_ptr<VOID> initParametersVoidUPtr_)
         : id(id_)
     {
         printf("TTTTTTTTTTTTTTTTTTTTTTTT\n");
         fflush(NULL);
-        initParametersUPtr = std::unique_ptr<VOID>(initParametersVoidPtr_);
+        initParametersVoidUPtr = std::unique_ptr<VOID>(std::move(initParametersVoidUPtr_));
     }
     CChildCreator(int id_)
         : id(id_)
@@ -33,9 +33,9 @@ template <typename CHILD> struct CChildCreator : CChildCreatorIf
                    typeid(CHILD).name() + 1);
 
             CHILD* x(new CHILD());
-            if (nullptr != initParametersUPtr)
+            if (nullptr != initParametersVoidUPtr)
             {
-                x->init(initParametersUPtr.get());
+                x->init(initParametersVoidUPtr.get());
                 printf("\t\t\t\t\t\tTTTTTTTTTTTTTTTTTTTTTTTT\n");
                 fflush(NULL);
             }
@@ -46,5 +46,5 @@ template <typename CHILD> struct CChildCreator : CChildCreatorIf
 
   private:
     int id;
-    std::unique_ptr<VOID> initParametersUPtr{nullptr};
+    std::unique_ptr<VOID> initParametersVoidUPtr{nullptr};
 };
