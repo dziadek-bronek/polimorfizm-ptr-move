@@ -1,9 +1,9 @@
 #include "include/CParent.hpp"
+#include "include/VOID.hpp"
 #include "include/child-creators.hpp"
 #include <cstdio>
 #include <list>
 #include <memory>
-#include "include/VOID.hpp"
 
 using UptrChCrIf = std::unique_ptr<CChildCreatorIf>;
 using MapOfUptrChCrIf = std::list<UptrChCrIf>;
@@ -14,15 +14,15 @@ struct CConfigSoChild : CParent
 
     virtual void init(void* initParameterVoidPtr)
     {
-	    struct X : VOID{
-		    MapOfUptrChCrIf* selectorCoreMap;
-	    };
+        struct X : VOID
+        {
+            MapOfUptrChCrIf* selectorCoreMap;
+        };
         mapVoidPtr = ((X*)initParameterVoidPtr)->selectorCoreMap;
     }
     virtual void* action(void* childCreatorVoidPtr) override;
     void* mapVoidPtr;
 };
-
 
 void* CConfigSoChild::action(void* childCreatorVoidPtr)
 {

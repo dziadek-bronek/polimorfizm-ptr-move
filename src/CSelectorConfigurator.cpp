@@ -78,12 +78,12 @@ struct CConfigurator : CSelectorConfiguratorIf
 
             {
 
-	    struct X : VOID{
-		    MapOfUptrChCrIf* selectorCoreMap;
-	    };
-	    std::unique_ptr<X> x(new X);
-	    x->selectorCoreMap = selectorCoreMap;
-
+                struct X : VOID
+                {
+                    MapOfUptrChCrIf* selectorCoreMap;
+                };
+                std::unique_ptr<X> x(new X);
+                x->selectorCoreMap = selectorCoreMap;
 
                 UptrChCrIf creatorOfSoChildCreatorsProducer(
                     (CChildCreatorIf*)
@@ -101,11 +101,12 @@ struct CConfigurator : CSelectorConfiguratorIf
                 fflush(NULL);
             }
 
-	    struct X : VOID{
-		    MapOfUptrChCrIf* selectorCoreMap;
-	    };
-	    std::unique_ptr<X> x(new X);
-	    x->selectorCoreMap = selectorCoreMap;
+            struct X : VOID
+            {
+                MapOfUptrChCrIf* selectorCoreMap;
+            };
+            std::unique_ptr<X> x(new X);
+            x->selectorCoreMap = selectorCoreMap;
 
             struct Y
             {
@@ -113,19 +114,19 @@ struct CConfigurator : CSelectorConfiguratorIf
                 const char* creatorName;
                 const char* destroyerName;
                 int id;
-		std::unique_ptr<VOID> initParameterVoidUPtr;
+                std::unique_ptr<VOID> initParameterVoidUPtr;
             };
             Y adderSoChildData{
                 "./libCConfigSoChild.so", "createNewCConfigSoChildExternC",
                 "deleteCConfigSoChildExternC", 222, std::move(x)};
-	    /*
-	    std::unique_ptr<Y> adderSoChildData(new Y);
-                adderSoChildData->fileName = "./libCConfigSoChild.so";
-		adderSoChildData->creatorName = "createNewCConfigSoChildExternC";
-		adderSoChildData->destroyerName = "deleteCConfigSoChildExternC";
-		adderSoChildData->id = 222;
-		adderSoChildData->initParameterVoidUPtr = std::move(x);
-		*/
+            /*
+            std::unique_ptr<Y> adderSoChildData(new Y);
+                    adderSoChildData->fileName = "./libCConfigSoChild.so";
+            adderSoChildData->creatorName = "createNewCConfigSoChildExternC";
+            adderSoChildData->destroyerName = "deleteCConfigSoChildExternC";
+            adderSoChildData->id = 222;
+            adderSoChildData->initParameterVoidUPtr = std::move(x);
+            */
 
             soChildCreatorsProducer->action(&adderSoChildData);
 

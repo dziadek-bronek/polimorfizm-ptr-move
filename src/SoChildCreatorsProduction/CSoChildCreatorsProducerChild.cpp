@@ -26,7 +26,7 @@ struct CSoChildCreatorsProducerChild : CParent
         const char* creatorName;
         const char* destroyerName;
         int id;
-	std::unique_ptr<VOID> initParameterVoidUPtr;
+        std::unique_ptr<VOID> initParameterVoidUPtr;
     };
 
     virtual void init(void* initParametersVoidPtr) override
@@ -35,7 +35,7 @@ struct CSoChildCreatorsProducerChild : CParent
         {
             MapOfUptrChCrIf* selectorCoreMapVoidPtr;
         };
-	mapPtr = ((X*)initParametersVoidPtr)->selectorCoreMapVoidPtr;
+        mapPtr = ((X*)initParametersVoidPtr)->selectorCoreMapVoidPtr;
     }
 
     void* action(void* actionParameterVoidPtr)
@@ -95,8 +95,8 @@ struct CSoChildCreatorsProducerChild : CParent
         CChildCreatorIf* x = nullptr;
 
         x = (CChildCreatorIf*)createNewCSoChildCreator(
-            soChild->id, std::move(soChild->initParameterVoidUPtr), dlHandle.ptr,
-            pluginCreator, pluginDestroyer);
+            soChild->id, std::move(soChild->initParameterVoidUPtr),
+            dlHandle.ptr, pluginCreator, pluginDestroyer);
         if (nullptr == x)
         {
             return nullptr;
@@ -131,5 +131,6 @@ struct CSoChildCreatorsProducerChild : CParent
 void* createNewCSoChildCreatorsProducerChildCreator(
     std::unique_ptr<VOID> initParametersVoidUPtr)
 {
-    return new CChildCreator<CSoChildCreatorsProducerChild>(221, std::move(initParametersVoidUPtr));
+    return new CChildCreator<CSoChildCreatorsProducerChild>(
+        221, std::move(initParametersVoidUPtr));
 }

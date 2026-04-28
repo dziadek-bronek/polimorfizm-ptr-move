@@ -11,7 +11,8 @@ template <typename CHILD> struct CChildCreator : CChildCreatorIf
     {
         printf("TTTTTTTTTTTTTTTTTTTTTTTT\n");
         fflush(NULL);
-        initParametersVoidUPtr = std::unique_ptr<VOID>(std::move(initParametersVoidUPtr_));
+        initParametersVoidUPtr =
+            std::unique_ptr<VOID>(std::move(initParametersVoidUPtr_));
     }
     CChildCreator(int id_)
         : id(id_)
