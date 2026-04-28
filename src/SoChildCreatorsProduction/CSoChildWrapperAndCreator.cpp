@@ -72,7 +72,7 @@ void* createNewCSoChildCreator(int id, void* soChildInitParameterVoidPtr,
 
     struct CInitParams : VOID
     {
-	    CInitParams()
+        CInitParams()
         {
             printf("\t\t\tINIT PARAMS CONSTRUCTOR\n");
         }
@@ -85,10 +85,10 @@ void* createNewCSoChildCreator(int id, void* soChildInitParameterVoidPtr,
         FPluginCreator pluginCreator;
         FPluginDestroyer pluginDestroyer;
     }* initParamsPtr = new CInitParams;
-             initParamsPtr->soChildInitParameterVoidPtr = soChildInitParameterVoidPtr;
-              initParamsPtr->dlHandle = dlHandle;
-              initParamsPtr->pluginCreator = pluginCreator;
-              initParamsPtr->pluginDestroyer = pluginDestroyer;
+    initParamsPtr->soChildInitParameterVoidPtr = soChildInitParameterVoidPtr;
+    initParamsPtr->dlHandle = dlHandle;
+    initParamsPtr->pluginCreator = pluginCreator;
+    initParamsPtr->pluginDestroyer = pluginDestroyer;
 
     return new CChildCreator<CSoChildWrapper>(id, initParamsPtr);
 }

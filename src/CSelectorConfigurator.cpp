@@ -58,7 +58,7 @@ struct CConfigurator : CSelectorConfiguratorIf
     }
     virtual void* initializeSelector()
     {
-	    // make this uniqu and resolve at the return
+        // make this uniqu and resolve at the return
         selectorCoreMap = new MapOfUptrChCrIf;
 
         {
@@ -79,33 +79,36 @@ struct CConfigurator : CSelectorConfiguratorIf
             {
                 UptrChCrIf creatorOfSoChildCreatorsProducer(
                     (CChildCreatorIf*)
-                        createNewCSoChildCreatorsProducerChildCreator(selectorCoreMap));
+                        createNewCSoChildCreatorsProducerChildCreator(
+                            selectorCoreMap));
                 soChildCreatorsProducer = std::unique_ptr<CParent>(
                     (CParent*)(creatorOfSoChildCreatorsProducer
                                    ->createNewChildIfIsNumber(221)));
 
                 selectorCoreMap->push_back(
                     std::move(creatorOfSoChildCreatorsProducer));
-                printf("initializeSelector: CChildCreator id=221, for SoChildCreatorsProducer - "
+                printf("initializeSelector: CChildCreator id=221, for "
+                       "SoChildCreatorsProducer - "
                        "added to selector\n");
                 fflush(NULL);
             }
 
-                struct
-                {
-                    const char* fileName;
-                    const char* constructorName;
-                    const char* destructorName;
-                    int id;
-                    void* initParameterVoidPtr;
-                } adderSoChildData{
-                    "./libCConfigSoChild.so", "createNewCConfigSoChildExternC",
-                    "deleteCConfigSoChildExternC", 222, selectorCoreMap};
+            struct
+            {
+                const char* fileName;
+                const char* constructorName;
+                const char* destructorName;
+                int id;
+                void* initParameterVoidPtr;
+            } adderSoChildData{
+                "./libCConfigSoChild.so", "createNewCConfigSoChildExternC",
+                "deleteCConfigSoChildExternC", 222, selectorCoreMap};
 
-		soChildCreatorsProducer->action(&adderSoChildData);
+            soChildCreatorsProducer->action(&adderSoChildData);
 
-                printf("initializeSelector: CSoChildCreator id=222 for CConfiSoChild - added to selector\n");
-                fflush(NULL);
+            printf("initializeSelector: CSoChildCreator id=222 for "
+                   "CConfiSoChild - added to selector\n");
+            fflush(NULL);
         }
 
         if (nullptr == initConfig)

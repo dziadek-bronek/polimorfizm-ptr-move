@@ -1,1 +1,2 @@
-void* createNewCSoChildCreatorsProducerChildCreator(void* selectorCoreMapVoidPtr);
+void* createNewCSoChildCreatorsProducerChildCreator(
+    void* selectorCoreMapVoidPtr);

@@ -1,9 +1,9 @@
 #include "../include/CParent.hpp"
+#include "../include/VOID.hpp"
 #include "../include/child-creators.hpp"
 #include "createNewCSoChildCeator.hpp"
 #include <cstdio>
 #include <dlfcn.h>
-#include "../include/VOID.hpp"
 #include <list>
 
 using UptrChCrIf = std::unique_ptr<CChildCreatorIf>;
@@ -29,11 +29,13 @@ struct CSoChildCreatorsProducerChild : CParent
         void* initParameterVoidPtr;
     };
 
-    virtual void init(void* initParametersVoidPtr)  override {
-	struct InitParamsAgregator : VOID {
-		void* selectorCoreMapVoidPtr;
-	}* params = (InitParamsAgregator*)initParametersVoidPtr;
-	mapPtr = (MapOfUptrChCrIf*)( params->selectorCoreMapVoidPtr);
+    virtual void init(void* initParametersVoidPtr) override
+    {
+        struct InitParamsAgregator : VOID
+        {
+            void* selectorCoreMapVoidPtr;
+        }* params = (InitParamsAgregator*)initParametersVoidPtr;
+        mapPtr = (MapOfUptrChCrIf*)(params->selectorCoreMapVoidPtr);
     }
 
     void* action(void* actionParameterVoidPtr)
@@ -92,16 +94,16 @@ struct CSoChildCreatorsProducerChild : CParent
 
         CChildCreatorIf* x = nullptr;
 
-        x = (CChildCreatorIf*)createNewCSoChildCreator(soChild->id, soChild->initParameterVoidPtr,
-                                     dlHandle.ptr, pluginCreator,
-                                     pluginDestroyer);
+        x = (CChildCreatorIf*)createNewCSoChildCreator(
+            soChild->id, soChild->initParameterVoidPtr, dlHandle.ptr,
+            pluginCreator, pluginDestroyer);
         if (nullptr == x)
         {
             return nullptr;
         }
         dlHandle.ptr = nullptr;
-	printf("DUPA DUPA\n"); fflush(NULL);
-	mapPtr->push_back(UptrChCrIf(x));
+        fflush(NULL);
+        mapPtr->push_back(UptrChCrIf(x));
         return x;
     }
 
@@ -122,16 +124,17 @@ struct CSoChildCreatorsProducerChild : CParent
         void* ptr;
     } dlHandle;
 
-
     CActionParams* soChild;
     MapOfUptrChCrIf* mapPtr;
 };
 
-void* createNewCSoChildCreatorsProducerChildCreator(void* selectorCoreMapVoidPtr)
+void* createNewCSoChildCreatorsProducerChildCreator(
+    void* selectorCoreMapVoidPtr)
 {
-	struct InitParamsAgregator : VOID {
-		void* selectorCoreMapVoidPtr;
-	}* params = new InitParamsAgregator;
-	params->selectorCoreMapVoidPtr = selectorCoreMapVoidPtr;
-	return new CChildCreator<CSoChildCreatorsProducerChild>(221, params);
+    struct InitParamsAgregator : VOID
+    {
+        void* selectorCoreMapVoidPtr;
+    }* params = new InitParamsAgregator;
+    params->selectorCoreMapVoidPtr = selectorCoreMapVoidPtr;
+    return new CChildCreator<CSoChildCreatorsProducerChild>(221, params);
 }
