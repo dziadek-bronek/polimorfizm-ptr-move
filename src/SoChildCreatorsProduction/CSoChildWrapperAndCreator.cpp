@@ -36,7 +36,6 @@ struct CSoChildWrapper : CParent
 
     virtual void init(void* initParametersVoidPtr)
     {
-
         struct CInitParams : VOID
         {
             void* soChildInitParameterVoidPtr;
@@ -73,13 +72,7 @@ void* createNewCSoChildCreator(int id, void* soChildInitParameterVoidPtr,
 
     struct CInitParams : VOID
     {
-        CInitParams(void* soChildInitParameterVoidPtr_, void* dlHandle_,
-                    FPluginCreator pluginCreator_,
-                    FPluginDestroyer pluginDestroyer_)
-            : soChildInitParameterVoidPtr(soChildInitParameterVoidPtr_),
-              dlHandle(dlHandle_),
-              pluginCreator(pluginCreator_),
-              pluginDestroyer(pluginDestroyer_)
+	    CInitParams()
         {
             printf("\t\t\tINIT PARAMS CONSTRUCTOR\n");
         }
@@ -91,9 +84,11 @@ void* createNewCSoChildCreator(int id, void* soChildInitParameterVoidPtr,
         void* dlHandle;
         FPluginCreator pluginCreator;
         FPluginDestroyer pluginDestroyer;
-    }* initParamsPtr = new CInitParams{soChildInitParameterVoidPtr, dlHandle,
-                                       pluginCreator, pluginDestroyer};
-    /* where it is to be destroyed */
+    }* initParamsPtr = new CInitParams;
+             initParamsPtr->soChildInitParameterVoidPtr = soChildInitParameterVoidPtr;
+              initParamsPtr->dlHandle = dlHandle;
+              initParamsPtr->pluginCreator = pluginCreator;
+              initParamsPtr->pluginDestroyer = pluginDestroyer;
 
     return new CChildCreator<CSoChildWrapper>(id, initParamsPtr);
 }

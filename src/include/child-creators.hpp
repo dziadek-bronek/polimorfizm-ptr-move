@@ -46,6 +46,5 @@ template <typename CHILD> struct CChildCreator : CChildCreatorIf
 
   private:
     int id;
-    // void* initParametersVoidPtr{nullptr};
     std::unique_ptr<VOID> initParametersUPtr{nullptr};
 };

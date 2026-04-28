@@ -64,14 +64,9 @@ struct CFramework : CFrameworkIf
             void* initParameterVoidPtr;
         } soChildOrigin{fileName, constructorName, destructorName, id, nullptr};
 
-        void* soChildCreator = configChild->action(&soChildOrigin);
-        if (nullptr == soChildCreator)
-        {
-            printf("HOUSTON WEV GOTTA PROBLEM\n");
-            return nullptr;
-        }
+        configChild->action(&soChildOrigin);
 
-        return configAdd(soChildCreator);
+        return nullptr;
     }
 
     virtual void* configAdd(void* childCreatorVoidPtr)

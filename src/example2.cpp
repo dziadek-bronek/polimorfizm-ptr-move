@@ -61,9 +61,7 @@ int main()
         DELETE_IF_FAILURE(
             framework->configAdd(new CChildCreator<CDevChild>(8)));
 
-        DELETE_IF_FAILURE(framework->configAdd(
-            "./libCDemoSoChild.so", "createNewCDemoSoChildExternC",
-            "deleteCDemoSoChildExternC", 13));
+        framework->configAdd( "./libCDemoSoChild.so", "createNewCDemoSoChildExternC", "deleteCDemoSoChildExternC", 13);
 
         /* Mock of input - vector represents input sequence */
         std::unique_ptr<CInputIf> input(CInputIf::createNew());
