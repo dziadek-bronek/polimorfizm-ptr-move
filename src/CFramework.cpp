@@ -14,6 +14,7 @@
 
 #include "include/CFramework.hpp"
 #include "include/CSoConfiguratorProducer.hpp"
+#include "include/VOID.hpp"
 
 struct CFramework : CFrameworkIf
 {
@@ -47,6 +48,14 @@ struct CFramework : CFrameworkIf
     virtual void* configAdd(const char* fileName, const char* constructorName,
                             const char* destructorName, int id)
     {
+        return configAdd(fileName, constructorName, destructorName, id,
+                         nullptr);
+    }
+
+    virtual void* configAdd(const char* fileName, const char* constructorName,
+                            const char* destructorName, int id,
+                            std::unique_ptr<VOID> initParameterVoidUPtr)
+    {
         std::unique_ptr<CParent> configChild((CParent*)selector->at(221));
 
         if (nullptr == configChild)
@@ -61,8 +70,9 @@ struct CFramework : CFrameworkIf
             const char* constructorName;
             const char* destructorName;
             int id;
-            void* initParameterVoidPtr;
-        } soChildOrigin{fileName, constructorName, destructorName, id, nullptr};
+            std::unique_ptr<VOID> initParameterVoidUPtr;
+        } soChildOrigin{fileName, constructorName, destructorName, id,
+                        std::move(initParameterVoidUPtr)};
 
         configChild->action(&soChildOrigin);
 

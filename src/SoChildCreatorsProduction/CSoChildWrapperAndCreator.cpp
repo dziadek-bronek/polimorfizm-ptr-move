@@ -60,12 +60,13 @@ void* createNewCSoChildCreator(
     int id, std::unique_ptr<VOID> soChildInitParameterVoidUPtr, void* dlHandle,
     FPluginCreator pluginCreator, FPluginDestroyer pluginDestroyer)
 {
-    std::unique_ptr<CInitParams> initParamsUPtr(new CInitParams);
-    initParamsUPtr->soChildInitParameterVoidUPtr =
+    std::unique_ptr<CInitParams> childWrapperInitParamsUPtr(new CInitParams);
+    childWrapperInitParamsUPtr->soChildInitParameterVoidUPtr =
         std::move(soChildInitParameterVoidUPtr);
-    initParamsUPtr->dlHandle = dlHandle;
-    initParamsUPtr->pluginCreator = pluginCreator;
-    initParamsUPtr->pluginDestroyer = pluginDestroyer;
+    childWrapperInitParamsUPtr->dlHandle = dlHandle;
+    childWrapperInitParamsUPtr->pluginCreator = pluginCreator;
+    childWrapperInitParamsUPtr->pluginDestroyer = pluginDestroyer;
 
-    return new CChildCreator<CSoChildWrapper>(id, std::move(initParamsUPtr));
+    return new CChildCreator<CSoChildWrapper>(
+        id, std::move(childWrapperInitParamsUPtr));
 }

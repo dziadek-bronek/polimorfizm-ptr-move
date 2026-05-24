@@ -11,6 +11,7 @@ CDlGlobalHandle dlCSelectorConfiguratorGlobalHandle;
 /* New action defined by a developer, to be added (registered) to framework
    (example/demonstration).
 */
+
 struct CDevChild : CParent
 {
     using CParent::CParent;
@@ -24,11 +25,11 @@ struct CDevChild : CParent
     }
     virtual void action() override
     {
-        printf("behavior specific for CDevChild\n");
+        printf("behavior specific for child CDevChild.\n");
     }
     virtual void* action(void* actionParameterVoidPtr)
     {
-        printf("behavior specific for child CDevChild\n");
+        printf("behavior specific for child CDevChild.\n");
         return nullptr;
     }
 };
@@ -61,9 +62,17 @@ int main()
         DELETE_IF_FAILURE(
             framework->configAdd(new CChildCreator<CDevChild>(8)));
 
-        framework->configAdd("./libCDemoSoChild.so",
-                             "createNewCDemoSoChildExternC",
-                             "deleteCDemoSoChildExternC", 13);
+        constexpr int EXAMPLE_INIT_VALUE = 543;
+
+        // clang-format off
+        PACK_1(CInitDataWrapper, initDataWrapped,
+		std::unique_ptr<int>, exampleDataUPtr,
+			std::unique_ptr<int>(new int(EXAMPLE_INIT_VALUE)));
+        // clang-format on
+
+        framework->configAdd(
+            "./libCDemoSoChild.so", "createNewCDemoSoChildExternC",
+            "deleteCDemoSoChildExternC", 13, std::move(initDataWrapped));
 
         /* Mock of input - vector represents input sequence */
         std::unique_ptr<CInputIf> input(CInputIf::createNew());

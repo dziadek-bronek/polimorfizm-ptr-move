@@ -19,17 +19,29 @@ struct CDemoSoChild : CParent
         printf("child CDemoSoChild destructor\n");
     }
 
-    virtual void init(void* initParameterVoidPtr) {}
+    virtual void init(void* initParameterVoidPtr) override
+    {
+        struct Y : VOID
+        {
+            std::unique_ptr<int> x;
+        };
+        exampleData = *(((Y*)initParameterVoidPtr)->x);
+    }
 
     virtual void action()
     {
-        printf("-------------------    behavior specific for CDemoSoChild\n");
+        printf(
+            "-------------------    behavior specific for CDemoSoChild %i.\n",
+            exampleData);
     }
 
     virtual void* action(void* actionParameterVoidPtr)
     {
         return nullptr;
     }
+
+  private:
+    int exampleData;
 };
 
 extern "C" void* createNewCDemoSoChildExternC()

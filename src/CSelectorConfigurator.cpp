@@ -73,28 +73,12 @@ struct CConfigurator : CSelectorConfiguratorIf
             destroys x, thus we can not is soChildCreatorsProducer and we hold
             it for a while
                 */
-
-
-
-
-#define PACK_1(STRUCT_ID, OBJ_U_PTR_ID,		\
-		F_A_TYPE, F_A, F_A_INIT		\
-	     )					\
-	    struct STRUCT_ID : VOID		\
-	    {					\
-		    F_A_TYPE F_A_ID;		\
-	    };					\
-	    std::unique_ptr<STRUCT_ID>		\
-	    	OBJ_U_PTR_ID(new STRUCT_ID);	\
-	    OBJ_U_PTR_ID->F_A_ID = F_A_INIT
-
-
             std::unique_ptr<CParent> soChildCreatorsProducer;
 
             {
 
-	    PACK_1(X, x,
-		MapOfUptrChCrIf*, selectorCoreMap, selectorCoreMap);
+                PACK_1(X, x, MapOfUptrChCrIf*, selectorCoreMap,
+                       selectorCoreMap);
 
                 UptrChCrIf creatorOfSoChildCreatorsProducer(
                     (CChildCreatorIf*)
@@ -113,8 +97,7 @@ struct CConfigurator : CSelectorConfiguratorIf
                 fflush(NULL);
             }
 
-	    PACK_1(X, x,
-		MapOfUptrChCrIf*, selectorCoreMap, selectorCoreMap);
+            PACK_1(X, x, MapOfUptrChCrIf*, selectorCoreMap, selectorCoreMap);
             struct Y
             {
                 const char* fileName;
@@ -127,31 +110,24 @@ struct CConfigurator : CSelectorConfiguratorIf
                 "./libCConfigSoChild.so", "createNewCConfigSoChildExternC",
                 "deleteCConfigSoChildExternC", 222, std::move(x)};
 
-
 #if 0
-#define PACK_5(STRUCT_ID, OBJ_PTR_ID		\
-		F_A_TYPE, F_A, F_A_INIT,	\
-		F_B_TYPE, F_B, F_B_INIT,	\
-		F_C_TYPE, F_C, F_C_INIT,	\
-		F_D_TYPE, F_D, F_D_INIT,	\
-		F_E_TYPE, F_E, F_E_INIT,	\
-		OBJ_PTR_ID			\
-	     )					\
-	    struct STRUCT_NAME : VOID		\
-	    {					\
-		    F_A_TYPE F_A;		\
-		    F_B_TYPE F_B;		\
-		    F_C_TYPE F_C;		\
-		    F_D_TYPE F_D;		\
-		    F_E_TYPE F_E;		\
-	    };					\
-	    std::unique_ptr<STRUCT_NAME>	\
-	    	OBJ_U_PTR_ID = new STRUCT_NAME;	\
-	    OBJ_NAME->F_A = F_A_INIT;		\
-	    OBJ_NAME->F_B = F_B_INIT;		\
-	    OBJ_NAME->F_C = F_C_INIT;		\
-	    OBJ_NAME->F_D = F_D_INIT;		\
-	    OBJ_NAME->F_E = F_E_INIT
+#define PACK_5(STRUCT_ID, OBJ_PTR_ID F_A_TYPE, F_A, F_A_INIT, F_B_TYPE, F_B,   \
+               F_B_INIT, F_C_TYPE, F_C, F_C_INIT, F_D_TYPE, F_D, F_D_INIT,     \
+               F_E_TYPE, F_E, F_E_INIT, OBJ_PTR_ID)                            \
+    struct STRUCT_NAME : VOID                                                  \
+    {                                                                          \
+        F_A_TYPE F_A;                                                          \
+        F_B_TYPE F_B;                                                          \
+        F_C_TYPE F_C;                                                          \
+        F_D_TYPE F_D;                                                          \
+        F_E_TYPE F_E;                                                          \
+    };                                                                         \
+    std::unique_ptr<STRUCT_NAME> OBJ_U_PTR_ID = new STRUCT_NAME;               \
+    OBJ_NAME->F_A = F_A_INIT;                                                  \
+    OBJ_NAME->F_B = F_B_INIT;                                                  \
+    OBJ_NAME->F_C = F_C_INIT;                                                  \
+    OBJ_NAME->F_D = F_D_INIT;                                                  \
+    OBJ_NAME->F_E = F_E_INIT
 
 
 
@@ -165,7 +141,6 @@ struct CConfigurator : CSelectorConfiguratorIf
 		)
 
 #endif
-
 
             /*
             std::unique_ptr<Y> adderSoChildData(new Y);

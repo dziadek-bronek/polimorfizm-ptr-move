@@ -11,6 +11,7 @@
 cmake_minimum_required(VERSION 3.5)
 
 project(polimorfizm-ptr-move-proj)
+# set(CMAKE_BUILD_TYPE Debug)
 
 
 

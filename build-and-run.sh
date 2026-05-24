@@ -4,5 +4,6 @@ cd /home/dtstgseete/cprogs/github/polimorfizm-ptr-move/build
 # if clear all, then:
 rm -rf /home/dtstgseete/cprogs/github/polimorfizm-ptr-move/build/*
 cmake .. &&  cmake --build . && { echo; echo; echo; ./polimorfizm-ptr-move; }
+# cmake -DCMAKE_BUILD_TYPE=Debug .. &&  cmake --build . && { echo; echo; echo; ./polimorfizm-ptr-move; }
 # for the command 'cmake --build .' alternative is command: 'make'
 
