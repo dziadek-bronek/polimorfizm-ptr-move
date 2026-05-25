@@ -77,13 +77,13 @@ struct CConfigurator : CSelectorConfiguratorIf
 
             {
 
-                PACK_1(X, x, MapOfUptrChCrIf*, selectorCoreMap,
-                       selectorCoreMap);
+                using CInitDataWrapper = CWrapperVOID_1<MapOfUptrChCrIf*>;
 
                 UptrChCrIf creatorOfSoChildCreatorsProducer(
                     (CChildCreatorIf*)
                         createNewCSoChildCreatorsProducerChildCreator(
-                            std::move(x)));
+                            std::unique_ptr<CInitDataWrapper>(
+                                new CInitDataWrapper(selectorCoreMap))));
 
                 soChildCreatorsProducer = std::unique_ptr<CParent>(
                     (CParent*)(creatorOfSoChildCreatorsProducer
@@ -97,7 +97,8 @@ struct CConfigurator : CSelectorConfiguratorIf
                 fflush(NULL);
             }
 
-            PACK_1(X, x, MapOfUptrChCrIf*, selectorCoreMap, selectorCoreMap);
+            using CInitDataWrapper = CWrapperVOID_1<MapOfUptrChCrIf*>;
+            // clang-format off
             struct Y
             {
                 const char* fileName;
@@ -107,40 +108,16 @@ struct CConfigurator : CSelectorConfiguratorIf
                 std::unique_ptr<VOID> initParameterVoidUPtr;
             };
             Y adderSoChildData{
-                "./libCConfigSoChild.so", "createNewCConfigSoChildExternC",
-                "deleteCConfigSoChildExternC", 222, std::move(x)};
-
-#if 0
-#define PACK_5(STRUCT_ID, OBJ_PTR_ID F_A_TYPE, F_A, F_A_INIT, F_B_TYPE, F_B,   \
-               F_B_INIT, F_C_TYPE, F_C, F_C_INIT, F_D_TYPE, F_D, F_D_INIT,     \
-               F_E_TYPE, F_E, F_E_INIT, OBJ_PTR_ID)                            \
-    struct STRUCT_NAME : VOID                                                  \
-    {                                                                          \
-        F_A_TYPE F_A;                                                          \
-        F_B_TYPE F_B;                                                          \
-        F_C_TYPE F_C;                                                          \
-        F_D_TYPE F_D;                                                          \
-        F_E_TYPE F_E;                                                          \
-    };                                                                         \
-    std::unique_ptr<STRUCT_NAME> OBJ_U_PTR_ID = new STRUCT_NAME;               \
-    OBJ_NAME->F_A = F_A_INIT;                                                  \
-    OBJ_NAME->F_B = F_B_INIT;                                                  \
-    OBJ_NAME->F_C = F_C_INIT;                                                  \
-    OBJ_NAME->F_D = F_D_INIT;                                                  \
-    OBJ_NAME->F_E = F_E_INIT
-
-
-
-
-	    PACK(X,
-			    fileName, "./libCConfigSoChild.so"
-			    creatorName, "createNewCConfigSoChildExternC"
-			    destroyerName, "deleteCConfigSoChildExternC"
-			    id, 222
-			    UPtrVOID, initParameterVoidUPtr, std::move(x)
-		)
-
-#endif
+                "./libCConfigSoChild.so",
+		"createNewCConfigSoChildExternC",
+                "deleteCConfigSoChildExternC",
+		222,
+		std::unique_ptr<CInitDataWrapper>(
+			new CInitDataWrapper(
+				selectorCoreMap
+			))
+	    };
+            // clang-format on
 
             /*
             std::unique_ptr<Y> adderSoChildData(new Y);

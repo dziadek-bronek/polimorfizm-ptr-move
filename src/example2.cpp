@@ -5,6 +5,7 @@
 #include "include/CInput.hpp"
 
 #include "include/CDlGlobalHandle.hpp"
+#include "include/VOID.hpp"
 #include <dlfcn.h>
 CDlGlobalHandle dlCSelectorConfiguratorGlobalHandle;
 
@@ -35,6 +36,7 @@ struct CDevChild : CParent
 };
 
 #define DELETE_IF_FAILURE(_x_) (delete ((CChildCreatorIf*)(_x_)))
+
 int main()
 {
     try
@@ -63,16 +65,21 @@ int main()
             framework->configAdd(new CChildCreator<CDevChild>(8)));
 
         constexpr int EXAMPLE_INIT_VALUE = 543;
+        using CInitDataWrapper = CWrapperVOID_1<std::unique_ptr<int>>;
 
         // clang-format off
-        PACK_1(CInitDataWrapper, initDataWrapped,
-		std::unique_ptr<int>, exampleDataUPtr,
-			std::unique_ptr<int>(new int(EXAMPLE_INIT_VALUE)));
+        framework->configAdd
+	(
+            "./libCDemoSoChild.so",
+	    "createNewCDemoSoChildExternC",
+            "deleteCDemoSoChildExternC",
+	    13,
+            std::unique_ptr<CInitDataWrapper>(
+		new CInitDataWrapper(
+			std::unique_ptr<int>(new int(EXAMPLE_INIT_VALUE))
+		))
+	);
         // clang-format on
-
-        framework->configAdd(
-            "./libCDemoSoChild.so", "createNewCDemoSoChildExternC",
-            "deleteCDemoSoChildExternC", 13, std::move(initDataWrapped));
 
         /* Mock of input - vector represents input sequence */
         std::unique_ptr<CInputIf> input(CInputIf::createNew());
