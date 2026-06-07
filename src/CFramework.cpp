@@ -54,8 +54,10 @@ struct CFramework : CFrameworkIf
 
     virtual void* configAdd(const char* fileName, const char* constructorName,
                             const char* destructorName, int id,
-                            std::unique_ptr<VOID> initParameterVoidUPtr)
+                            void* initParameterVoidPtr)
     {
+        std::unique_ptr<VOID> initParameterVoidUPtr(
+            (VOID*)initParameterVoidPtr);
         std::unique_ptr<CParent> configChild((CParent*)selector->at(221));
 
         if (nullptr == configChild)
@@ -79,10 +81,9 @@ struct CFramework : CFrameworkIf
         return nullptr;
     }
 
-    virtual void configAddCreator(VOID* childCreatorVoidPtr)
+    virtual void configAddCreator(void* childCreatorVoidPtr)
     {
-        std::unique_ptr<VOID> childCreatorVoidUPtr =
-            std::unique_ptr<VOID>(childCreatorVoidPtr);
+        std::unique_ptr<VOID> childCreatorVoidUPtr((VOID*)childCreatorVoidPtr);
         std::unique_ptr<CParent> configChild((CParent*)selector->at(222));
 
         if (nullptr == configChild)

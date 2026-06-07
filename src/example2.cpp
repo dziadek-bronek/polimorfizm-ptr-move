@@ -35,8 +35,6 @@ struct CDevChild : CParent
     }
 };
 
-#define DELETE_IF_FAILURE(_x_) (delete ((CChildCreatorIf*)(_x_)))
-
 int main()
 {
     try
@@ -77,10 +75,9 @@ int main()
 		    "createNewCDemoSoChildExternC",
 		    "deleteCDemoSoChildExternC",
 		    13,
-		    std::unique_ptr<CInitDataWrapper>(
-			    new CInitDataWrapper(
-				    std::unique_ptr<int>(new int(EXAMPLE_INIT_VALUE))
-		    ))
+            new CInitDataWrapper(
+                std::unique_ptr<int>(new int(EXAMPLE_INIT_VALUE))
+		    )
 	    );
         // clang-format on
 
