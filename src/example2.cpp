@@ -69,16 +69,16 @@ int main()
 
         // clang-format off
         framework->configAdd
-	(
-		"./libCDemoSoChild.so",
-		"createNewCDemoSoChildExternC",
-		"deleteCDemoSoChildExternC",
-		13,
-		std::unique_ptr<CInitDataWrapper>(
-			new CInitDataWrapper(
-				std::unique_ptr<int>(new int(EXAMPLE_INIT_VALUE))
-		))
-	);
+	    (
+		    "./libCDemoSoChild.so",
+		    "createNewCDemoSoChildExternC",
+		    "deleteCDemoSoChildExternC",
+		    13,
+		    std::unique_ptr<CInitDataWrapper>(
+			    new CInitDataWrapper(
+				    std::unique_ptr<int>(new int(EXAMPLE_INIT_VALUE))
+		    ))
+	    );
         // clang-format on
 
         /* Mock of input - vector represents input sequence */
