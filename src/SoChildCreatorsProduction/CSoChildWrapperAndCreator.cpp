@@ -14,7 +14,8 @@ struct CInitParams : VOID
     virtual ~CInitParams()
     {
         printf("\t\t\tINIT PARAMS DESTRUCTOR\n");
-        // take care of dlHandle
+        // TODO
+        // take care of dlHandle - global list
         // take care of  soChildInitParameterVoidUPtr
     }
     std::unique_ptr<VOID> soChildInitParameterVoidUPtr;
