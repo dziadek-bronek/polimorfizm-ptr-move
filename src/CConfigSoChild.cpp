@@ -26,7 +26,7 @@ struct CConfigSoChild : CParent
 
 void* CConfigSoChild::action(void* childCreatorVoidPtr)
 {
-    UptrChCrIf creator((CChildCreatorIf*)childCreatorVoidPtr);
+    UptrChCrIf& creator = ((CWrapperVOID_1<UptrChCrIf>*)childCreatorVoidPtr)->x;
 
     printf("behavior specific for CConfigChild: adding ChildCreator to "
            "selector\n");

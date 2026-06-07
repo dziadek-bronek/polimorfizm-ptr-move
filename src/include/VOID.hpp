@@ -20,6 +20,7 @@ struct VOID
 
 template <typename T> struct CWrapperVOID_1 : VOID
 {
+    // CWrapperVOID_1() = default;
     CWrapperVOID_1(T xInit)
         : x(std::move(xInit))
     {

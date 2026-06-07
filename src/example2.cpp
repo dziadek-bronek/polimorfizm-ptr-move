@@ -61,8 +61,11 @@ int main()
         */
 
         /* Add creator to framework */
-        DELETE_IF_FAILURE(
-            framework->configAdd(new CChildCreator<CDevChild>(8)));
+        // clang-format off
+        // clang-format on
+        using UptrChCrIf = std::unique_ptr<CChildCreatorIf>;
+        framework->configAddCreator(new CWrapperVOID_1<UptrChCrIf>(
+            UptrChCrIf(new CChildCreator<CDevChild>(8))));
 
         constexpr int EXAMPLE_INIT_VALUE = 543;
         using CInitDataWrapper = CWrapperVOID_1<std::unique_ptr<int>>;

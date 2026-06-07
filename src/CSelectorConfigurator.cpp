@@ -58,7 +58,8 @@ struct CConfigurator : CSelectorConfiguratorIf
     }
     virtual void* initializeSelector()
     {
-        // make this uniqu and resolve at the return
+        // TODO?
+        // make this uniqu and release at the return
         selectorCoreMap = new MapOfUptrChCrIf;
 
         {

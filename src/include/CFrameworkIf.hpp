@@ -10,7 +10,7 @@ struct CFrameworkIf
 
     virtual void* getChildBasedOnNumber(int n) = 0;
 
-    virtual void* configAdd(void* childCreatorUPtrVoidPtr) = 0;
+    virtual void configAddCreator(VOID* childCreatorVoidPtr) = 0;
     virtual void* configAdd(const char* fileName, const char* constructorName,
                             const char* destructorName, int id) = 0;
     virtual void* configAdd(const char* fileName, const char* constructorName,

@@ -79,19 +79,20 @@ struct CFramework : CFrameworkIf
         return nullptr;
     }
 
-    virtual void* configAdd(void* childCreatorVoidPtr)
+    virtual void configAddCreator(VOID* childCreatorVoidPtr)
     {
-        printf("\t\t\t HOPSA HOPSA\n");
+        std::unique_ptr<VOID> childCreatorVoidUPtr =
+            std::unique_ptr<VOID>(childCreatorVoidPtr);
         std::unique_ptr<CParent> configChild((CParent*)selector->at(222));
 
         if (nullptr == configChild)
         {
             printf(
                 "No action allowed in current configuration of selection!!!\n");
-            return childCreatorVoidPtr;
+            return;
         }
 
-        return configChild->action(childCreatorVoidPtr);
+        configChild->action(childCreatorVoidUPtr.release());
     }
 
     virtual void mainLoop(void* inputVoidPtr)
