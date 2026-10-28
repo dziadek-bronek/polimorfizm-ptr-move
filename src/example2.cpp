@@ -35,8 +35,6 @@ struct CDevChild : CParent
     }
 };
 
-#define DELETE_IF_FAILURE(_x_) (delete ((CChildCreatorIf*)(_x_)))
-
 int main()
 {
     try
@@ -61,24 +59,26 @@ int main()
         */
 
         /* Add creator to framework */
-        DELETE_IF_FAILURE(
-            framework->configAdd(new CChildCreator<CDevChild>(8)));
+        // clang-format off
+        // clang-format on
+        using UptrChCrIf = std::unique_ptr<CChildCreatorIf>;
+        framework->configAddCreator(new CWrapperVOID_1<UptrChCrIf>(
+            UptrChCrIf(new CChildCreator<CDevChild>(8))));
 
         constexpr int EXAMPLE_INIT_VALUE = 543;
         using CInitDataWrapper = CWrapperVOID_1<std::unique_ptr<int>>;
 
         // clang-format off
         framework->configAdd
-	(
-            "./libCDemoSoChild.so",
-	    "createNewCDemoSoChildExternC",
-            "deleteCDemoSoChildExternC",
-	    13,
-            std::unique_ptr<CInitDataWrapper>(
-		new CInitDataWrapper(
-			std::unique_ptr<int>(new int(EXAMPLE_INIT_VALUE))
-		))
-	);
+	    (
+		    "./libCDemoSoChild.so",
+		    "createNewCDemoSoChildExternC",
+		    "deleteCDemoSoChildExternC",
+		    13,
+            new CInitDataWrapper(
+                std::unique_ptr<int>(new int(EXAMPLE_INIT_VALUE))
+		    )
+	    );
         // clang-format on
 
         /* Mock of input - vector represents input sequence */

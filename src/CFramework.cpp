@@ -54,8 +54,10 @@ struct CFramework : CFrameworkIf
 
     virtual void* configAdd(const char* fileName, const char* constructorName,
                             const char* destructorName, int id,
-                            std::unique_ptr<VOID> initParameterVoidUPtr)
+                            void* initParameterVoidPtr)
     {
+        std::unique_ptr<VOID> initParameterVoidUPtr(
+            (VOID*)initParameterVoidPtr);
         std::unique_ptr<CParent> configChild((CParent*)selector->at(221));
 
         if (nullptr == configChild)
@@ -79,19 +81,19 @@ struct CFramework : CFrameworkIf
         return nullptr;
     }
 
-    virtual void* configAdd(void* childCreatorVoidPtr)
+    virtual void configAddCreator(void* childCreatorVoidPtr)
     {
-        printf("\t\t\t HOPSA HOPSA\n");
+        std::unique_ptr<VOID> childCreatorVoidUPtr((VOID*)childCreatorVoidPtr);
         std::unique_ptr<CParent> configChild((CParent*)selector->at(222));
 
         if (nullptr == configChild)
         {
             printf(
                 "No action allowed in current configuration of selection!!!\n");
-            return childCreatorVoidPtr;
+            return;
         }
 
-        return configChild->action(childCreatorVoidPtr);
+        configChild->action(childCreatorVoidUPtr.release());
     }
 
     virtual void mainLoop(void* inputVoidPtr)

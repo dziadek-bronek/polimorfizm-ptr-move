@@ -10,6 +10,7 @@ struct VOID
     } //= default;
 };
 
+#if 0
 #define PACK_1(STRUCT_ID, OBJ_U_PTR_ID, F_A_TYPE, F_A, F_A_INIT)               \
     struct STRUCT_ID : VOID                                                    \
     {                                                                          \
@@ -17,9 +18,11 @@ struct VOID
     };                                                                         \
     std::unique_ptr<STRUCT_ID> OBJ_U_PTR_ID(new STRUCT_ID);                    \
     OBJ_U_PTR_ID->F_A_ID = F_A_INIT
+#endif
 
 template <typename T> struct CWrapperVOID_1 : VOID
 {
+    // CWrapperVOID_1() = default;
     CWrapperVOID_1(T xInit)
         : x(std::move(xInit))
     {
