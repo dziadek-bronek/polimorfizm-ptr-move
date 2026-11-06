@@ -90,7 +90,6 @@ target_sources(mylib
 		src/CSoConfiguratorProducer.cpp
 
 		src/CInput.cpp
-		src/CInputIf.cpp
 
 		src/CFramework.cpp
 
@@ -101,7 +100,9 @@ target_sources(mylib
 			src/include
 		FILES
 			src/include/CFrameworkIf.hpp
-			src/include/CInputIf.hpp
+			src/include/CEventSourceIf.hpp
+			src/include/CInputPreparator.hpp
+			src/include/VOID.hpp
 			src/include/CParent.hpp
 			src/include/child-creators.hpp
 )

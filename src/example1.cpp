@@ -1,4 +1,4 @@
-#include "include/CInputIf.hpp"
+#include "include/CInputPreparator.hpp"
 #include "include/CParent.hpp"
 
 #include "include/CDlGlobalHandle.hpp"
@@ -35,10 +35,12 @@ int main()
 #endif
 
         /* Mock input - vector represents input sequence */
-        std::unique_ptr<CInputIf> input(CInputIf::createNew());
-        input->init(new std::vector<int>{2, 4, 3, 8, 0, 7});
+        std::unique_ptr<CEventSourceIf> input = prepareInput(
+            InputKind::Vector,
+            std::make_unique<CVectorInputPayload>(
+                std::vector<int>{2, 4, 3, 8, 0, 7}));
 
-        framework->mainLoop(&input);
+        framework->mainLoop(*input);
     }
     catch (const char* result)
     {

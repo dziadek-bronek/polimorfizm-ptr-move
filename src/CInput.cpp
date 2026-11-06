@@ -1,58 +1,68 @@
-#include "include/CInputIf.hpp"
+#include "include/CInputPreparator.hpp"
+
+#include <cstddef>
+#include <cstdio>
+#include <iostream>
 
 #include "include/throw.hpp"
-#include <cstdio>
 
-struct CInput : CInputIf
+namespace
 {
-    virtual void init(void* sequenceOfEvents_);
+/* Concrete inputs: hidden here, nobody outside this file can name them.
+   Fields are part of the implementation, so they are declared in descendants
+   only (the role interface CEventSourceIf has none). */
 
-    virtual int getCurrentEvent();
+struct CVectorInput : CEventSourceIf
+{
+    explicit CVectorInput(std::vector<int> events_)
+        : events(std::move(events_))
+    {
+    }
 
-    virtual int nextCurrentEvent();
-
-    virtual void setCurrentEvent();
+    bool next(int& event) override
+    {
+        if (index >= events.size())
+        {
+            return false;
+        }
+        event = events[index++];
+        return true;
+    }
 
   private:
-    int indexOfCurrentEvent{0};
-    std::unique_ptr<std::vector<int>> sequenceOfEvents;
-    int currentEvent{0};
+    std::vector<int> events;
+    std::size_t index{0};
 };
 
-void CInput::init(void* sequenceOfEvents_)
+struct CKeyboardInput : CEventSourceIf
 {
-    sequenceOfEvents =
-        std::unique_ptr<std::vector<int>>((std::vector<int>*)sequenceOfEvents_);
-    setCurrentEvent();
-}
-
-int CInput::getCurrentEvent()
-{
-    return currentEvent;
-}
-
-int CInput::nextCurrentEvent()
-{
-    ++indexOfCurrentEvent;
-    setCurrentEvent();
-    return currentEvent;
-}
-
-void CInput::setCurrentEvent()
-{
-    if (indexOfCurrentEvent < 0)
+    /* End of stdin (or something that is not a number) ends the events. */
+    bool next(int& event) override
     {
-        THROW2("Exit", " on error: invalid index of event");
+        return static_cast<bool>(std::cin >> event);
     }
-
-    if (sequenceOfEvents->size() <= indexOfCurrentEvent)
-    {
-        THROW2("Clean exit", " (no more events)");
-    }
-
-    currentEvent = (*sequenceOfEvents)[indexOfCurrentEvent];
-}
-CInputIf* createNewCInput()
-{
-    return new CInput;
 };
+} // namespace
+
+std::unique_ptr<CEventSourceIf> prepareInput(InputKind kind,
+                                             std::unique_ptr<VOID> payload)
+{
+    switch (kind)
+    {
+    case InputKind::Vector:
+    {
+        auto* vectorPayload = dynamic_cast<CVectorInputPayload*>(payload.get());
+        if (nullptr == vectorPayload)
+        {
+            THROW2("Exit", " on error: InputKind::Vector needs "
+                           "CVectorInputPayload");
+        }
+        return std::make_unique<CVectorInput>(std::move(vectorPayload->x));
+    }
+
+    case InputKind::Keyboard:
+        return std::make_unique<CKeyboardInput>();
+    }
+
+    THROW2("Exit", " on error: unknown InputKind");
+}

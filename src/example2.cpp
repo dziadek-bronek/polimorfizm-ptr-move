@@ -2,7 +2,7 @@
 #include "include/CParent.hpp"
 #include "include/child-creators.hpp"
 
-#include "include/CInput.hpp"
+#include "include/CInputPreparator.hpp"
 
 #include "include/CDlGlobalHandle.hpp"
 #include "include/VOID.hpp"
@@ -81,11 +81,16 @@ int main()
 	    );
         // clang-format on
 
-        /* Mock of input - vector represents input sequence */
-        std::unique_ptr<CInputIf> input(CInputIf::createNew());
-        input->init(new std::vector<int>{2, 4, 3, 8, 0, 12, 13, 14, 7});
+        /* Mock of input - vector represents input sequence.
+           main only says WHICH kind of input it wants (plus the data that
+           kind needs); how the input works is not main's business.
+           For a real keyboard: prepareInput(InputKind::Keyboard) */
+        std::unique_ptr<CEventSourceIf> input = prepareInput(
+            InputKind::Vector,
+            std::make_unique<CVectorInputPayload>(
+                std::vector<int>{2, 4, 3, 8, 0, 12, 13, 14, 7}));
 
-        framework->mainLoop(&input);
+        framework->mainLoop(*input);
     }
     catch (const char* result)
     {

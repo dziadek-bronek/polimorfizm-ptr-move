@@ -10,7 +10,7 @@
 
 #include "include/throw.hpp"
 
-#include "include/CInputIf.hpp"
+#include "include/CEventSourceIf.hpp"
 
 #include "include/CFramework.hpp"
 #include "include/CSoConfiguratorProducer.hpp"
@@ -96,15 +96,13 @@ struct CFramework : CFrameworkIf
         configChild->action(childCreatorVoidUPtr.release());
     }
 
-    virtual void mainLoop(void* inputVoidPtr)
+    virtual void mainLoop(CEventSourceIf& source) override
     {
-        std::unique_ptr<CInputIf>& input =
-            *((std::unique_ptr<CInputIf>*)inputVoidPtr);
-        for (int event = input->getCurrentEvent();;
-             event = input->nextCurrentEvent() /* input++*/)
+        int event = 0;
+        while (source.next(event))
         {
             printf("PROCESSING EVENT %i.\n", event);
-            std::unique_ptr<CParent> child((CParent*)(selector->at(event)));
+            std::unique_ptr<CParent> child = getChildBasedOnNumber(event);
             if (child == nullptr)
             {
                 printf("-------- UNKNOWN EVENT (%i).\n", event);
@@ -114,9 +112,11 @@ struct CFramework : CFrameworkIf
         }
     }
 
-    virtual void* getChildBasedOnNumber(int n)
+    virtual std::unique_ptr<CParent> getChildBasedOnNumber(int n) override
     {
-        return selector->at(n);
+        /* The selector still speaks void*: the cast stays here, in one place,
+           until CSelectorIf gets typed. */
+        return std::unique_ptr<CParent>((CParent*)selector->at(n));
     }
 
   private:

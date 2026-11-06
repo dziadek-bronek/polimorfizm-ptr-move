@@ -4,11 +4,16 @@
 // #include "VOID.hpp"
 #include <memory>
 
+/* Forward declarations only: the header pulls no implementation types. */
+struct CParent;
+struct CEventSourceIf;
+
 struct CFrameworkIf
 {
     virtual ~CFrameworkIf() = default;
 
-    virtual void* getChildBasedOnNumber(int n) = 0;
+    /* The caller becomes the owner. Empty = nobody knows this number. */
+    virtual std::unique_ptr<CParent> getChildBasedOnNumber(int n) = 0;
 
     virtual void configAddCreator(void* childCreatorVoidPtr) = 0;
     virtual void* configAdd(const char* fileName, const char* constructorName,
@@ -17,7 +22,9 @@ struct CFrameworkIf
                             const char* destructorName, int id,
                             void* initParameterVoidPtr) = 0;
 
-    virtual void mainLoop(void* inputVoidPtr) = 0;
+    /* The framework runs the loop. The source is only borrowed.
+       Returns normally when the source reports the end of events. */
+    virtual void mainLoop(CEventSourceIf& source) = 0;
 };
 
 #endif
