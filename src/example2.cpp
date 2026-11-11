@@ -85,10 +85,10 @@ int main()
            main only says WHICH kind of input it wants (plus the data that
            kind needs); how the input works is not main's business.
            For a real keyboard: prepareInput(InputKind::Keyboard) */
-        std::unique_ptr<CEventSourceIf> input = prepareInput(
-            InputKind::Vector,
-            std::make_unique<CVectorInputPayload>(
-                std::vector<int>{2, 4, 3, 8, 0, 12, 13, 14, 7}));
+        std::unique_ptr<CEventSourceIf> input =
+            prepareInput(InputKind::Vector,
+                         std::make_unique<CVectorInputPayload>(
+                             std::vector<int>{2, 4, 3, 8, 0, 12, 13, 14, 7}));
 
         framework->mainLoop(*input);
     }

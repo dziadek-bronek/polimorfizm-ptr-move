@@ -36,9 +36,8 @@ int main()
 
         /* Mock input - vector represents input sequence */
         std::unique_ptr<CEventSourceIf> input = prepareInput(
-            InputKind::Vector,
-            std::make_unique<CVectorInputPayload>(
-                std::vector<int>{2, 4, 3, 8, 0, 7}));
+            InputKind::Vector, std::make_unique<CVectorInputPayload>(
+                                   std::vector<int>{2, 4, 3, 8, 0, 7}));
 
         framework->mainLoop(*input);
     }

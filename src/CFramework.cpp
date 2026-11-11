@@ -112,14 +112,14 @@ struct CFramework : CFrameworkIf
         }
     }
 
-    virtual std::unique_ptr<CParent> getChildBasedOnNumber(int n) override
+  private:
+    std::unique_ptr<CParent> getChildBasedOnNumber(int n)
     {
         /* The selector still speaks void*: the cast stays here, in one place,
            until CSelectorIf gets typed. */
         return std::unique_ptr<CParent>((CParent*)selector->at(n));
     }
 
-  private:
     std::unique_ptr<CSelectorConfiguratorIf> configurator;
     std::unique_ptr<CSelectorIf> selector;
 };
