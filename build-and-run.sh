@@ -1,3 +1,4 @@
+# sed -i 's/dtstgseete/your-linux-user-name/g' build-and-run.sh
 clear
 mkdir /home/dtstgseete/cprogs/github/polimorfizm-ptr-move/build
 cd /home/dtstgseete/cprogs/github/polimorfizm-ptr-move/build
